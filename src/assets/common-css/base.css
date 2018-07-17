@@ -1,0 +1,11 @@
+.row {
+  margin-top: 10px;
+}
+
+.el-pagination {
+  text-align: center;
+}
+
+.el-menu {
+  border: none;
+}
