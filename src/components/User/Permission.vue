@@ -1,5 +1,6 @@
 <template>
   <div class="view-container">
+
     <!--面包屑导航-->
     <div class="row breadcrumb-container">
       <el-breadcrumb separator="/">
@@ -9,9 +10,9 @@
 
     <!-- 操作按钮 -->
     <div class="row ope-container">
-      <el-button type="primary" icon="el-icon-refresh" size="small" @click="refreshPermissionList()">刷新</el-button>
+      <el-button type="primary" icon="el-icon-refresh" size="small" @click="getPermissionData()">刷新</el-button>
       <el-button type="success" size="small" @click="addPermission()">新增</el-button>
-      <Search v-on:search="searchPermissionData()"></Search>
+      <Search v-on:search="getPermissionData()"></Search>
     </div>
 
     <!-- 数据列表 -->
@@ -48,7 +49,7 @@
 
     <!-- 新增权限弹窗 -->
     <el-dialog title="新增权限" :visible.sync="addPermissionDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="80px" :model="addPermissionData" ref="addPermissionData">
+      <el-form label-position="left" label-width="80px" :model="addPermissionData">
         <el-form-item label="标识" prop="code">
           <el-input v-model="addPermissionData.code"></el-input>
         </el-form-item>
@@ -70,7 +71,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="addPermissionDialogVisible = false">取 消</el-button>
-        <el-button type="primary" size="small" @click="submitAddPermission('addPermissionData')">确 定</el-button>
+        <el-button type="primary" size="small" @click="submitAddPermission()">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -85,7 +86,7 @@
 
     <!-- 编辑权限弹窗 -->
     <el-dialog title="编辑权限" :visible.sync="editPermissionDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="80px" :model="editPermissionData" ref="editPermissionData">
+      <el-form label-position="left" label-width="80px" :model="editPermissionData">
         <el-form-item label="标识" prop="code">
           <el-input v-model="editPermissionData.code"></el-input>
         </el-form-item>
@@ -98,7 +99,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="editPermissionDialogVisible = false">取 消</el-button>
-        <el-button type="primary" size="small" @click="submitEditPermission('editPermissionData')">确 定</el-button>
+        <el-button type="primary" size="small" @click="submitEditPermission()">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -106,6 +107,7 @@
 </template>
 <script>
 import Search from './Commen/Search.vue'
+import { apiStatusFn } from '../../utils/base.js'
 export default {
   name: 'permission',
   data() {
@@ -167,40 +169,35 @@ export default {
           name: this.searchId
         })
         .then(res => {
-          this.permissionData = res.data.list
-          this.totalSize = res.data.total
-          let clientHieght = document.body.clientHeight
-          this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
+          apiStatusFn(res)
+            .then(res => {
+              this.permissionData = res.data.list
+              this.totalSize = res.data.total
+              let clientHieght = document.body.clientHeight
+              this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
+            })
+            .catch(err => {
+              this.$message({
+                showClose: true,
+                message: err.message,
+                type: 'warning'
+              })
+            })
         })
-    },
-    // 刷新数据
-    refreshPermissionList() {
-      this.getPermissionData()
-    },
-    // 搜索数据
-    searchPermissionData() {
-      this.getPermissionData()
     },
     //  新增
     addPermission() {
       this.addPermissionDialogVisible = true
+      // 获取叶子节点数据
       this.$store.dispatch('getAllLeaf').then(res => {
-        console.log('[allLeafData]', res.data)
         this.allLeafData = res.data
       })
     },
     // 新增请求
     submitAddPermission(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.addPermissionDialogVisible = false
-          this.$store.dispatch('addPermissionData', this.addPermissionData).then(res => {
-            this.getPermissionData()
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+      this.addPermissionDialogVisible = false
+      this.$store.dispatch('addPermissionData', this.addPermissionData).then(res => {
+        this.getPermissionData()
       })
     },
     // 删除
@@ -223,7 +220,6 @@ export default {
       this.editPermissionData.action = row.action
       this.editPermissionDialogVisible = true
       this.$store.dispatch('getAllLeaf').then(res => {
-        console.log('[allLeafData]', res.data)
         this.allLeafData = res.data
       })
     },

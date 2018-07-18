@@ -47,7 +47,7 @@ class MenuService {
       headers: {
         authKey: getSessionStorage('authKey')
       },
-      data: params
+      params
     })
   }
 

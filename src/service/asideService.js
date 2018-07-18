@@ -1,7 +1,8 @@
 import axios from 'axios'
 import config from '../config'
-import store from '../store'
-
+import {
+  getSessionStorage
+} from '../utils/base.js'
 
 class AsideService {
 
@@ -10,7 +11,7 @@ class AsideService {
       url: `${config.service.host}/bguser/menu`,
       method: 'post',
       headers: {
-        authKey: store.state.login.authKey
+        authKey: getSessionStorage('authKey')
       }
     })
   }
@@ -20,7 +21,7 @@ class AsideService {
       url: `${config.service.host}/menu/all-leaf`,
       method: 'post',
       headers: {
-        authKey: store.state.login.authKey
+        authKey: getSessionStorage('authKey')
       }
     })
   }

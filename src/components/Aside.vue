@@ -1,6 +1,6 @@
 <template>
   <el-aside width="250px">
-    <el-menu default-active="1" :router="true" :unique-opened="true" @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+    <el-menu default-active="1" :router="true" :unique-opened="true">
       <el-submenu v-for="aside in asideList" :key="aside.id" :index="aside.name">
         <template slot="title">
           <span>{{aside.name}}</span>
@@ -19,21 +19,14 @@ export default {
     asideList() {
       return this.$store.state.aside.asideList
     }
-  },
-  methods: {
-    handleOpen() {},
-    handleClose() {},
-    toString(item) {
-      return item.tostring()
-    }
   }
 }
 </script>
 <style>
 .el-aside {
   height: 100%;
-  background: #545c64;
   overflow: auto;
+  background: #ffffff;
 }
 </style>
 

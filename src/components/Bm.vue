@@ -1,10 +1,12 @@
 <template>
   <div class="wrapper">
+    <!-- 头部 -->
 
     <Head></Head>
     <div class="inner">
       <div class="main">
-        <Aside class="sidebar" />
+        <!-- 侧边导航 -->
+        <Aside></Aside>
         <div class="content">
           <router-view></router-view>
         </div>
@@ -19,9 +21,6 @@ import Aside from './Aside'
 import { getSessionStorage, removeSessionStorage } from '../utils/base.js'
 export default {
   name: 'App',
-  data() {
-    return {}
-  },
   components: {
     Head,
     Aside
@@ -32,12 +31,11 @@ export default {
     if (!authKey) {
       this.$router.push('/bm')
     } else {
-      this.$store.dispatch('getAuthkey', authKey)
       // 进入页面会去更新页面菜单
       this.$store.dispatch('getAsideList').then(res => {
-        console.log(res)
+        // 用户token过期
         if (res.status === '0x5002') {
-          this.$router.push('/bm')
+          this.$router.push('/login')
         }
       })
     }
@@ -47,11 +45,6 @@ export default {
       this.$store.dispatch('getBtnList', {
         pageId
       })
-    },
-    logout() {
-      removeSessionStorage('authKey')
-      // this.$store.dispatch('logout')
-      this.$router.push('/login')
     }
   },
   watch: {
@@ -73,7 +66,6 @@ export default {
 .wrapper {
   flex: 1;
   display: flex;
-  background: #eeeeee;
   flex-direction: column;
 }
 .inner {

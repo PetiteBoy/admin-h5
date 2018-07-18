@@ -154,7 +154,6 @@ export default {
           id: this.delMenuId
         })
         .then(res => {
-          console.log(res)
           this.getMenu()
         })
     },
@@ -198,6 +197,9 @@ export default {
 }
 </script>
 <style>
+.data-container .el-tree {
+  width: 100%;
+}
 .custom-tree-node {
   flex: 1;
   display: flex;

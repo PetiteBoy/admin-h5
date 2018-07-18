@@ -32,7 +32,6 @@
             <el-button type="primary" @click="login()">登录</el-button>
           </div>
         </div>
-        <!-- <div class="copyright">&copyright 2017 piyingke.com. Powered By Piyingke Team.</div> -->
       </div>
     </div>
   </div>
@@ -50,6 +49,7 @@ export default {
     }
   },
   methods: {
+    //  用户登录
     login() {
       if (this.loginData.username && this.loginData.password) {
         this.$store
@@ -69,7 +69,7 @@ export default {
             console.log(err)
             this.$message({
               showClose: true,
-              message: '服务异常请充实',
+              message: '服务异常请重试',
               type: 'warning'
             })
           })
@@ -81,9 +81,11 @@ export default {
         })
       }
     },
+    // 密码获取焦点
     passwordFouce() {
       this.passwordStatus = true
     },
+    // 密码是去焦点
     passwordBlur() {
       this.passwordStatus = false
     }

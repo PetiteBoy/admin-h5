@@ -2,22 +2,9 @@ import loginService from '../../service/loginService.js'
 import {
   setSessionStorage
 } from '../../utils/base.js'
-const state = {
-  // 用户的登录状态
-  authKey: ''
-}
-const mutations = {
-  GET_AUTHKEY(state, authKey) {
-    state.authKey = authKey
-  }
-}
+const state = {}
+const mutations = {}
 const actions = {
-  // 获取authkey
-  getAuthkey({
-    commit
-  }, authKey) {
-    commit('GET_AUTHKEY', authKey)
-  },
   // 用户登录
   login({
     commit
@@ -27,8 +14,6 @@ const actions = {
         .login(params)
         .then(data => {
           let result = data.data
-          console.log('[loginService][login]', result)
-          commit('GET_AUTHKEY', result.data.authKey)
           setSessionStorage('authKey', result.data.authKey)
           resolve(result)
         })
@@ -37,12 +22,14 @@ const actions = {
         })
     })
   },
+  // 用户退出
   logout() {
     loginService
       .logout()
       .then(data => {})
       .catch(err => {})
   },
+  // 获取登录用户信息
   loginInfo() {
     return new Promise((resolve, reject) => {
       loginService

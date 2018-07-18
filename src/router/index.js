@@ -12,6 +12,10 @@ import Permission from '@/components/User/Permission.vue'
 import Menu from '@/components/User/Menu.vue'
 import Log from '@/components/User/Log.vue'
 
+// 视频管理
+import VideoList from '@/components/Video/VideoList'
+
+
 
 Vue.use(Router)
 export default new Router({
