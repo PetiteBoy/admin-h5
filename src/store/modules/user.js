@@ -6,12 +6,13 @@ const mutations = {
     state.searchId = id
   }
 }
+const actions = {
 
-updateSearchId({
-  commit
-}, id) {
-  commit('UPDATE_SEARCH_ID', id)
-}
+  updateSearchId({
+    commit
+  }, id) {
+    commit('UPDATE_SEARCH_ID', id)
+  }
 
 }
 export default {
