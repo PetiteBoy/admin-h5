@@ -108,6 +108,9 @@
 <script>
 import Search from './Commen/Search.vue'
 import { apiStatusFn } from '../../utils/base.js'
+import permissionService from '../../service/permissionService.js'
+import menuService from '../../service/menuService.js'
+
 export default {
   name: 'permission',
   data() {
@@ -144,7 +147,16 @@ export default {
       // 子目录列表
       allLeafData: [],
       // 表格最大高度
-      tabMaxHeight: 0
+      tabMaxHeight: 0,
+      permissionPath: {
+        getPath: '/authority/page',
+        addPath: '/authority/add',
+        editPath: '/authority/update',
+        delPath: '/authority/delete'
+      },
+      menuPath: {
+        allLeafPath: '/menu/all-leaf'
+      }
     }
   },
   computed: {
@@ -162,41 +174,45 @@ export default {
   methods: {
     //  获取数据
     getPermissionData() {
-      this.$store
-        .dispatch('getPermissionData', {
+      permissionService
+        .getPermissionData(this.permissionPath.getPath, {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
           name: this.searchId
         })
         .then(res => {
-          apiStatusFn(res)
-            .then(res => {
-              this.permissionData = res.data.list
-              this.totalSize = res.data.total
-              let clientHieght = document.body.clientHeight
-              this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
-            })
-            .catch(err => {
-              this.$message({
-                showClose: true,
-                message: err.message,
-                type: 'warning'
-              })
-            })
+          let result = res.data.data
+          this.permissionData = result.list
+          this.totalSize = result.total
+          let clientHieght = document.body.clientHeight
+          this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
         })
     },
     //  新增
     addPermission() {
+      this.addPermissionData = {
+        code: '',
+        name: '',
+        action: '',
+        menuId: '',
+        idOnPage: ''
+      }
       this.addPermissionDialogVisible = true
       // 获取叶子节点数据
-      this.$store.dispatch('getAllLeaf').then(res => {
-        this.allLeafData = res.data
-      })
+      menuService
+        .getAllLeaf(this.menuPath.allLeafPath)
+        .then(res => {
+          let result = res.data.data
+          this.allLeafData = result
+        })
+        .catch(err => {
+          throw err
+        })
     },
     // 新增请求
     submitAddPermission(formName) {
       this.addPermissionDialogVisible = false
-      this.$store.dispatch('addPermissionData', this.addPermissionData).then(res => {
+      permissionService.addPermissionData(this.permissionPath.getPath, this.addPermissionData).then(res => {
         this.getPermissionData()
       })
     },
@@ -207,10 +223,10 @@ export default {
     },
     // 删除请求
     submitDelPermission() {
-      this.$store.dispatch('delPermissionData', this.delPermissionId).then(res => {
+      this.delPermissionDialogVisible = false
+      permissionService.delPermissionData(this.permissionPath.delPath, this.delPermissionId).then(res => {
         this.getPermissionData()
       })
-      this.delPermissionDialogVisible = false
     },
     // 编辑
     editPermissionItem(row) {
@@ -219,16 +235,23 @@ export default {
       this.editPermissionData.name = row.name
       this.editPermissionData.action = row.action
       this.editPermissionDialogVisible = true
-      this.$store.dispatch('getAllLeaf').then(res => {
-        this.allLeafData = res.data
-      })
+      // 获取叶子节点数据
+      menuService
+        .getAllLeaf(this.menuPath.allLeafPath)
+        .then(res => {
+          let result = res.data.data
+          this.allLeafData = result
+        })
+        .catch(err => {
+          throw err
+        })
     },
     // 编辑请求
     submitEditPermission() {
-      this.$store.dispatch('updatePermissionData', this.editPermissionData).then(res => {
+      this.editPermissionDialogVisible = false
+      permissionService.updatePermissionData(this.permissionPath.editPath, this.editPermissionData).then(res => {
         this.getPermissionData()
       })
-      this.editPermissionDialogVisible = false
     },
     // 关闭弹窗
     handleClose() {
@@ -244,19 +267,6 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.getPermissionData()
-    }
-  },
-  watch: {
-    addPermissionDialogVisible() {
-      if (!this.addPermissionDialogVisible) {
-        this.addPermissionData = {
-          code: '',
-          name: '',
-          action: '',
-          menuId: '',
-          idOnPage: ''
-        }
-      }
     }
   }
 }

@@ -29,15 +29,7 @@ export default {
     // 判断用户是否登录
     let authKey = getSessionStorage('authKey')
     if (!authKey) {
-      this.$router.push('/bm')
-    } else {
-      // 进入页面会去更新页面菜单
-      this.$store.dispatch('getAsideList').then(res => {
-        // 用户token过期
-        if (res.status === '0x5002') {
-          this.$router.push('/login')
-        }
-      })
+      this.$router.push('/login')
     }
   },
   methods: {
@@ -52,11 +44,6 @@ export default {
       let pageId = this.$route.query.pageId
       if (pageId) {
         this.getBtnList(pageId)
-      }
-    },
-    authKey() {
-      if (!this.authKey) {
-        this.$router.push('/bm')
       }
     }
   }

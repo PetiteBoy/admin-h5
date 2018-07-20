@@ -1,23 +1,16 @@
-import permissionService from '../../service/permissionService'
+import videoService from '../../service/videoService'
 
-const state = {
-  permissionData: ['']
-}
-const mutations = {
-  //  更新权限列表数据
-  GET_PERMISSION_DATA(state, dataList) {
-    state.permissionData = dataList
-  }
-}
+const state = {}
+const mutations = {}
 const actions = {
 
   // 获取列表
-  getPermissionData({
+  getVideoData({
     commit
   }, params) {
     return new Promise((resolve, reject) => {
-      permissionService
-        .getPermissionData(params)
+      videoService
+        .getRoleData(params)
         .then(res => {
           let result = res.data
           resolve(result)
@@ -29,13 +22,13 @@ const actions = {
   },
 
   //   添加
-  addPermissionData({
+  addVideoData({
       commit
     },
     params) {
     return new Promise((resolve, reject) => {
-      permissionService
-        .addPermissionData(params)
+      videoService
+        .addRoleData(params)
         .then(res => {
           let result = res.data
           resolve(result)
@@ -46,12 +39,12 @@ const actions = {
     })
   },
   // 删除  
-  delPermissionData({
+  delVideoData({
     commit
-  }, id) {
+  }, params) {
     return new Promise((resolve, reject) => {
-      permissionService
-        .delPermissionData(id)
+      videoService
+        .delRoleData(params)
         .then(res => {
           let result = res.data
           resolve(result)
@@ -62,13 +55,28 @@ const actions = {
     })
   },
   //   修改
-  updatePermissionData({
-      commit
-    },
-    params) {
+  updateVideoData({
+    commit
+  }, params) {
     return new Promise((resolve, reject) => {
-      permissionService
-        .updatePermissionData(params)
+      videoService
+        .updateRoleData(params)
+        .then(res => {
+          let result = res.data
+          resolve(result)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  },
+  // 查询详情
+  getVideoDetail({
+    commit
+  }, params) {
+    return new Promise((resolve, reject) => {
+      videoService
+        .getVideoDetail(params)
         .then(res => {
           let result = res.data
           resolve(result)

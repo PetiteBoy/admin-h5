@@ -7,9 +7,9 @@ import {
 
 class AdminService {
 
-  getAdminData(params) {
+  getAdminData(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/page`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -18,9 +18,9 @@ class AdminService {
     })
   }
 
-  addAdminData(params) {
+  addAdminData(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/add`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -29,9 +29,9 @@ class AdminService {
     })
   }
 
-  delAdminData(params) {
+  delAdminData(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/delete`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -40,9 +40,9 @@ class AdminService {
     })
   }
 
-  updateAdminData(params) {
+  updateAdminData(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/update`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -51,9 +51,9 @@ class AdminService {
     })
   }
 
-  searchAdminPermission(params) {
+  searchAdminPermission(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/privilege/authorities`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -62,9 +62,9 @@ class AdminService {
     })
   }
 
-  addAdminPermission(params) {
+  addAdminPermission(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/config/privilege/authorities`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -73,9 +73,9 @@ class AdminService {
     })
   }
 
-  searchAdminRole(params) {
+  searchAdminRole(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/roles`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -84,9 +84,9 @@ class AdminService {
     })
   }
 
-  addAdminRole(params) {
+  addAdminRole(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/config/roles`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -95,9 +95,9 @@ class AdminService {
     })
   }
 
-  searchAdminMenu(params) {
+  searchAdminMenu(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/privilege/menu`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -106,9 +106,9 @@ class AdminService {
     })
   }
 
-  addAdminMenu(params) {
+  addAdminMenu(path, params) {
     return axios({
-      url: `${config.service.host}/bguser/config/privilege/menu`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -116,11 +116,6 @@ class AdminService {
       data: params
     })
   }
-
-
-
-
-
 }
 
 

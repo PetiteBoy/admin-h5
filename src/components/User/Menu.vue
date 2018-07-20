@@ -1,5 +1,6 @@
 <template>
   <div class="view-container">
+
     <!--面包屑导航-->
     <div class="row breadcrumb-container">
       <el-breadcrumb separator="/">
@@ -14,7 +15,7 @@
 
     <!-- 添加菜单 -->
     <el-dialog title="添加菜单" :visible.sync="addMenuDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="80px" :model="addMenu" ref="addMenu">
+      <el-form label-position="left" label-width="80px" :model="addMenu">
         <el-form-item label="名称" prop="name">
           <el-input v-model="addMenu.name"></el-input>
         </el-form-item>
@@ -33,7 +34,7 @@
 
     <!-- 编辑菜单 -->
     <el-dialog title="编辑菜单" :visible.sync="editMenuDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="80px" :model="editMenu" ref="addMenu">
+      <el-form label-position="left" label-width="80px" :model="editMenu">
         <el-form-item label="名称" prop="name">
           <el-input v-model="editMenu.name"></el-input>
         </el-form-item>
@@ -63,8 +64,9 @@
   </div>
 </template>
 <script>
+import menuService from '../../service/menuService.js'
 export default {
-  name: 'men',
+  name: 'menu',
   data() {
     return {
       // 初始化树属性值
@@ -98,7 +100,12 @@ export default {
       menuList: [],
       // 父级Id
       parentId: 0,
-      tabMaxHeight: 0
+      menuPath: {
+        getPath: '/menu/all',
+        addPath: '/menu/add',
+        editPath: '/menu/update',
+        delPath: '/menu/delete'
+      }
     }
   },
   mounted() {
@@ -108,20 +115,26 @@ export default {
   methods: {
     // 获取数据
     getMenu() {
-      this.$store.dispatch('getMenuList').then(res => {
-        this.menuList = res.data
+      menuService.getMenuList(this.menuPath.getPath, {}).then(res => {
+        this.menuList = res.data.data
       })
     },
     // 添加
     addMenuItem(node) {
+      // 初始化数据
+      this.addMenu = {
+        name: '',
+        action: '',
+        sortedOrder: '',
+        parentId: ''
+      }
       this.addMenu.parentId = node.data.id
       this.addMenuDialogVisible = true
     },
     // 添加请求
     submitAddmenu() {
       this.addMenuDialogVisible = false
-      this.$store.dispatch('addMenu', this.addMenu).then(res => {
-        console.log(res)
+      menuService.addMenu(this.menuPath.addPath, this.addMenu).then(res => {
         this.getMenu()
       })
     },
@@ -136,8 +149,7 @@ export default {
     // 编辑请求
     submitEditmenu() {
       this.editMenuDialogVisible = false
-      this.$store.dispatch('editMenu', this.editMenu).then(res => {
-        console.log(res)
+      menuService.editMenu(this.menuPath.editPath, this.editMenu).then(res => {
         this.getMenu()
       })
     },
@@ -149,8 +161,9 @@ export default {
     // 删除请求
     submitDelmenu() {
       this.delMenuDialogVisible = false
-      this.$store
-        .dispatch('delMenu', {
+      let path = ''
+      menuService
+        .delMenu(this.menuPath.delPath, {
           id: this.delMenuId
         })
         .then(res => {
@@ -180,18 +193,6 @@ export default {
           </span>
         </span>
       )
-    }
-  },
-  watch: {
-    addMenuDialogVisible() {
-      if (!this.addMenuDialogVisible) {
-        this.addMenu = {
-          name: '',
-          action: '',
-          sortedOrder: '',
-          parentId: ''
-        }
-      }
     }
   }
 }

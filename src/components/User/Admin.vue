@@ -1,5 +1,6 @@
 <template>
   <div class="view-container">
+
     <!--面包屑导航-->
     <div class="row breadcrumb-container">
       <el-breadcrumb separator="/">
@@ -9,10 +10,11 @@
 
     <!-- 操作按钮 -->
     <div class="row ope-container">
-      <el-button type="primary" icon="el-icon-refresh" size="small" @click="refreshAdminList()">刷新</el-button>
+      <el-button type="primary" icon="el-icon-refresh" size="small" @click="getAdminData()">刷新</el-button>
       <el-button type="success" size="small" @click="addAdmin()">新增</el-button>
-      <Search v-on:search="searchAdminData()"></Search>
+      <Search v-on:search="getAdminData()"></Search>
     </div>
+
     <!-- 数据列表 -->
     <div class="row data-container">
       <el-table :data="adminData" border style="width: 100%" :max-height="tabMaxHeight">
@@ -25,8 +27,14 @@
         <el-table-column label="邮箱" prop="email">
         </el-table-column>
         <el-table-column label="创建时间" prop="createTime">
+          <template slot-scope="scope">
+            <div>{{moment(scope.row.createTime)}}</div>
+          </template>
         </el-table-column>
         <el-table-column label="更新时间" prop="updateTime">
+          <template slot-scope="scope">
+            <div>{{moment(scope.row.updateTime)}}</div>
+          </template>
         </el-table-column>
         <el-table-column label="操作" width="350">
           <template slot-scope="scope">
@@ -55,7 +63,7 @@
 
     <!-- 新增管理员弹窗 -->
     <el-dialog title="新增管理员" :visible.sync="addAdminDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="120px" :model="addAdminData" ref="addAdminData">
+      <el-form label-position="left" label-width="120px" :model="addAdminData">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="addAdminData.username"></el-input>
         </el-form-item>
@@ -90,7 +98,7 @@
 
     <!-- 编辑管理员弹窗 -->
     <el-dialog title="编辑管理员" :visible.sync="editAdminDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="120px" :model="editAdminData" ref="editAdminData">
+      <el-form label-position="left" label-width="120px" :model="editAdminData">
         <el-form-item label="密码" prop="password">
           <el-input v-model="editAdminData.password"></el-input>
         </el-form-item>
@@ -136,7 +144,7 @@
 
     <!-- 添加用户菜单 -->
     <el-dialog title="添加菜单" :visible.sync="editAdminMenuDialogVisible" width="30%" :before-close="handleClose" ref="multipleTable">
-      <el-tree node-key="id" default-expand-all :expand-on-click-node="false" :data="menuList" :props="defaultProps" show-checkbox :default-checked-keys="adminMenuData"  ref="tree">
+      <el-tree node-key="id" default-expand-all :expand-on-click-node="false" :data="menuList" :props="defaultProps" show-checkbox :default-checked-keys="adminMenuData" ref="tree">
       </el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="editAdminMenuDialogVisible = false">取 消</el-button>
@@ -148,6 +156,11 @@
 </template>
 <script>
 import Search from './Commen/Search.vue'
+import moment from 'moment'
+import adminService from '../../service/adminService.js'
+import permissionService from '../../service/permissionService.js'
+import roleService from '../../service/roleService.js'
+import menuService from '../../service/menuService.js'
 export default {
   name: 'Admin',
   data() {
@@ -178,7 +191,7 @@ export default {
       delAdminDialogVisible: false,
       // 删除管理员id
       delAdminId: 0,
-      // 管理员
+      // 列表数据
       adminData: [],
       //页码相关
       currentPage: 1,
@@ -186,21 +199,56 @@ export default {
       totalSize: 0,
       // 表格最大高度
       tabMaxHeight: 0,
-      editAdminPermissionDialogVisible: false,
-      permissionData: [],
-      roleData: [],
-      adminPermissionData: [],
-      adminRoleData: [],
+
+      // 当前用户Id
       currentAdminId: '',
+      // 用户权限弹窗
+      editAdminPermissionDialogVisible: false,
+      // 权限列表
+      permissionData: [],
+      // 用户已有权限
+      adminPermissionData: [],
+
+      // 用户角色弹窗
       editAdminRoleDialogVisible: false,
-       menuList: [],
+      // 角色列表
+      roleData: [],
+      // 用户已有角色
+      adminRoleData: [],
+
+      // 用户菜单弹窗
+      editAdminMenuDialogVisible: false,
+      // 菜单列表
+      menuList: [],
       // 初始化树属性值
       defaultProps: {
         children: 'children',
         label: 'name'
       },
-      editAdminMenuDialogVisible: false,
-      adminMenuData: []
+      // 用户已有菜单
+      adminMenuData: [],
+
+      adminPath: {
+        getPath: '/bguser/page',
+        addPath: '/bguser/add',
+        delPath: '/bguser/delete',
+        editPath: '/bguser/update',
+        searchPermissionPath: '/bguser/privilege/authorities',
+        addPermissionPath: '/bguser/config/privilege/authorities',
+        searchRolePath: '/bguser/roles',
+        addRolePath: '/bguser/config/roles',
+        searchMenuPath: '/bguser/privilege/menu',
+        addMenuPath: '/bguser/config/privilege/menu'
+      },
+      permissionPath: {
+        getPath: '/authority/page'
+      },
+      rolePath: {
+        getPath: '/role/page'
+      },
+      menuPath: {
+        getPath: '/menu/all'
+      }
     }
   },
   computed: {
@@ -215,45 +263,43 @@ export default {
     this.getAdminData()
   },
   methods: {
+    // 时间转化
+    moment(time) {
+      return moment(time).format('YYYY-MM-DD')
+    },
     //  获取数据
     getAdminData() {
-      this.$store
-        .dispatch('getAdminData', {
+      adminService
+        .getAdminData(this.adminPath.getPath, {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
           name: this.searchId
         })
         .then(res => {
-          this.adminData = res.data.list
-          this.totalSize = res.data.total
+          let result = res.data
+          this.adminData = result.data.list
+          this.totalSize = result.data.total
           let clientHieght = document.body.clientHeight
           this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
         })
     },
-    // 刷新数据
-    refreshAdminList() {
-      this.getAdminData()
-    },
-    // 搜索数据
-    searchAdminData() {
-      this.getAdminData()
-    },
     //  新增
     addAdmin() {
+      this.addAdminData = {
+        username: '',
+        password: '',
+        realname: '',
+        email: '',
+        telephone: '',
+        isEnable: false
+      }
       this.addAdminDialogVisible = true
     },
     // 新增请求
     submitAddAdmin(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.addAdminDialogVisible = false
-          this.$store.dispatch('addAdminData', this.addAdminData).then(res => {
-            this.getAdminData()
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+      this.addAdminDialogVisible = false
+      adminService.addAdminData(this.adminPath.addPath, this.addAdminData).then(res => {
+        this.getAdminData()
       })
     },
     // 删除
@@ -264,15 +310,12 @@ export default {
     // 删除请求
     submitDelAdmin() {
       this.delAdminDialogVisible = false
-      this.$store
-        .dispatch('delAdminData', {
+      adminService
+        .delAdminData(this.adminPath.delPath, {
           id: this.delAdminId
         })
         .then(res => {
           this.getAdminData()
-        })
-        .catch(err => {
-          throw err
         })
     },
     // 编辑
@@ -287,31 +330,33 @@ export default {
     },
     // 编辑请求
     submitEditAdmin() {
-      this.$store.dispatch('updateAdminData', this.editAdminData).then(res => {
+      adminService.updateAdminData(this.adminPath.editPath, this.editAdminData).then(res => {
         this.getAdminData()
       })
       this.editAdminDialogVisible = false
     },
-    // 添加用户权限
+    // 用户权限
     addAdminPermission(row) {
       this.currentAdminId = row.id
       this.editAdminPermissionDialogVisible = true
-      this.$store.dispatch('getPermissionData', {}).then(res => {
-        this.permissionData = res.data.list
+      // 获取权限列表
+      permissionService.getPermissionData(this.permissionPath.getPath, {}).then(res => {
+        this.permissionData = res.data.data.list
       })
-      this.$store
-        .dispatch('searchAdminPermission', {
+      //用户已有权限
+      adminService
+        .searchAdminPermission(this.adminPath.searchPermissionPath, {
           userId: this.currentAdminId
         })
         .then(res => {
-          this.adminPermissionData = res.data
+          this.adminPermissionData = res.data.data
         })
     },
-    // 添加用户权限 请求
+    // 用户权限请求
     submitEditAdminPermission() {
       this.editAdminPermissionDialogVisible = false
-      this.$store
-        .dispatch('addAdminPermission', {
+      adminService
+        .addAdminPermission(this.adminPath.addPermissionPath, {
           userId: this.currentAdminId,
           authorityIds: this.adminPermissionData
         })
@@ -319,26 +364,28 @@ export default {
           this.getAdminData()
         })
     },
-    // 添加用户角色
+    // 用户角色
     addAdminRole(row) {
       this.currentAdminId = row.id
       this.editAdminRoleDialogVisible = true
-      this.$store.dispatch('getRoleData', {}).then(res => {
-        this.roleData = res.data.list
+      // 获取角色列表
+      roleService.getRoleData(this.rolePath.getPath, {}).then(res => {
+        this.roleData = res.data.data.list
       })
-      this.$store
-        .dispatch('searchAdminRole', {
+      // 获取用户角色
+      adminService
+        .searchAdminRole(this.adminPath.searchRolePath, {
           userId: this.currentAdminId
         })
         .then(res => {
-          this.adminRoleData = res.data
+          this.adminRoleData = res.data.data
         })
     },
-    // 添加用户角色 请求
+    // 用户角色 请求
     submitEditAdminRole() {
       this.editAdminRoleDialogVisible = false
-      this.$store
-        .dispatch('addAdminRole', {
+      adminService
+        .addAdminRole(this.adminPath.addRolePath, {
           userId: this.currentAdminId,
           roleIds: this.adminRoleData
         })
@@ -346,25 +393,28 @@ export default {
           this.getAdminData()
         })
     },
-    // 添加用户菜单
-    addAdminMenu(row){
+    // 用户菜单
+    addAdminMenu(row) {
       this.currentAdminId = row.id
       this.editAdminMenuDialogVisible = true
-      this.$store.dispatch('getMenuList').then(res => {
-        this.menuList = res.data
+      // 获取菜单列表
+      menuService.getMenuList(this.menuPath.getPath, {}).then(res => {
+        this.menuList = res.data.data
       })
-      this.$store
-        .dispatch('searchAdminMenu', {
+      // 用户已有菜单
+      adminService
+        .searchAdminMenu(this.adminPath.searchMenuPath, {
           userId: this.currentAdminId
         })
         .then(res => {
-          this.adminMenuData = res.data
+          this.adminMenuData = res.data.data
         })
     },
-    submitEditAdminMenu(){
+    // 用户菜单请求
+    submitEditAdminMenu() {
       this.editAdminMenuDialogVisible = false
-      this.$store
-        .dispatch('addAdminMenu', {
+      adminService
+        .addAdminMenu(this.adminPath.addMenuPath, {
           userId: this.currentAdminId,
           menuIds: this.$refs.tree.getCheckedKeys()
         })
@@ -389,20 +439,6 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.getAdminData()
-    }
-  },
-  watch: {
-    addAdminDialogVisible() {
-      if (!this.addAdminDialogVisible) {
-        this.addAdminData = {
-          username: '',
-          password: '',
-          realname: '',
-          email: '',
-          telephone: '',
-          isEnable: false
-        }
-      }
     }
   }
 }

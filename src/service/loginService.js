@@ -14,10 +14,6 @@ class LoginService {
     })
   }
 
-  logout() {
-    return axios.get(`${config.service.host}/user/audit/query`)
-  }
-
   loginInfo() {
     return axios({
       url: `${config.service.host}/bguser/info`,
@@ -27,7 +23,6 @@ class LoginService {
       }
     })
   }
-
 }
 
 

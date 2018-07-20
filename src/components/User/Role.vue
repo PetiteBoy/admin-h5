@@ -1,5 +1,6 @@
 <template>
   <div class="view-container">
+
     <!--面包屑导航-->
     <div class="row breadcrumb-container">
       <el-breadcrumb separator="/">
@@ -9,9 +10,9 @@
 
     <!-- 操作按钮 -->
     <div class="row ope-container">
-      <el-button type="primary" icon="el-icon-refresh" size="small" @click="refreshRoleList()">刷新</el-button>
+      <el-button type="primary" icon="el-icon-refresh" size="small" @click="getRoleData()">刷新</el-button>
       <el-button type="success" size="small" @click="addRole()">新增</el-button>
-      <Search v-on:search="searchRoleData()"></Search>
+      <Search v-on:search="getRoleData()"></Search>
     </div>
     <!-- 数据列表 -->
     <div class="row">
@@ -49,7 +50,7 @@
 
     <!-- 新增角色弹窗 -->
     <el-dialog title="新增角色" :visible.sync="addRoleDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="120px" :model="addRoleData" ref="addRoleData ">
+      <el-form label-position="left" label-width="120px" :model="addRoleData">
         <el-form-item label="角色标识" prop="code">
           <el-input v-model="addRoleData.code "></el-input>
         </el-form-item>
@@ -74,8 +75,7 @@
 
     <!-- 编辑角色弹窗 -->
     <el-dialog title="编辑角色" :visible.sync="editRoleDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="120px " :model="editRoleData" ref="editRoleData">
-
+      <el-form label-position="left" label-width="120px " :model="editRoleData">
         <el-form-item label="标识" prop="code">
           <el-input v-model="editRoleData.code"></el-input>
         </el-form-item>
@@ -103,7 +103,7 @@
 
     <!-- 添加角色菜单 -->
     <el-dialog title="添加菜单" class="edit-role-permission" :visible.sync="editRoleMenuDialogVisible" width="30%" :before-close="handleClose" ref="multipleTable">
-      <el-tree node-key="id" default-expand-all :expand-on-click-node="false" :data="menuList" :props="defaultProps" show-checkbox :default-checked-keys="roleMenuData"  ref="tree">
+      <el-tree node-key="id" default-expand-all :expand-on-click-node="false" :data="menuList" :props="defaultProps" show-checkbox :default-checked-keys="roleMenuData" ref="tree">
       </el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="editRoleMenuDialogVisible = false">取 消</el-button>
@@ -114,6 +114,9 @@
 </template>
 <script>
 import Search from './Commen/Search.vue'
+import roleService from '../../service/roleService.js'
+import permissionService from '../../service/permissionService.js'
+import menuService from '../../service/menuService.js'
 export default {
   name: 'Role',
   data() {
@@ -145,18 +148,43 @@ export default {
       roleData: [],
       // 表格最大高度
       tabMaxHeight: 0,
-      editRolePermissionDialogVisible: false,
-      permissionData: [],
-      rolePermissionData: [],
+      // 当前角色Id
       currentRoleId: '',
+
+      // 角色权限弹窗
+      editRolePermissionDialogVisible: false,
+      // 权限列表
+      permissionData: [],
+      // 角色已有权限列表
+      rolePermissionData: [],
+
+      //角色菜单弹窗
+      editRoleMenuDialogVisible: false,
+      // 菜单列表
       menuList: [],
       // 初始化树属性值
       defaultProps: {
         children: 'children',
         label: 'name'
       },
-      editRoleMenuDialogVisible: false,
-      roleMenuData: []
+      // 角色已有菜单
+      roleMenuData: [],
+      rolePath: {
+        getPath: '/role/page',
+        addPath: '/role/add',
+        delPath: '/role/delete',
+        editPath: '/role/update',
+        searchPermisssionPath: '/role/authorities',
+        addPermisssionPath: '/role/config/authorities',
+        searchMenuPath: '/role/menu',
+        addMenuPath: '/role/config/menu'
+      },
+      permissionPath: {
+        getPath: '/authority/page'
+      },
+      menuPath: {
+        getPath: '/menu/all'
+      }
     }
   },
   computed: {
@@ -174,42 +202,34 @@ export default {
   methods: {
     //  获取数据
     getRoleData() {
-      this.$store
-        .dispatch('getRoleData', {
+      roleService
+        .getRoleData(this.rolePath.getPath, {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
           name: this.searchId
         })
         .then(res => {
-          this.roleData = res.data.list
-          this.totalSize = res.data.total
+          let result = res.data
+          this.roleData = result.data.list
+          this.totalSize = result.data.total
           let clientHieght = document.body.clientHeight
           this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
         })
     },
-    // 刷新数据
-    refreshRoleList() {
-      this.getRoleData()
-    },
-    // 搜索数据
-    searchRoleData() {
-      this.getRoleData()
-    },
     //  新增
     addRole() {
+      this.addRoleData = {
+        code: '',
+        name: ''
+      }
       this.addRoleDialogVisible = true
     },
     // 新增请求
-    submitAddRole(formName) {
+    submitAddRole() {
       this.addRoleDialogVisible = false
-      this.$store
-        .dispatch('addRoleData', this.addRoleData)
-        .then(res => {
-          this.getRoleData()
-        })
-        .catch(err => {
-          throw err
-        })
+      roleService.addRoleData(this.rolePath.addPath, this.addRoleData).then(res => {
+        this.getRoleData()
+      })
     },
     // 删除
     delRoleItem(row) {
@@ -219,15 +239,12 @@ export default {
     // 删除请求
     submitDelRole() {
       this.delRoleDialogVisible = false
-      this.$store
-        .dispatch('delRoleData', {
+      roleService
+        .delRoleData(this.rolePath.delPath, {
           id: this.delRoleId
         })
         .then(res => {
           this.getRoleData()
-        })
-        .catch(err => {
-          throw err
         })
     },
     // 编辑
@@ -240,35 +257,32 @@ export default {
     // 编辑请求
     submitEditRole() {
       this.editRoleDialogVisible = false
-      this.$store
-        .dispatch('updateRoleData', this.editRoleData)
-        .then(res => {
-          this.getRoleData()
-        })
-        .catch(err => {
-          throw err
-        })
+      roleService.updateRoleData(this.rolePath.editPath, this.editRoleData).then(res => {
+        this.getRoleData()
+      })
     },
     // 添加角色权限
     addRolePermission(row) {
       this.currentRoleId = row.id
       this.editRolePermissionDialogVisible = true
-      this.$store.dispatch('getPermissionData', {}).then(res => {
-        this.permissionData = res.data.list
+      // 获取权限列表
+      permissionService.getPermissionData(this.permissionPath.getPath, {}).then(res => {
+        this.permissionData = res.data.data.list
       })
-      this.$store
-        .dispatch('searchRolePermission', {
+      // 获取角色已有权限列表
+      roleService
+        .searchRolePermission(this.rolePath.searchPermisssionPath, {
           roleId: this.currentRoleId
         })
         .then(res => {
-          this.rolePermissionData = res.data
+          this.rolePermissionData = res.data.data
         })
     },
     // 添加角色权限请求
     submitEditRolePermission() {
       this.editRolePermissionDialogVisible = false
-      this.$store
-        .dispatch('addRolePermission', {
+      roleService
+        .addRolePermission(this.rolePath.addPermisssionPath, {
           roleId: this.currentRoleId,
           authorityIds: this.rolePermissionData
         })
@@ -280,21 +294,24 @@ export default {
     addRoleMenu(row) {
       this.currentRoleId = row.id
       this.editRoleMenuDialogVisible = true
-      this.$store.dispatch('getMenuList').then(res => {
-        this.menuList = res.data
+      // 获取菜单列表
+      menuService.getMenuList(this.menuPath.getPath, {}).then(res => {
+        this.menuList = res.data.data
       })
-      this.$store
-        .dispatch('searchRoleMenu', {
+      // 获取角色已有菜单
+      roleService
+        .searchRoleMenu(this.rolePath.searchMenuPath, {
           roleId: this.currentRoleId
         })
         .then(res => {
-          this.roleMenuData = res.data
+          this.roleMenuData = res.data.data
         })
     },
-    submitEditRoleMenu(){
+    // 添加角色菜单请求
+    submitEditRoleMenu() {
       this.editRoleMenuDialogVisible = false
-      this.$store
-        .dispatch('addRoleMenu', {
+      roleService
+        .addRoleMenu(this.rolePath.addMenuPath, {
           roleId: this.currentRoleId,
           menuIds: this.$refs.tree.getCheckedKeys()
         })
@@ -318,16 +335,6 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.getRoleData()
-    }
-  },
-  watch: {
-    addRoleDialogVisible() {
-      if (!this.addRoleDialogVisible) {
-        this.addRoleData = {
-          code: '',
-          name: ''
-        }
-      }
     }
   }
 }

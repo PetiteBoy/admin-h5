@@ -1,6 +1,6 @@
 <template>
   <el-aside width="250px">
-    <el-menu default-active="1" :router="true" :unique-opened="true">
+    <el-menu default-active="1" :router="true" :unique-opened="true" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
       <el-submenu v-for="aside in asideList" :key="aside.id" :index="aside.name">
         <template slot="title">
           <span>{{aside.name}}</span>
@@ -13,11 +13,22 @@
   </el-aside>
 </template>
 <script>
+import menuService from '../service/menuService.js'
 export default {
   name: 'Aside',
-  computed: {
-    asideList() {
-      return this.$store.state.aside.asideList
+  data() {
+    return {
+      asideList: []
+    }
+  },
+  mounted() {
+    this.getUserMenu()
+  },
+  methods: {
+    getUserMenu() {
+      menuService.getUserMenu().then(res => {
+        this.asideList = res.data.data
+      })
     }
   }
 }
@@ -26,7 +37,7 @@ export default {
 .el-aside {
   height: 100%;
   overflow: auto;
-  background: #ffffff;
+  background: #545c64;
 }
 </style>
 

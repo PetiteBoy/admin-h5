@@ -14,6 +14,16 @@ import Log from '@/components/User/Log.vue'
 
 // 视频管理
 import VideoList from '@/components/Video/VideoList'
+import VideoDetail from '@/components/Video/VideoDetail'
+import VideoCategory from '@/components/Video/VideoCategory'
+import VideoSetCbEdu from '@/components/Video/VideoSetCbEdu'
+import VideoSetMarkEdu from '@/components/Video/VideoSetMarkEdu'
+import AnnouncementSet from '@/components/Video/AnnouncementSet'
+
+
+// 驾驶人
+import DriverList from '@/components/Driver/List'
+
 
 
 
@@ -33,6 +43,27 @@ export default new Router({
           path: '/',
           name: 'home',
           component: Home
+        }, {
+          path: '/driver/list',
+          component: DriverList
+        }, {
+          path: '/video/list',
+          component: VideoList
+        }, {
+          path: '/video/detail',
+          component: VideoDetail
+        }, {
+          path: '/video/catgeory',
+          component: VideoCategory
+        }, {
+          path: '/video/cb-edu',
+          component: VideoSetCbEdu
+        }, {
+          path: '/video/mark-edu',
+          component: VideoSetMarkEdu
+        }, {
+          path: '/video/announcement',
+          component: AnnouncementSet
         }, {
           path: '/user/admin',
           name: 'admin',

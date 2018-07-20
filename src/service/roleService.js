@@ -8,9 +8,9 @@ class RoleService {
 
 
 
-  getRoleData(params) {
+  getRoleData(path, params) {
     return axios({
-      url: `${config.service.host}/role/page`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -19,9 +19,9 @@ class RoleService {
     })
   }
 
-  addRoleData(params) {
+  addRoleData(path, params) {
     return axios({
-      url: `${config.service.host}/role/add`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -30,9 +30,9 @@ class RoleService {
     })
   }
 
-  delRoleData(params) {
+  delRoleData(path, params) {
     return axios({
-      url: `${config.service.host}/role/delete`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -41,9 +41,9 @@ class RoleService {
     })
   }
 
-  updateRoleData(params) {
+  updateRoleData(path, params) {
     return axios({
-      url: `${config.service.host}/role/update`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -52,9 +52,9 @@ class RoleService {
     })
   }
 
-  searchRolePermission(params) {
+  searchRolePermission(path, params) {
     return axios({
-      url: `${config.service.host}/role/authorities`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -63,9 +63,9 @@ class RoleService {
     })
   }
 
-  addRolePermission(params) {
+  addRolePermission(path, params) {
     return axios({
-      url: `${config.service.host}/role/config/authorities`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -75,9 +75,9 @@ class RoleService {
   }
 
 
-  searchRoleMenu(params) {
+  searchRoleMenu(path, params) {
     return axios({
-      url: `${config.service.host}/role/menu`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -86,9 +86,9 @@ class RoleService {
     })
   }
 
-  addRoleMenu(params) {
+  addRoleMenu(path, params) {
     return axios({
-      url: `${config.service.host}/role/config/menu`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')

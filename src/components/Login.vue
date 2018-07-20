@@ -36,8 +36,9 @@
     </div>
   </div>
 </template>
-
 <script>
+import { setSessionStorage } from '../utils/base.js'
+import loginService from '../service/loginService.js'
 export default {
   data() {
     return {
@@ -52,24 +53,16 @@ export default {
     //  用户登录
     login() {
       if (this.loginData.username && this.loginData.password) {
-        this.$store
-          .dispatch('login', this.loginData)
+        loginService
+          .login(this.loginData)
           .then(res => {
-            if (res.status === '0x0000') {
-              this.$router.push('/bm')
-            } else {
-              this.$message({
-                showClose: true,
-                message: res.message,
-                type: 'warning'
-              })
-            }
+            setSessionStorage('authKey', res.data.data.authKey)
+            this.$router.push('/bm')
           })
           .catch(err => {
-            console.log(err)
             this.$message({
               showClose: true,
-              message: '服务异常请重试',
+              message: err,
               type: 'warning'
             })
           })

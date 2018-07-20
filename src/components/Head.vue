@@ -7,6 +7,7 @@
 
 <script>
 import { removeSessionStorage } from '../utils/base.js'
+import loginService from '../service/loginService.js'
 export default {
   name: '',
   data() {
@@ -19,8 +20,8 @@ export default {
   },
   methods: {
     getUserInfo() {
-      this.$store.dispatch('loginInfo').then(res => {
-        this.realname = res.data.realname
+      loginService.loginInfo().then(res => {
+        this.realname = res.data.data.realname
       })
     },
     logout() {

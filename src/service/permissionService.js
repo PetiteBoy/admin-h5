@@ -8,9 +8,9 @@ import {
 class PermissionService {
 
 
-  getPermissionData(params) {
+  getPermissionData(path, params) {
     return axios({
-      url: `${config.service.host}/authority/page`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -19,9 +19,9 @@ class PermissionService {
     })
   }
 
-  addPermissionData(params) {
+  addPermissionData(path, params) {
     return axios({
-      url: `${config.service.host}/authority/add`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -30,9 +30,9 @@ class PermissionService {
     })
   }
 
-  delPermissionData(id) {
+  delPermissionData(path, id) {
     return axios({
-      url: `${config.service.host}/authority/delete?id=${id}`,
+      url: `${config.service.host}${path}?id=${id}`,
       method: 'get',
       headers: {
         authKey: getSessionStorage('authKey')
@@ -40,9 +40,9 @@ class PermissionService {
     })
   }
 
-  updatePermissionData(params) {
+  updatePermissionData(path, params) {
     return axios({
-      url: `${config.service.host}/authority/update`,
+      url: `${config.service.host}${path}`,
       method: 'post',
       headers: {
         authKey: getSessionStorage('authKey')
