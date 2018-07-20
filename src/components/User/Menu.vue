@@ -66,7 +66,7 @@
 <script>
 import menuService from '../../service/menuService.js'
 export default {
-  name: 'menu',
+  name: 'menu-list',
   data() {
     return {
       // 初始化树属性值

@@ -13,18 +13,22 @@ import Menu from '@/components/User/Menu.vue'
 import Log from '@/components/User/Log.vue'
 
 // 视频管理
-import VideoList from '@/components/Video/VideoList'
-import VideoDetail from '@/components/Video/VideoDetail'
-import VideoCategory from '@/components/Video/VideoCategory'
-import VideoSetCbEdu from '@/components/Video/VideoSetCbEdu'
-import VideoSetMarkEdu from '@/components/Video/VideoSetMarkEdu'
-import AnnouncementSet from '@/components/Video/AnnouncementSet'
+import VideoList from '@/components/Video/List'
+import VideoDetail from '@/components/Video/Detail'
+import VideoCategory from '@/components/Video/Category'
 
 
-// 驾驶人
+// 驾驶人管理
 import DriverList from '@/components/Driver/List'
+import DriverDetail from '@/components/Driver/Detail'
+import DriverBlack from '@/components/Driver/BlackList'
 
+// 试题管理
+import QuestionList from '@/components/Question/List'
+import QuestionCategory from '@/components/Question/Category'
 
+// 预约管理
+import BookList from '@/components/Book/List'
 
 
 Vue.use(Router)
@@ -44,8 +48,23 @@ export default new Router({
           name: 'home',
           component: Home
         }, {
+          path: '/book/list',
+          component: BookList
+        }, {
+          path: '/question/category',
+          component: QuestionCategory
+        }, {
+          path: '/question/list',
+          component: QuestionList
+        }, {
           path: '/driver/list',
           component: DriverList
+        }, {
+          path: '/driver/detail',
+          component: DriverDetail
+        }, {
+          path: '/driver/black',
+          component: DriverBlack
         }, {
           path: '/video/list',
           component: VideoList
@@ -53,17 +72,8 @@ export default new Router({
           path: '/video/detail',
           component: VideoDetail
         }, {
-          path: '/video/catgeory',
+          path: '/video/category',
           component: VideoCategory
-        }, {
-          path: '/video/cb-edu',
-          component: VideoSetCbEdu
-        }, {
-          path: '/video/mark-edu',
-          component: VideoSetMarkEdu
-        }, {
-          path: '/video/announcement',
-          component: AnnouncementSet
         }, {
           path: '/user/admin',
           name: 'admin',

@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+
     <!-- 头部 -->
 
     <Head></Head>
@@ -43,7 +44,7 @@ export default {
     $route: function() {
       let pageId = this.$route.query.pageId
       if (pageId) {
-        this.getBtnList(pageId)
+        // this.getBtnList(pageId)
       }
     }
   }
