@@ -108,8 +108,7 @@
 <script>
 import Search from './Commen/Search.vue'
 import { apiStatusFn } from '../../utils/base.js'
-import permissionService from '../../service/permissionService.js'
-import menuService from '../../service/menuService.js'
+import baseService from '../../service/baseService.js'
 
 export default {
   name: 'permission',
@@ -174,8 +173,8 @@ export default {
   methods: {
     //  获取数据
     getPermissionData() {
-      permissionService
-        .getPermissionData(this.permissionPath.getPath, {
+      baseService
+        .basePostData(this.permissionPath.getPath, {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
           name: this.searchId
@@ -199,8 +198,8 @@ export default {
       }
       this.addPermissionDialogVisible = true
       // 获取叶子节点数据
-      menuService
-        .getAllLeaf(this.menuPath.allLeafPath)
+      baseService
+        .basePostData(this.menuPath.allLeafPath)
         .then(res => {
           let result = res.data.data
           this.allLeafData = result
@@ -212,7 +211,7 @@ export default {
     // 新增请求
     submitAddPermission(formName) {
       this.addPermissionDialogVisible = false
-      permissionService.addPermissionData(this.permissionPath.getPath, this.addPermissionData).then(res => {
+      baseService.basePostData(this.permissionPath.getPath, this.addPermissionData).then(res => {
         this.getPermissionData()
       })
     },
@@ -224,7 +223,7 @@ export default {
     // 删除请求
     submitDelPermission() {
       this.delPermissionDialogVisible = false
-      permissionService.delPermissionData(this.permissionPath.delPath, this.delPermissionId).then(res => {
+      baseService.baseGetData(this.permissionPath.delPath, this.delPermissionId).then(res => {
         this.getPermissionData()
       })
     },
@@ -236,8 +235,8 @@ export default {
       this.editPermissionData.action = row.action
       this.editPermissionDialogVisible = true
       // 获取叶子节点数据
-      menuService
-        .getAllLeaf(this.menuPath.allLeafPath)
+      baseService
+        .basePostData(this.menuPath.allLeafPath)
         .then(res => {
           let result = res.data.data
           this.allLeafData = result
@@ -249,7 +248,7 @@ export default {
     // 编辑请求
     submitEditPermission() {
       this.editPermissionDialogVisible = false
-      permissionService.updatePermissionData(this.permissionPath.editPath, this.editPermissionData).then(res => {
+      baseService.basePostData(this.permissionPath.editPath, this.editPermissionData).then(res => {
         this.getPermissionData()
       })
     },

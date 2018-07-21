@@ -16,19 +16,22 @@
         <!-- 数据列表 -->
         <div class="row data-container">
             <el-table :data="videoDate" border style="width: 100%" :max-height="tabMaxHeight">
-                <el-table-column label="ID" prop="">
+                <el-table-column label="ID" prop="id">
                 </el-table-column>
-                <el-table-column label="所属分类" prop="">
+                <el-table-column label="所属分类" prop="categoryId">
                 </el-table-column>
-                <el-table-column label="视频名称" prop="">
+                <el-table-column label="视频名称" prop="categoryName">
                 </el-table-column>
-                <el-table-column label="原始文件名" prop="">
+                <el-table-column label="原始文件名" prop="originName">
                 </el-table-column>
-                <el-table-column label="视频时长" prop="">
+                <el-table-column label="视频时长" prop="duration">
+                    <template slot-scope="scope">
+                        <div>{{Math.floor(scope.row.duration/ 3600) || '00'}} : {{Math.floor((scope.row.duration / 60) % 60) || '00'}} : {{Math.floor(scope.row.duration % 60) || '00'}}</div>
+                    </template>
                 </el-table-column>
-                <el-table-column label="视频大小" prop="">
+                <el-table-column label="视频大小" prop="fileSize">
                 </el-table-column>
-                <el-table-column label="创建时间" prop="">
+                <el-table-column label="创建时间" prop="createTime">
                 </el-table-column>
                 <el-table-column label="最近修改时间" prop="">
                 </el-table-column>
@@ -51,19 +54,37 @@
 
         <!-- 新增视频弹窗 -->
         <el-dialog title="新增视频" class="add-video" :visible.sync="addVideoDialogVisible" width="30%" :before-close="handleClose">
-            <el-form label-position="left" label-width="80px" :model="addVideoData">
+            <el-form label-position="left" label-width="120px" :model="addVideoData">
                 <el-form-item label="视频分类" prop="">
-                    <el-select v-model="addVideoData.category" placeholder="请选择">
-                        <el-option v-for="item in categoryData" :key="item.name" :label="item.name" :value="item.name">
+                    <el-select v-model="addVideoData.categoryId" placeholder="请选择">
+                        <el-option v-for="item in categoryData" :key="item.name" :label="item.name" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="视频名称" prop="">
+                <el-form-item label="视频名称" prop="name">
                     <el-input v-model="addVideoData.name"></el-input>
                 </el-form-item>
-                <el-form-item label="视频简介" prop="">
-                    <el-input v-model="addVideoData.sub"></el-input>
+                <el-form-item label="视频简介" prop="introduction">
+                    <el-input v-model="addVideoData.introduction"></el-input>
                 </el-form-item>
+                <el-form-item label="上传视频" prop="">
+                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/video/upload" :on-success="handleSuccessVideo" :headers="headers">
+                        <el-button size="small" type="primary">上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="上传缩略图" prop="">
+                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :headers="headers" :on-success="handleSuccessPic">
+                        <el-button size="small" type="primary">上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="视频时长" prop="" class="video-druction">
+                    <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> ：
+                    <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> ：
+                    <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input>
+                </el-form-item>
+
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button size="small" @click="addVideoDialogVisible = false">取 消</el-button>
@@ -75,16 +96,33 @@
         <el-dialog title="编辑视频" class="add-video" :visible.sync="editVideoDialogVisible" width="30%" :before-close="handleClose">
             <el-form label-position="left" label-width="80px" :model="editVideoData">
                 <el-form-item label="视频分类" prop="">
-                    <el-select v-model="editVideoData.category" placeholder="请选择">
-                        <el-option v-for="item in categoryData" :key="item.name" :label="item.name" :value="item.name">
+                    <el-select v-model="editVideoData.categoryId" placeholder="请选择">
+                        <el-option v-for="item in categoryData" :key="item.name" :label="item.name" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="视频名称" prop="">
+                <el-form-item label="视频名称" prop="name">
                     <el-input v-model="editVideoData.name"></el-input>
                 </el-form-item>
-                <el-form-item label="视频简介" prop="">
-                    <el-input v-model="editVideoData.sub"></el-input>
+                <el-form-item label="视频简介" prop="introduction">
+                    <el-input v-model="editVideoData.introduction"></el-input>
+                </el-form-item>
+                <el-form-item label="上传视频" prop="">
+                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/video/upload" :on-success="handleSuccessVideoEdit" :headers="headers">
+                        <el-button size="small" type="primary">上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="上传缩略图" prop="">
+                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :headers="headers" :on-success="handleSuccessPicEdit">
+                        <el-button size="small" type="primary">上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="视频时长" prop="" class="video-druction">
+                    <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> ：
+                    <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> ：
+                    <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -105,73 +143,183 @@
 </template>
 
 <script>
+import baseService from '../../service/baseService.js'
+import { getSessionStorage } from '../../utils/base.js'
 export default {
   name: 'video-list',
   data() {
     return {
+      headers: {
+        authKey: getSessionStorage('authKey')
+      },
       // 视频列表
-      videoDate: [''],
+      videoDate: [],
       tabMaxHeight: 300,
 
       //   添加弹窗状态
       addVideoDialogVisible: false,
       //   添加视频数据
       addVideoData: {
-        category: '',
+        categoryId: '',
         name: '',
-        sub: ''
+        introduction: '',
+        videoToken: '',
+        thumbToken: '',
+        duration: 0
       },
       //   编辑视频弹窗
       editVideoDialogVisible: false,
       //   编辑视频数据
       editVideoData: {
-        category: '',
+        id: '',
+        categoryId: '',
         name: '',
-        sub: ''
+        introduction: '',
+        videoToken: '',
+        thumbToken: '',
+        duration: 0
+      },
+      duration: {
+        hour: '00',
+        minute: '00',
+        second: '00'
       },
       //删除视频弹窗
       delVideoDialogVisible: false,
+      //   删除视频ID
+      delVideoId: '',
       //   视频分类
-      categoryData: [
-        {
-          name: '1'
-        }
-      ]
+      categoryData: [],
+      videoPath: {
+        getPath: '/video/page',
+        addPath: '/video/add',
+        editPath: '/video/update',
+        delPath: '/video/delete'
+      },
+      categoryPath: {
+        getPath: '/category/video'
+      }
     }
+  },
+  mounted() {
+    this.getVideoDate()
   },
   methods: {
     //   获取数据
     getVideoDate() {
-      this.$store
+      baseService
+        .basePostData(this.videoPath.getPath, {
+          pageNum: this.currentPage,
+          pageSize: this.pageSize
+        })
+        .then(res => {
+          let result = res.data.data
+          this.videoDate = result.list
+          this.totalSize = result.total
+          let clientHieght = document.body.clientHeight
+          this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
+        })
     },
     //   添加视频
     addVideo() {
+      this.addVideoData = {
+        categoryId: '',
+        name: '',
+        introduction: '',
+        videoToken: '',
+        thumbToken: '',
+        duration: 0
+      }
+      this.duration = {
+        hour: '00',
+        minute: '00',
+        second: '00'
+      }
+      //获取分类列表
+      baseService.basePostData(this.categoryPath.getPath).then(res => {
+        let result = res.data.data
+        this.categoryData = result
+      })
       this.addVideoDialogVisible = true
     },
     // 添加视频请求
-    submitAddVideo() {},
+    submitAddVideo() {
+      this.addVideoData.duration = this.duration.hour * 60 * 60 + this.duration.minute * 60 + this.duration.second
+      this.addVideoDialogVisible = false
+      baseService.basePostData(this.videoPath.addPath, this.addVideoData).then(res => {
+        this.getVideoDate()
+      })
+    },
     //删除视频
-    delVideoItem() {
+    delVideoItem(row) {
+      this.delVideoId = row.id
       this.delVideoDialogVisible = true
     },
     // 删除视频请求
-    submitDelVideo() {},
+    submitDelVideo() {
+      this.delVideoDialogVisible = false
+      baseService.baseGetData(this.videoPath.delPath, this.delVideoId).then(res => {
+        this.getVideoDate()
+      })
+    },
     // 编辑视频
-    editVideoItem() {
+    editVideoItem(row) {
+      let t = row.duration
+      let h = Math.floor(t / 3600)
+      let m = Math.floor((t / 60) % 60)
+      let s = Math.floor(t % 60)
+      this.duration.hour = h < 10 ? '0' + h : h
+      this.duration.minute = m < 10 ? '0' + m : m
+      this.duration.second = s < 10 ? '0' + s : s
+
+      //获取分类列表
+      baseService.basePostData(this.categoryPath.getPath).then(res => {
+        let result = res.data.data
+        this.categoryData = result
+      })
+      this.editVideoData.id = row.id
+      this.editVideoData.categoryId = row.categoryId
+      this.editVideoData.name = row.name
+      this.editVideoData.introduction = row.introduction
+      this.editVideoData.duration = row.duration
       this.editVideoDialogVisible = true
     },
     // 编辑视频请求
-    submitEditVideo() {},
+    submitEditVideo() {
+      this.editVideoDialogVisible = false
+      baseService.basePostData(this.videoPath.editPath, this.editVideoData).then(res => {
+        this.getVideoDate()
+      })
+    },
     // 查看视频详情
-    detailVideoItem() {
-      this.$router.push('/video/detail')
+    detailVideoItem(row) {
+      this.$router.push(`/video/detail?id=${row.id}`)
     },
     // 关闭弹窗
     handleClose() {
       this.addVideoDialogVisible = false
       this.editVideoDialogVisible = false
       this.delVideoDialogVisible = false
-    }
+    },
+    handleSuccessVideo(val) {
+      this.addVideoData.videoToken = val.data.token
+    },
+    handleSuccessPic(val) {
+      this.addVideoData.thumbToken = val.data.token
+    },
+    handleSuccessVideoEdit(val) {
+      this.editVideoData.videoToken = val.data.token
+    },
+    handleSuccessPicEdit(val) {
+      this.editVideoData.thumbToken = val.data.token
+    },
+    keydownh() {
+      if (!isNaN(this.duration.hour)) {
+        alert(1)
+      }
+    },
+    keydownm() {},
+    keydowns() {}
   }
 }
 </script>
@@ -179,6 +327,15 @@ export default {
 <style>
 .add-video .el-select {
   width: 100%;
+}
+.view-container .el-upload__tip {
+  line-height: 14px;
+}
+.video-druction .el-input {
+  width: 40px;
+}
+.video-druction .el-input__inner {
+  padding: 2px;
 }
 </style>
 

@@ -94,14 +94,14 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  background: url('./img/login.jpg') no-repeat;
+  background: url('../assets/login.jpg') no-repeat;
   background-size: cover;
 }
 #login #owl-login,
 #register #owl-login {
   width: 211px;
   height: 108px;
-  background: url('./img/owl-login.png');
+  background: url('../assets/owl-login.png');
   position: absolute;
   top: -100px;
   left: 50%;
@@ -115,7 +115,7 @@ export default {
   (min-resolution: 1.5dppx) {
   #login #owl-login,
   #register #owl-login {
-    background: url('./img/owl-login@2x.png');
+    background: url('../assets/owl-login@2x.png');
     -webkit-background-size: 211px 108px;
     -moz-background-size: 211px 108px;
     background-size: 211px 108px;
@@ -177,7 +177,7 @@ export default {
   position: absolute;
   left: 20px;
   top: 40px;
-  background: url('./img/owl-login-arm.png');
+  background: url('../assets/owl-login-arm.png');
   -webkit-transition: 0.3s ease-out;
   -moz-transition: 0.3s ease-out;
   -o-transition: 0.3s ease-out;
@@ -197,7 +197,7 @@ export default {
   (min-resolution: 1.5dppx) {
   #login #owl-login .arms .arm,
   #register #owl-login .arms .arm {
-    background: url('./img/owl-login-arm@2x.png');
+    background: url('../assets/owl-login-arm@2x.png');
     -webkit-background-size: 40px 65px;
     -moz-background-size: 40px 65px;
     background-size: 40px 65px;

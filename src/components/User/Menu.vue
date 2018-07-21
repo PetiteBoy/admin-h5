@@ -64,7 +64,7 @@
   </div>
 </template>
 <script>
-import menuService from '../../service/menuService.js'
+import baseService from '../../service/baseService.js'
 export default {
   name: 'menu-list',
   data() {
@@ -115,7 +115,7 @@ export default {
   methods: {
     // 获取数据
     getMenu() {
-      menuService.getMenuList(this.menuPath.getPath, {}).then(res => {
+      baseService.basePostData(this.menuPath.getPath, {}).then(res => {
         this.menuList = res.data.data
       })
     },
@@ -134,7 +134,7 @@ export default {
     // 添加请求
     submitAddmenu() {
       this.addMenuDialogVisible = false
-      menuService.addMenu(this.menuPath.addPath, this.addMenu).then(res => {
+      baseService.basePostData(this.menuPath.addPath, this.addMenu).then(res => {
         this.getMenu()
       })
     },
@@ -149,7 +149,7 @@ export default {
     // 编辑请求
     submitEditmenu() {
       this.editMenuDialogVisible = false
-      menuService.editMenu(this.menuPath.editPath, this.editMenu).then(res => {
+      baseService.basePostData(this.menuPath.editPath, this.editMenu).then(res => {
         this.getMenu()
       })
     },
@@ -162,13 +162,9 @@ export default {
     submitDelmenu() {
       this.delMenuDialogVisible = false
       let path = ''
-      menuService
-        .delMenu(this.menuPath.delPath, {
-          id: this.delMenuId
-        })
-        .then(res => {
-          this.getMenu()
-        })
+      baseService.baseGetData(this.menuPath.delPath, this.delMenuId).then(res => {
+        this.getMenu()
+      })
     },
     // 关闭弹窗
     handleClose() {

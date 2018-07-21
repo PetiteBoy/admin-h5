@@ -13,12 +13,13 @@
   </el-aside>
 </template>
 <script>
-import menuService from '../service/menuService.js'
+import baseService from '../service/baseService.js'
 export default {
   name: 'Aside',
   data() {
     return {
-      asideList: []
+      asideList: [],
+      path: '/bguser/menu'
     }
   },
   mounted() {
@@ -26,7 +27,7 @@ export default {
   },
   methods: {
     getUserMenu() {
-      menuService.getUserMenu().then(res => {
+      baseService.basePostData(this.path).then(res => {
         this.asideList = res.data.data
       })
     }

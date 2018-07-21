@@ -114,9 +114,7 @@
 </template>
 <script>
 import Search from './Commen/Search.vue'
-import roleService from '../../service/roleService.js'
-import permissionService from '../../service/permissionService.js'
-import menuService from '../../service/menuService.js'
+import baseService from '../../service/baseService.js'
 export default {
   name: 'Role',
   data() {
@@ -202,8 +200,8 @@ export default {
   methods: {
     //  获取数据
     getRoleData() {
-      roleService
-        .getRoleData(this.rolePath.getPath, {
+      baseService
+        .basePostData(this.rolePath.getPath, {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
           name: this.searchId
@@ -227,7 +225,7 @@ export default {
     // 新增请求
     submitAddRole() {
       this.addRoleDialogVisible = false
-      roleService.addRoleData(this.rolePath.addPath, this.addRoleData).then(res => {
+      baseService.basePostData(this.rolePath.addPath, this.addRoleData).then(res => {
         this.getRoleData()
       })
     },
@@ -239,13 +237,9 @@ export default {
     // 删除请求
     submitDelRole() {
       this.delRoleDialogVisible = false
-      roleService
-        .delRoleData(this.rolePath.delPath, {
-          id: this.delRoleId
-        })
-        .then(res => {
-          this.getRoleData()
-        })
+      baseService.baseGetData(this.rolePath.delPath, this.delRoleId).then(res => {
+        this.getRoleData()
+      })
     },
     // 编辑
     editRoleItem(row) {
@@ -257,7 +251,7 @@ export default {
     // 编辑请求
     submitEditRole() {
       this.editRoleDialogVisible = false
-      roleService.updateRoleData(this.rolePath.editPath, this.editRoleData).then(res => {
+      baseService.basePostData(this.rolePath.editPath, this.editRoleData).then(res => {
         this.getRoleData()
       })
     },
@@ -266,12 +260,12 @@ export default {
       this.currentRoleId = row.id
       this.editRolePermissionDialogVisible = true
       // 获取权限列表
-      permissionService.getPermissionData(this.permissionPath.getPath, {}).then(res => {
+      baseService.basePostData(this.permissionPath.getPath, {}).then(res => {
         this.permissionData = res.data.data.list
       })
       // 获取角色已有权限列表
-      roleService
-        .searchRolePermission(this.rolePath.searchPermisssionPath, {
+      baseService
+        .basePostData(this.rolePath.searchPermisssionPath, {
           roleId: this.currentRoleId
         })
         .then(res => {
@@ -281,8 +275,8 @@ export default {
     // 添加角色权限请求
     submitEditRolePermission() {
       this.editRolePermissionDialogVisible = false
-      roleService
-        .addRolePermission(this.rolePath.addPermisssionPath, {
+      baseService
+        .basePostData(this.rolePath.addPermisssionPath, {
           roleId: this.currentRoleId,
           authorityIds: this.rolePermissionData
         })
@@ -295,12 +289,12 @@ export default {
       this.currentRoleId = row.id
       this.editRoleMenuDialogVisible = true
       // 获取菜单列表
-      menuService.getMenuList(this.menuPath.getPath, {}).then(res => {
+      baseService.basePostData(this.menuPath.getPath, {}).then(res => {
         this.menuList = res.data.data
       })
       // 获取角色已有菜单
-      roleService
-        .searchRoleMenu(this.rolePath.searchMenuPath, {
+      baseService
+        .basePostData(this.rolePath.searchMenuPath, {
           roleId: this.currentRoleId
         })
         .then(res => {
@@ -310,8 +304,8 @@ export default {
     // 添加角色菜单请求
     submitEditRoleMenu() {
       this.editRoleMenuDialogVisible = false
-      roleService
-        .addRoleMenu(this.rolePath.addMenuPath, {
+      baseService
+        .basePostData(this.rolePath.addMenuPath, {
           roleId: this.currentRoleId,
           menuIds: this.$refs.tree.getCheckedKeys()
         })

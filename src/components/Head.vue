@@ -21,7 +21,7 @@ export default {
   methods: {
     getUserInfo() {
       loginService.loginInfo().then(res => {
-        this.realname = res.data.data.realname
+        this.realname = res.data.realname
       })
     },
     logout() {

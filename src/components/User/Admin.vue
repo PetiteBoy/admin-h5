@@ -157,10 +157,7 @@
 <script>
 import Search from './Commen/Search.vue'
 import moment from 'moment'
-import adminService from '../../service/adminService.js'
-import permissionService from '../../service/permissionService.js'
-import roleService from '../../service/roleService.js'
-import menuService from '../../service/menuService.js'
+import baseService from '../../service/baseService.js'
 export default {
   name: 'Admin',
   data() {
@@ -269,8 +266,8 @@ export default {
     },
     //  获取数据
     getAdminData() {
-      adminService
-        .getAdminData(this.adminPath.getPath, {
+      baseService
+        .basePostData(this.adminPath.getPath, {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
           name: this.searchId
@@ -298,7 +295,7 @@ export default {
     // 新增请求
     submitAddAdmin(formName) {
       this.addAdminDialogVisible = false
-      adminService.addAdminData(this.adminPath.addPath, this.addAdminData).then(res => {
+      baseService.basePostData(this.adminPath.addPath, this.addAdminData).then(res => {
         this.getAdminData()
       })
     },
@@ -310,13 +307,9 @@ export default {
     // 删除请求
     submitDelAdmin() {
       this.delAdminDialogVisible = false
-      adminService
-        .delAdminData(this.adminPath.delPath, {
-          id: this.delAdminId
-        })
-        .then(res => {
-          this.getAdminData()
-        })
+      baseService.baseGetData(this.adminPath.delPath, this.delAdminId).then(res => {
+        this.getAdminData()
+      })
     },
     // 编辑
     editAdminItem(row) {
@@ -330,7 +323,7 @@ export default {
     },
     // 编辑请求
     submitEditAdmin() {
-      adminService.updateAdminData(this.adminPath.editPath, this.editAdminData).then(res => {
+      baseService.basePostData(this.adminPath.editPath, this.editAdminData).then(res => {
         this.getAdminData()
       })
       this.editAdminDialogVisible = false
@@ -340,12 +333,12 @@ export default {
       this.currentAdminId = row.id
       this.editAdminPermissionDialogVisible = true
       // 获取权限列表
-      permissionService.getPermissionData(this.permissionPath.getPath, {}).then(res => {
+      baseService.basePostData(this.permissionPath.getPath, {}).then(res => {
         this.permissionData = res.data.data.list
       })
       //用户已有权限
-      adminService
-        .searchAdminPermission(this.adminPath.searchPermissionPath, {
+      baseService
+        .basePostData(this.adminPath.searchPermissionPath, {
           userId: this.currentAdminId
         })
         .then(res => {
@@ -355,8 +348,8 @@ export default {
     // 用户权限请求
     submitEditAdminPermission() {
       this.editAdminPermissionDialogVisible = false
-      adminService
-        .addAdminPermission(this.adminPath.addPermissionPath, {
+      baseService
+        .basePostData(this.adminPath.addPermissionPath, {
           userId: this.currentAdminId,
           authorityIds: this.adminPermissionData
         })
@@ -369,12 +362,12 @@ export default {
       this.currentAdminId = row.id
       this.editAdminRoleDialogVisible = true
       // 获取角色列表
-      roleService.getRoleData(this.rolePath.getPath, {}).then(res => {
+      baseService.basePostData(this.rolePath.getPath, {}).then(res => {
         this.roleData = res.data.data.list
       })
       // 获取用户角色
-      adminService
-        .searchAdminRole(this.adminPath.searchRolePath, {
+      baseService
+        .basePostData(this.adminPath.searchRolePath, {
           userId: this.currentAdminId
         })
         .then(res => {
@@ -384,8 +377,8 @@ export default {
     // 用户角色 请求
     submitEditAdminRole() {
       this.editAdminRoleDialogVisible = false
-      adminService
-        .addAdminRole(this.adminPath.addRolePath, {
+      baseService
+        .basePostData(this.adminPath.addRolePath, {
           userId: this.currentAdminId,
           roleIds: this.adminRoleData
         })
@@ -398,12 +391,12 @@ export default {
       this.currentAdminId = row.id
       this.editAdminMenuDialogVisible = true
       // 获取菜单列表
-      menuService.getMenuList(this.menuPath.getPath, {}).then(res => {
+      baseService.basePostData(this.menuPath.getPath, {}).then(res => {
         this.menuList = res.data.data
       })
       // 用户已有菜单
-      adminService
-        .searchAdminMenu(this.adminPath.searchMenuPath, {
+      baseService
+        .basePostData(this.adminPath.searchMenuPath, {
           userId: this.currentAdminId
         })
         .then(res => {
@@ -413,8 +406,8 @@ export default {
     // 用户菜单请求
     submitEditAdminMenu() {
       this.editAdminMenuDialogVisible = false
-      adminService
-        .addAdminMenu(this.adminPath.addMenuPath, {
+      baseService
+        .basePostData(this.adminPath.addMenuPath, {
           userId: this.currentAdminId,
           menuIds: this.$refs.tree.getCheckedKeys()
         })
