@@ -18,9 +18,9 @@
             <el-table :data="videoDate" border style="width: 100%" :max-height="tabMaxHeight">
                 <el-table-column label="ID" prop="id">
                 </el-table-column>
-                <el-table-column label="所属分类" prop="categoryId">
+                <el-table-column label="所属分类" prop="categoryName">
                 </el-table-column>
-                <el-table-column label="视频名称" prop="categoryName">
+                <el-table-column label="视频名称" prop="name">
                 </el-table-column>
                 <el-table-column label="原始文件名" prop="originName">
                 </el-table-column>
