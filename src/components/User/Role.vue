@@ -22,20 +22,27 @@
         <el-table-column label="名称" prop="name">
         </el-table-column>
         <el-table-column label="创建时间 " prop="createTime">
+          <template slot-scope="scope">
+            <div>{{moment(scope.row.createTime)}}</div>
+          </template>
         </el-table-column>
         <el-table-column label="最近修改时间 " prop="updateTime">
+          <template slot-scope="scope">
+            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+          </template>
         </el-table-column>
         <el-table-column label="操作 " width="300">
           <template slot-scope="scope ">
-            <el-button type="danger " size="mini " @click="delRoleItem(scope.row) ">
-              <i class="el-icon-delete "></i>
-            </el-button>
+
             <el-button type="primary " size="mini " @click="editRoleItem(scope.row) ">
               <i class="el-icon-edit "></i>
             </el-button>
             <el-button type="primary " size="mini " @click="addRolePermission(scope.row) ">权限
             </el-button>
             <el-button type="primary " size="mini " @click="addRoleMenu(scope.row) ">菜单
+            </el-button>
+            <el-button type="danger " size="mini " @click="delRoleItem(scope.row) ">
+              <i class="el-icon-delete "></i>
             </el-button>
           </template>
         </el-table-column>
@@ -114,6 +121,7 @@
 </template>
 <script>
 import Search from './Commen/Search.vue'
+import moment from 'moment'
 import baseService from '../../service/baseService.js'
 export default {
   name: 'Role',
@@ -198,6 +206,10 @@ export default {
     this.getRoleData()
   },
   methods: {
+    // 时间转化
+    moment(time) {
+      return moment(time).format('YYYY-MM-DD h:mm:ss')
+    },
     //  获取数据
     getRoleData() {
       baseService

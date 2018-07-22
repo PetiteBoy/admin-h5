@@ -26,25 +26,31 @@
                 </el-table-column>
                 <el-table-column label="视频时长" prop="duration">
                     <template slot-scope="scope">
-                        <div>{{Math.floor(scope.row.duration/ 3600) || '00'}} : {{Math.floor((scope.row.duration / 60) % 60) || '00'}} : {{Math.floor(scope.row.duration % 60) || '00'}}</div>
+                        <div>{{Math.floor((scope.row.duration/ 3600)%24)}} 时 {{Math.floor((scope.row.duration / 60) % 60)}} 分 {{Math.floor(scope.row.duration % 60) }}秒</div>
                     </template>
                 </el-table-column>
                 <el-table-column label="视频大小" prop="fileSize">
                 </el-table-column>
                 <el-table-column label="创建时间" prop="createTime">
+                    <template slot-scope="scope">
+                        <div>{{moment(scope.row.createTime)}}</div>
+                    </template>
                 </el-table-column>
-                <el-table-column label="最近修改时间" prop="">
+                <el-table-column label="最近修改时间" prop="updateTime">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+                    </template>
                 </el-table-column>
                 <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
-                        <el-button type="danger" size="mini" @click="delVideoItem(scope.row)">
-                            <i class="el-icon-delete"></i>
-                        </el-button>
                         <el-button type="primary" size="mini" @click="editVideoItem(scope.row)">
                             <i class="el-icon-edit"></i>
                         </el-button>
                         <el-button type="primary" size="mini" @click="detailVideoItem(scope.row)">
                             <i class="el-icon-tickets"></i>
+                        </el-button>
+                        <el-button type="danger" size="mini" @click="delVideoItem(scope.row)">
+                            <i class="el-icon-delete"></i>
                         </el-button>
                     </template>
                 </el-table-column>
@@ -61,10 +67,10 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="视频名称" prop="name">
+                <el-form-item label="视频名称" prop="">
                     <el-input v-model="addVideoData.name"></el-input>
                 </el-form-item>
-                <el-form-item label="视频简介" prop="introduction">
+                <el-form-item label="视频简介" prop="">
                     <el-input v-model="addVideoData.introduction"></el-input>
                 </el-form-item>
                 <el-form-item label="上传视频" prop="">
@@ -80,9 +86,9 @@
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="视频时长" prop="" class="video-druction">
-                    <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> ：
-                    <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> ：
-                    <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input>
+                    <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> 时
+                    <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> 分
+                    <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
                 </el-form-item>
 
             </el-form>
@@ -120,9 +126,9 @@
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="视频时长" prop="" class="video-druction">
-                    <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> ：
-                    <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> ：
-                    <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input>
+                    <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> 时
+                    <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> 分
+                    <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -132,11 +138,11 @@
         </el-dialog>
 
         <!-- 删除视频弹窗 -->
-        <el-dialog title="编辑视频" class="add-video" :visible.sync="delVideoDialogVisible" width="30%" :before-close="handleClose">
+        <el-dialog title="删除视频" class="add-video" :visible.sync="delVideoDialogVisible" width="30%" :before-close="handleClose">
             <span>你确认要删除该视频？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button size="small" @click="delVideoDialogVisible = false">取 消</el-button>
-                <el-button type="primary" size="small" @click="submitDelVideo()">确 定</el-button>
+                <el-button type="danger" size="small" @click="submitDelVideo()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -145,6 +151,7 @@
 <script>
 import baseService from '../../service/baseService.js'
 import { getSessionStorage } from '../../utils/base.js'
+import moment from 'moment'
 export default {
   name: 'video-list',
   data() {
@@ -154,8 +161,7 @@ export default {
       },
       // 视频列表
       videoDate: [],
-      tabMaxHeight: 300,
-
+      tabMaxHeight: 0,
       //   添加弹窗状态
       addVideoDialogVisible: false,
       //   添加视频数据
@@ -180,9 +186,9 @@ export default {
         duration: 0
       },
       duration: {
-        hour: '00',
-        minute: '00',
-        second: '00'
+        hour: 0,
+        minute: 0,
+        second: 0
       },
       //删除视频弹窗
       delVideoDialogVisible: false,
@@ -205,6 +211,10 @@ export default {
     this.getVideoDate()
   },
   methods: {
+    // 时间转化
+    moment(time) {
+      return moment(time).format('YYYY-MM-DD h:mm:ss')
+    },
     //   获取数据
     getVideoDate() {
       baseService
@@ -231,9 +241,9 @@ export default {
         duration: 0
       }
       this.duration = {
-        hour: '00',
-        minute: '00',
-        second: '00'
+        hour: 0,
+        minute: 0,
+        second: 0
       }
       //获取分类列表
       baseService.basePostData(this.categoryPath.getPath).then(res => {
@@ -264,28 +274,25 @@ export default {
     },
     // 编辑视频
     editVideoItem(row) {
-      let t = row.duration
-      let h = Math.floor(t / 3600)
+      let t = Number(row.duration)
+      let h = Math.floor((t / 3600) % 24)
       let m = Math.floor((t / 60) % 60)
       let s = Math.floor(t % 60)
-      this.duration.hour = h < 10 ? '0' + h : h
-      this.duration.minute = m < 10 ? '0' + m : m
-      this.duration.second = s < 10 ? '0' + s : s
+      this.duration.hour = h
+      this.duration.minute = m
+      this.duration.second = s
 
       //获取分类列表
       baseService.basePostData(this.categoryPath.getPath).then(res => {
         let result = res.data.data
         this.categoryData = result
       })
-      this.editVideoData.id = row.id
-      this.editVideoData.categoryId = row.categoryId
-      this.editVideoData.name = row.name
-      this.editVideoData.introduction = row.introduction
-      this.editVideoData.duration = row.duration
+      this.editVideoData = row
       this.editVideoDialogVisible = true
     },
     // 编辑视频请求
     submitEditVideo() {
+      this.editVideoData.duration = Number(this.duration.hour) * 60 * 60 + Number(this.duration.minute) * 60 + Number(this.duration.second)
       this.editVideoDialogVisible = false
       baseService.basePostData(this.videoPath.editPath, this.editVideoData).then(res => {
         this.getVideoDate()
@@ -312,14 +319,7 @@ export default {
     },
     handleSuccessPicEdit(val) {
       this.editVideoData.thumbToken = val.data.token
-    },
-    keydownh() {
-      if (!isNaN(this.duration.hour)) {
-        alert(1)
-      }
-    },
-    keydownm() {},
-    keydowns() {}
+    }
   }
 }
 </script>

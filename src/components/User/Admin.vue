@@ -33,14 +33,12 @@
         </el-table-column>
         <el-table-column label="更新时间" prop="updateTime">
           <template slot-scope="scope">
-            <div>{{moment(scope.row.updateTime)}}</div>
+            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="350">
           <template slot-scope="scope">
-            <el-button type="danger" size="mini" @click="delAdminItem(scope.row)">
-              <i class="el-icon-delete"></i>
-            </el-button>
+
             <el-button type="primary" size="mini" @click="editAdminItem(scope.row)">
               <i class="el-icon-edit"></i>
             </el-button>
@@ -49,6 +47,9 @@
             <el-button type="primary " size="mini " @click="addAdminMenu(scope.row) ">菜单
             </el-button>
             <el-button type="primary " size="mini " @click="addAdminRole(scope.row) ">角色
+            </el-button>
+            <el-button type="danger" size="mini" @click="delAdminItem(scope.row)">
+              <i class="el-icon-delete"></i>
             </el-button>
           </template>
         </el-table-column>
@@ -262,7 +263,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD')
+      return moment(time).format('YYYY-MM-DD h:mm:ss')
     },
     //  获取数据
     getAdminData() {

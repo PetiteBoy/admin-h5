@@ -34,7 +34,7 @@ export default {
   }
 }
 </script>
-<style>
+<style >
 .el-aside {
   height: 100%;
   overflow: auto;

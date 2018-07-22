@@ -21,7 +21,6 @@ import VideoCategory from '@/components/Video/Category'
 // 驾驶人管理
 import DriverList from '@/components/Driver/List'
 import DriverDetail from '@/components/Driver/Detail'
-import DriverBlack from '@/components/Driver/BlackList'
 
 // 试题管理
 import QuestionList from '@/components/Question/List'
@@ -62,9 +61,6 @@ export default new Router({
         }, {
           path: '/driver/detail',
           component: DriverDetail
-        }, {
-          path: '/driver/black',
-          component: DriverBlack
         }, {
           path: '/video/list',
           component: VideoList

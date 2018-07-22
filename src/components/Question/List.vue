@@ -1,130 +1,194 @@
 <template>
-    <div class="view-container">
-        <!--面包屑导航-->
-        <div class="row breadcrumb-container">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>试题管理</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-
-        <div class="row ope-container">
-            <div class="row base-search">
-                <el-input size="small" v-model="search.id" placeholder="请输入用户id"></el-input>
-            </div>
-            <el-button @click="add()">添加试题</el-button>
-        </div>
-
-        <!-- 数据列表 -->
-        <div class="row data-container">
-            <el-table :data="data" border style="width: 100%" :max-height="tabMaxHeight">
-                <el-table-column label="题目id" prop="id">
-                </el-table-column>
-                <el-table-column label="科目类别" prop="phone">
-                    <template slot-scope="scope">
-                        <div v-if="scope.row.subject === '1'">科目一</div>
-                        <div v-if="scope.row.subject === '4'">科目四</div>
-                    </template>
-                </el-table-column>
-                <el-table-column label="题目类型" prop="type">
-                </el-table-column>
-                <el-table-column label="题目分类" prop="licenseType">
-                    <template slot-scope="scope">
-                        <el-select size="small" v-model="categoryIds[scope.$index]" placeholder="请选择" @change="change(scope.$index,scope.row)">
-                            <el-option v-for="(item, index) in categoryDate" :key="index" :label="item.name" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="题目问题" prop="answer">
-                </el-table-column>
-                <el-table-column label="创建时间" prop="createTime">
-                </el-table-column>
-                <el-table-column label="最近修改时间" prop="updateTime">
-                </el-table-column>
-                <el-table-column label="操作" width="300">
-                    <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="detail(scope.row)">
-                            查看
-                        </el-button>
-                        <el-button type="primary" size="mini" @click="edit(scope.row)">
-                            编辑
-                        </el-button>
-                        <el-button type="primary" size="mini" @click="del(scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>s
-            </el-table>
-        </div>
-        <!-- 分页器 -->
-        <div class="row page-container">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.currentPage" :page-sizes="[10, 20]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
-            </el-pagination>
-        </div>
-
-        <!-- 添加 -->
-        <el-dialog title="添加" :visible.sync="addDialogVisible" width="30%" :before-close="handleClose">
-            <el-select size="small" v-model="addData.subject" placeholder="请选择">
-                <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
-                </el-option>
-            </el-select>
-            <el-checkbox-group v-model="addData.type">
-                <el-checkbox v-for="(item, index) in typeList" :key="index" :label="item"></el-checkbox>
-            </el-checkbox-group>
-            <el-input v-model="addData.question" placeholder="请输入题目问题"></el-input>
-            <el-input v-model="addData.item1" placeholder="请输入题目选项A（必填）"></el-input>
-            <el-input v-model="addData.item2" placeholder="请输入题目选项B（必填）"></el-input>
-            <el-input v-model="addData.item3" placeholder="请输入题目选项C"></el-input>
-            <el-input v-model="addData.item4" placeholder="请输入题目选项D"></el-input>
-            <el-select size="small" v-model="addData.answer" placeholder="请选择题目答案">
-                <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
-                </el-option>
-            </el-select>
-            <el-input v-model="addData.explains" placeholder="请输入题目详解"></el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
-                <el-button type="primary" size="small" @click="submitAdd()">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <!-- 编辑 -->
-        <el-dialog title="编辑" :visible.sync="editDialogVisible" width="30%" :before-close="handleClose">
-            <el-select size="small" v-model="editData.subject" placeholder="请选择">
-                <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
-                </el-option>
-            </el-select>
-            <el-checkbox-group v-model="editData.type">
-                <el-checkbox v-for="(item, index) in typeList" :key="index" :label="item"></el-checkbox>
-            </el-checkbox-group>
-            <el-input v-model="editData.question" placeholder="请输入题目问题"></el-input>
-            <el-input v-model="editData.item1" placeholder="请输入题目选项A（必填）"></el-input>
-            <el-input v-model="editData.item2" placeholder="请输入题目选项B（必填）"></el-input>
-            <el-input v-model="editData.item3" placeholder="请输入题目选项C"></el-input>
-            <el-input v-model="editData.item4" placeholder="请输入题目选项D"></el-input>
-            <el-select size="small" v-model="editData.answer" placeholder="请选择题目答案">
-                <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
-                </el-option>
-            </el-select>
-            <el-input v-model="editData.explains" placeholder="请输入题目详解"></el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="editDialogVisible = false">取 消</el-button>
-                <el-button type="primary" size="small" @click="submitEdit()">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <!-- 删除 -->
-        <el-dialog title="删除" :visible.sync="delDialogVisible" width="30%" :before-close="handleClose">
-            <span>确认要删除该试题？</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="delDialogVisible = false">取 消</el-button>
-                <el-button type="primary" size="small" @click="submitDel()">确 定</el-button>
-            </span>
-        </el-dialog>
+  <div class="view-container">
+    <!--面包屑导航-->
+    <div class="row breadcrumb-container">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>试题管理</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
+
+    <div class="row ope-container">
+      <div class="row base-search">
+        <el-input size="small" v-model="search.id" placeholder="请输入题目id"></el-input>
+        <el-select size="small" v-model="search.subject" placeholder="请选择科目类别">
+          <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
+          </el-option>
+        </el-select>
+        <el-select size="small" v-model="search.type" placeholder="请选择题目类型">
+          <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
+          </el-option>
+        </el-select>
+        <el-input size="small" v-model="search.question" placeholder="请输入题目关键字"></el-input>
+        <el-button size="small" type="primary" @click="getData()">搜索</el-button>
+        <el-button size="small" type="primary" @click="reset()">重置</el-button>
+        <el-button size="small" type="primary" @click="add()">添加</el-button>
+      </div>
+      <div class="row senior-search">
+        <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="请选择创建时间范围" end-placeholder="" @change="creatTimeChange" value-format="timestamp">
+        </el-date-picker>
+        <el-date-picker size="small" v-model="updateTime" type="daterange" range-separator="" start-placeholder="请选择更新时间范围" end-placeholder="" @change="updateTimeChange" value-format="timestamp">
+        </el-date-picker>
+      </div>
+    </div>
+
+    <!-- 数据列表 -->
+    <div class="row data-container">
+      <el-table :data="data" border style="width: 100%" :max-height="tabMaxHeight">
+        <el-table-column label="题目id" prop="id">
+        </el-table-column>
+        <el-table-column label="科目类别" prop="phone">
+          <template slot-scope="scope">
+            <div v-if="scope.row.subject === '1'">科目一</div>
+            <div v-if="scope.row.subject === '4'">科目四</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="题目类型" prop="type">
+        </el-table-column>
+        <el-table-column label="题目分类" prop="licenseType">
+          <template slot-scope="scope">
+            <el-select size="small" v-model="categoryIds[scope.$index]" placeholder="请选择" @change="change(scope.$index,scope.row)">
+              <el-option v-for="(item, index) in categoryDate" :key="index" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="题目问题" prop="answer">
+        </el-table-column>
+        <el-table-column label="创建时间" prop="createTime">
+          <template slot-scope="scope">
+            <div>{{moment(scope.row.createTime)}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="最近修改时间" prop="updateTime">
+          <template slot-scope="scope">
+            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="300">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="detail(scope.row)">
+              查看
+            </el-button>
+            <el-button type="primary" size="mini" @click="edit(scope.row)">
+              编辑
+            </el-button>
+            <el-button type="primary" size="mini" @click="del(scope.row)">
+              删除
+            </el-button>
+          </template>
+        </el-table-column>s
+      </el-table>
+    </div>
+    <!-- 分页器 -->
+    <div class="row page-container">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.currentPage" :page-sizes="[10, 20]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+      </el-pagination>
+    </div>
+
+    <!-- 添加 -->
+    <el-dialog title="添加" :visible.sync="addDialogVisible" width="30%" :before-close="handleClose">
+      <el-form class="add-form" label-position="left" label-width="0px" :model="addData" :rules="addRules" ref="addFrom">
+        <el-form-item label="" prop="subject">
+          <el-select size="small" v-model="addData.subject" placeholder="请选择科目类别">
+            <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="" prop="type">
+          <el-checkbox-group v-model="addData.type">
+            <el-checkbox v-for="(item, index) in licenseList" :key="index" :label="item.name"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="" prop="question">
+          <el-input v-model="addData.question" placeholder="请输入题目问题"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="item1">
+          <el-input v-model="addData.item1" placeholder="请输入题目选项A（必填）"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="item2">
+          <el-input v-model="addData.item2" placeholder="请输入题目选项B（必填）"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="item3">
+          <el-input v-model="addData.item3" placeholder="请输入题目选项C"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="item4">
+          <el-input v-model="addData.item4" placeholder="请输入题目选项D"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="answer">
+          <el-select size="small" v-model="addData.answer" placeholder="请选择题目答案">
+            <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="" prop="explains">
+          <el-input v-model="addData.explains" placeholder="请输入题目详解"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
+          <el-button type="primary" size="small" @click="submitAdd('addFrom')">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <!-- 编辑 -->
+    <el-dialog title="编辑" :visible.sync="editDialogVisible" width="30%" :before-close="handleClose">
+      <el-form class="add-form" label-position="left" label-width="0px" :model="editData" :rules="addRules" ref="editData">
+        <el-form-item label="" prop="subject">
+          <el-select size="small" v-model="editData.subject" placeholder="请选择科目类别">
+            <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="" prop="type">
+          <el-checkbox-group v-model="editData.type">
+            <el-checkbox v-for="(item, index) in licenseList" :key="index" :label="item.name"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="" prop="question">
+          <el-input v-model="editData.question" placeholder="请输入题目问题"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="item1">
+          <el-input v-model="editData.item1" placeholder="请输入题目选项A（必填）"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="item2">
+          <el-input v-model="editData.item2" placeholder="请输入题目选项B（必填）"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="item3">
+          <el-input v-model="editData.item3" placeholder="请输入题目选项C"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="item4">
+          <el-input v-model="editData.item4" placeholder="请输入题目选项D"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="answer">
+          <el-select size="small" v-model="editData.answer" placeholder="请选择题目答案">
+            <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="" prop="explains">
+          <el-input v-model="editData.explains" placeholder="请输入题目详解"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
+          <el-button type="primary" size="small" @click="submitEdit('editData')">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <!-- 删除 -->
+    <el-dialog title="删除" :visible.sync="delDialogVisible" width="30%" :before-close="handleClose">
+      <span>确认要删除该试题？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" @click="delDialogVisible = false">取 消</el-button>
+        <el-button type="primary" size="small" @click="submitDel()">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
 import baseService from '../../service/baseService.js'
+import moment from 'moment'
 export default {
   name: '',
   data() {
@@ -140,7 +204,14 @@ export default {
       data: [],
       //   搜索数据
       search: {
-        id: ''
+        id: '',
+        subject: '',
+        type: '',
+        question: '',
+        creatBeginDate: '',
+        creatEndDate: '',
+        updateBeginDate: '',
+        updateEndDate: ''
       },
       totalSize: 0,
       //   添加弹窗
@@ -149,24 +220,41 @@ export default {
       addData: {
         subject: '',
         type: [],
-        item1: '',
-        item2: '',
-        item3: '',
-        item4: '',
-        answer: ''
-      },
-      editData: {
-        id: '',
-        subject: '',
-        type: [],
+        question: '',
         item1: '',
         item2: '',
         item3: '',
         item4: '',
         answer: '',
+        explains: ''
+      },
+      // 规则
+      addRules: {
+        subject: [{ required: true, message: '请选择科目类型', trigger: 'change' }],
+        type: [{ required: true, message: '请选择题目类型', trigger: 'change' }],
+        question: [{ required: true, message: '请填写题目', trigger: 'change' }],
+        item1: [{ required: true, message: '请填写答案A', trigger: 'change' }],
+        item2: [{ required: true, message: '请填写答案B', trigger: 'change' }],
+        answer: [{ required: true, message: '请填写答案', trigger: 'change' }],
+        explains: [{ required: true, message: '请填写详解', trigger: 'change' }]
+      },
+      // 编辑弹窗
+      editDialogVisible: false,
+      // 编辑数据
+      editData: {
+        id: '',
+        subject: '',
+        type: [],
+        question: '',
+        item1: '',
+        item2: '',
+        item3: '',
+        item4: '',
+        answer: '',
+        explains: '',
         categoryIds: ''
       },
-      typeList: ['C1', 'C2', 'A1'],
+      // 科目列表
       subjectList: [
         {
           name: '科目一',
@@ -177,16 +265,26 @@ export default {
           val: 4
         }
       ],
+      // 答案列表
       answerList: ['A', 'B', 'C', 'D'],
       tabMaxHeight: 0,
-      editDialogVisible: false,
+      // 删除弹窗
       delDialogVisible: false,
+      // 删除id
       delId: '',
+      // 分类列表
       categoryDate: [],
       categoryPath: {
         getPath: '/category/question'
       },
-      categoryIds: []
+      categoryIds: [],
+      creatTime: '',
+      updateTime: ''
+    }
+  },
+  computed: {
+    licenseList() {
+      return this.$store.state.data.licenseList
     }
   },
   mounted() {
@@ -194,6 +292,10 @@ export default {
     this.getData()
   },
   methods: {
+    // 时间转化
+    moment(time) {
+      return moment(time).format('YYYY-MM-DD h:mm:ss')
+    },
     // 获取列表数据
     getData() {
       baseService.basePostData(this.apiPath.get, this.search).then(res => {
@@ -212,35 +314,70 @@ export default {
         this.categoryDate = result
       })
     },
+    // 重置
+    reset() {
+      this.search = {
+        id: '',
+        subject: '',
+        type: '',
+        question: '',
+        creatBeginDate: '',
+        creatEndDate: '',
+        updateBeginDate: '',
+        updateEndDate: ''
+      }
+      this.getData()
+    },
+    // 添加
     add() {
       this.addDialogVisible = true
     },
-    submitAdd() {
-      this.addDialogVisible = false
-      baseService.basePostData(this.apiPath.add, this.addData).then(res => {
-        this.getData()
+    // 添加请求
+    submitAdd(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.addDialogVisible = false
+          baseService.basePostData(this.apiPath.add, this.addData).then(res => {
+            this.getData()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
     },
+    // 编辑
     edit(row) {
       this.editData = row
       this.editDialogVisible = true
     },
-    submitEdit() {
-      this.editDialogVisible = false
-      baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
-        this.getData()
+    // 编辑请求
+    submitEdit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.editDialogVisible = false
+          baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
+            this.getData()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
     },
+    // 删除
     del(row) {
       this.delId = row.id
       this.delDialogVisible = true
     },
+    // 删除请求
     submitDel() {
       this.delDialogVisible = false
       baseService.baseGetData(this.apiPath.del, this.delId).then(res => {
         this.getData()
       })
     },
+    // 修改类型
     change(index, row) {
       this.editData = row
       this.editData.categoryId = this.categoryIds[index]
@@ -261,7 +398,24 @@ export default {
     handleCurrentChange(val) {
       this.search.currentPage = val
       this.getData()
+    },
+    creatTimeChange(val) {
+      this.search.creatBeginDate = val[0]
+      this.search.creatEndDate = val[1]
+    },
+    updateTimeChange(val) {
+      this.search.updateBeginDate = val[0]
+      this.search.updateEndDate = val[1]
     }
   }
 }
 </script>
+<style>
+.base-search .el-input {
+  width: 150px;
+}
+.senior-search .el-input {
+  width: 200px;
+}
+</style>
+

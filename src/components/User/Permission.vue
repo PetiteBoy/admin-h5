@@ -25,16 +25,23 @@
         <el-table-column label="名称" prop="name">
         </el-table-column>
         <el-table-column label="创建时间" prop="createTime">
+          <template slot-scope="scope">
+            <div>{{moment(scope.row.createTime)}}</div>
+          </template>
         </el-table-column>
         <el-table-column label="更新时间" prop="updateTime">
+          <template slot-scope="scope">
+            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+          </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="danger" size="mini" @click="delPermissionItem(scope.row)">
-              <i class="el-icon-delete"></i>
-            </el-button>
+
             <el-button type="primary" size="mini" @click="editPermissionItem(scope.row)">
               <i class="el-icon-edit"></i>
+            </el-button>
+            <el-button type="danger" size="mini" @click="delPermissionItem(scope.row)">
+              <i class="el-icon-delete"></i>
             </el-button>
           </template>
         </el-table-column>
@@ -109,6 +116,7 @@
 import Search from './Commen/Search.vue'
 import { apiStatusFn } from '../../utils/base.js'
 import baseService from '../../service/baseService.js'
+import moment from 'moment'
 
 export default {
   name: 'permission',
@@ -171,6 +179,10 @@ export default {
     this.getPermissionData()
   },
   methods: {
+    // 时间转化
+    moment(time) {
+      return moment(time).format('YYYY-MM-DD h:mm:ss')
+    },
     //  获取数据
     getPermissionData() {
       baseService
