@@ -16,6 +16,7 @@ import Log from '@/components/User/Log.vue'
 import VideoList from '@/components/Video/List'
 import VideoDetail from '@/components/Video/Detail'
 import VideoCategory from '@/components/Video/Category'
+import VideoCheck from '@/components/Video/CheckConfig'
 
 
 // 驾驶人管理
@@ -25,6 +26,7 @@ import DriverDetail from '@/components/Driver/Detail'
 // 试题管理
 import QuestionList from '@/components/Question/List'
 import QuestionCategory from '@/components/Question/Category'
+import QuestionCheck from '@/components/Question/CheckConfig'
 
 // 预约管理
 import BookList from '@/components/Book/List'
@@ -53,6 +55,9 @@ export default new Router({
           path: '/question/category',
           component: QuestionCategory
         }, {
+          path: '/question/check',
+          component: QuestionCheck
+        }, {
           path: '/question/list',
           component: QuestionList
         }, {
@@ -70,6 +75,9 @@ export default new Router({
         }, {
           path: '/video/category',
           component: VideoCategory
+        }, {
+          path: '/video/check',
+          component: VideoCheck
         }, {
           path: '/user/admin',
           name: 'admin',

@@ -374,10 +374,17 @@ export default {
     // 获取列表数据
     getData() {
       baseService.basePostData(this.apiPath.get, this.search).then(res => {
-        this.data = res.data.data.list
-        this.totalSize = res.data.data.total
+        let result = res.data
+        this.data = result.data.list
+        this.totalSize = result.data.total
         let clientHieght = document.body.clientHeight
         this.tabMaxHeight = clientHieght - 60 - 30 - 117 - 50 - 50
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
       })
     },
     // 重置
@@ -435,6 +442,13 @@ export default {
           this.addDialogVisible = false
           baseService.basePostData(this.apiPath.add, this.addData).then(res => {
             this.getData()
+            let result = res.data
+            if (result.status !== '0x0000') {
+              this.$message({
+                message: result.message,
+                type: 'warning'
+              })
+            }
           })
         } else {
           console.log('error submit!!')
@@ -459,6 +473,13 @@ export default {
         if (valid) {
           this.editDialogVisible = false
           baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
+            let result = res.data
+            if (result.status !== '0x0000') {
+              this.$message({
+                message: result.message,
+                type: 'warning'
+              })
+            }
             this.getData()
           })
         } else {
@@ -488,6 +509,13 @@ export default {
         this.auditDate.auditDesc = '通过'
       }
       baseService.basePostData(this.apiPath.audit, this.auditDate).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getData()
       })
     },
@@ -500,6 +528,13 @@ export default {
     submitBlack() {
       this.balckDialogVisible = false
       baseService.baseGetData(this.apiPath.black, this.currentId).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getData()
       })
     },
@@ -512,6 +547,13 @@ export default {
     submitWhite() {
       this.whiteDialogVisible = false
       baseService.baseGetData(this.apiPath.white, this.currentId).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getData()
       })
     },

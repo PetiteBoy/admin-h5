@@ -220,6 +220,12 @@ export default {
         })
         .then(res => {
           let result = res.data
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
           this.roleData = result.data.list
           this.totalSize = result.data.total
           let clientHieght = document.body.clientHeight
@@ -238,6 +244,13 @@ export default {
     submitAddRole() {
       this.addRoleDialogVisible = false
       baseService.basePostData(this.rolePath.addPath, this.addRoleData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getRoleData()
       })
     },
@@ -250,6 +263,13 @@ export default {
     submitDelRole() {
       this.delRoleDialogVisible = false
       baseService.baseGetData(this.rolePath.delPath, this.delRoleId).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getRoleData()
       })
     },
@@ -264,6 +284,13 @@ export default {
     submitEditRole() {
       this.editRoleDialogVisible = false
       baseService.basePostData(this.rolePath.editPath, this.editRoleData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getRoleData()
       })
     },
@@ -293,6 +320,13 @@ export default {
           authorityIds: this.rolePermissionData
         })
         .then(res => {
+          let result = res.data
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
           this.getRoleData()
         })
     },
@@ -322,6 +356,13 @@ export default {
           menuIds: this.$refs.tree.getCheckedKeys()
         })
         .then(res => {
+          let result = res.data
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
           this.getRoleData()
         })
     },

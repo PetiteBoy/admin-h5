@@ -279,6 +279,12 @@ export default {
           this.totalSize = result.data.total
           let clientHieght = document.body.clientHeight
           this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
         })
     },
     //  新增
@@ -297,6 +303,13 @@ export default {
     submitAddAdmin(formName) {
       this.addAdminDialogVisible = false
       baseService.basePostData(this.adminPath.addPath, this.addAdminData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getAdminData()
       })
     },
@@ -309,6 +322,13 @@ export default {
     submitDelAdmin() {
       this.delAdminDialogVisible = false
       baseService.baseGetData(this.adminPath.delPath, this.delAdminId).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getAdminData()
       })
     },
@@ -325,6 +345,13 @@ export default {
     // 编辑请求
     submitEditAdmin() {
       baseService.basePostData(this.adminPath.editPath, this.editAdminData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getAdminData()
       })
       this.editAdminDialogVisible = false
@@ -355,6 +382,13 @@ export default {
           authorityIds: this.adminPermissionData
         })
         .then(res => {
+          let result = res.data
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
           this.getAdminData()
         })
     },
@@ -384,6 +418,13 @@ export default {
           roleIds: this.adminRoleData
         })
         .then(res => {
+          let result = res.data
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
           this.getAdminData()
         })
     },
@@ -413,6 +454,13 @@ export default {
           menuIds: this.$refs.tree.getCheckedKeys()
         })
         .then(res => {
+          let result = res.data
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
           this.getAdminData()
         })
     },

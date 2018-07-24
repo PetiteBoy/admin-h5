@@ -192,11 +192,17 @@ export default {
           name: this.searchId
         })
         .then(res => {
-          let result = res.data.data
-          this.permissionData = result.list
-          this.totalSize = result.total
+          let result = res.data
+          this.permissionData = result.datalist
+          this.totalSize = result.data.total
           let clientHieght = document.body.clientHeight
           this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
         })
     },
     //  新增
@@ -224,6 +230,13 @@ export default {
     submitAddPermission(formName) {
       this.addPermissionDialogVisible = false
       baseService.basePostData(this.permissionPath.getPath, this.addPermissionData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getPermissionData()
       })
     },
@@ -236,6 +249,13 @@ export default {
     submitDelPermission() {
       this.delPermissionDialogVisible = false
       baseService.baseGetData(this.permissionPath.delPath, this.delPermissionId).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getPermissionData()
       })
     },
@@ -261,6 +281,13 @@ export default {
     submitEditPermission() {
       this.editPermissionDialogVisible = false
       baseService.basePostData(this.permissionPath.editPath, this.editPermissionData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getPermissionData()
       })
     },

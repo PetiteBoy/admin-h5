@@ -8,23 +8,45 @@ import {
 class BaseService {
 
   basePostData(path, params = {}) {
-    return axios({
-      url: `${config.service.host}${path}`,
-      method: 'post',
-      headers: {
-        authKey: getSessionStorage('authKey')
-      },
-      data: params
+    return new Promise((resolve, reject) => {
+      axios({
+        url: `${config.service.host}${path}`,
+        method: 'post',
+        headers: {
+          authKey: getSessionStorage('authKey')
+        },
+        data: params
+      }).then(res => {
+        let result = res.data
+        if (result.status === '0x5002') {
+          location.hash = '/login'
+        } else {
+          resolve(res)
+        }
+      }).catch(err => {
+        reject(err)
+      })
     })
   }
 
   baseGetData(path, delId) {
-    return axios({
-      url: `${config.service.host}${path}?id=${delId}`,
-      method: 'get',
-      headers: {
-        authKey: getSessionStorage('authKey')
-      }
+    return new Promise((resolve, reject) => {
+      axios({
+        url: `${config.service.host}${path}?id=${delId}`,
+        method: 'get',
+        headers: {
+          authKey: getSessionStorage('authKey')
+        }
+      }).then(res => {
+        let result = res.data
+        if (result.status === '0x5002') {
+          location.hash = '/login'
+        } else {
+          resolve(res)
+        }
+      }).catch(err => {
+        reject(err)
+      })
     })
   }
 }

@@ -299,14 +299,21 @@ export default {
     // 获取列表数据
     getData() {
       baseService.basePostData(this.apiPath.get, this.search).then(res => {
-        this.data = res.data.data.list
-        this.totalSize = res.data.data.total
+        let result = res.data
+        this.data = result.data.list
+        this.totalSize = result.data.total
         this.categoryIds = []
         for (let i = 0; i < this.data.length; i++) {
           this.categoryIds.push(this.data[i].categoryId)
         }
         let clientHieght = document.body.clientHeight
         this.tabMaxHeight = clientHieght - 60 - 30 - 117 - 50 - 50
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
       })
 
       baseService.basePostData(this.categoryPath.getPath, {}).then(res => {
@@ -338,6 +345,13 @@ export default {
         if (valid) {
           this.addDialogVisible = false
           baseService.basePostData(this.apiPath.add, this.addData).then(res => {
+            let result = res.data
+            if (result.status !== '0x0000') {
+              this.$message({
+                message: result.message,
+                type: 'warning'
+              })
+            }
             this.getData()
           })
         } else {
@@ -357,6 +371,13 @@ export default {
         if (valid) {
           this.editDialogVisible = false
           baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
+            let result = res.data
+            if (result.status !== '0x0000') {
+              this.$message({
+                message: result.message,
+                type: 'warning'
+              })
+            }
             this.getData()
           })
         } else {
@@ -374,6 +395,13 @@ export default {
     submitDel() {
       this.delDialogVisible = false
       baseService.baseGetData(this.apiPath.del, this.delId).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getData()
       })
     },
@@ -382,6 +410,13 @@ export default {
       this.editData = row
       this.editData.categoryId = this.categoryIds[index]
       baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getData()
       })
     },

@@ -39,6 +39,7 @@ export default {
   height: 100%;
   overflow: auto;
   background: #545c64;
+  box-shadow: 0px 1px 3px 0px rgba(140, 140, 140, 0.5);
 }
 </style>
 

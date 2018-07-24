@@ -117,6 +117,13 @@ export default {
     getMenu() {
       baseService.basePostData(this.menuPath.getPath, {}).then(res => {
         this.menuList = res.data.data
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
       })
     },
     // 添加
@@ -135,6 +142,13 @@ export default {
     submitAddmenu() {
       this.addMenuDialogVisible = false
       baseService.basePostData(this.menuPath.addPath, this.addMenu).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getMenu()
       })
     },
@@ -150,6 +164,13 @@ export default {
     submitEditmenu() {
       this.editMenuDialogVisible = false
       baseService.basePostData(this.menuPath.editPath, this.editMenu).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getMenu()
       })
     },
@@ -163,6 +184,13 @@ export default {
       this.delMenuDialogVisible = false
       let path = ''
       baseService.baseGetData(this.menuPath.delPath, this.delMenuId).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getMenu()
       })
     },

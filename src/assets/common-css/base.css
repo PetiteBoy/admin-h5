@@ -9,3 +9,7 @@
 .el-menu {
   border: none;
 }
+
+.el-table {
+  font-size: 12px;
+}

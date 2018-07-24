@@ -117,11 +117,17 @@ export default {
   methods: {
     getCategoryData() {
       baseService.basePostData(this.categoryPath.getPath, {}).then(res => {
-        let result = res.data.data
-        this.categoryDate = result
-        this.totalSize = result.total
+        let result = res.data
+        this.categoryDate = result.data
+        this.totalSize = result.data.total
         let clientHieght = document.body.clientHeight
         this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
       })
     },
     //   添加
