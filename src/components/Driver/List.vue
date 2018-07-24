@@ -48,7 +48,7 @@
 
     <!-- 数据列表 -->
     <div class="row data-container">
-      <el-table :data="data" border style="width: 100%" :max-height="tabMaxHeight">
+      <el-table :data="data" border style="width: 100%" :max-height="tabMaxHeight" min-height="409">
         <el-table-column label="用户id" prop="id">
         </el-table-column>
         <el-table-column label="用户手机" prop="phone">

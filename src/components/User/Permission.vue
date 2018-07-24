@@ -193,7 +193,7 @@ export default {
         })
         .then(res => {
           let result = res.data
-          this.permissionData = result.datalist
+          this.permissionData = result.data.list
           this.totalSize = result.data.total
           let clientHieght = document.body.clientHeight
           this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50

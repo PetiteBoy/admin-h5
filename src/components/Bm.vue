@@ -55,6 +55,8 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 1440px;
+  min-height: 716px;
 }
 .head {
   box-shadow: 0px 1px 3px 0px rgba(140, 140, 140, 0.5);

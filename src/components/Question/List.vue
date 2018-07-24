@@ -52,7 +52,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="题目问题" prop="answer">
+        <el-table-column label="题目问题" prop="question">
         </el-table-column>
         <el-table-column label="创建时间" prop="createTime">
           <template slot-scope="scope">
@@ -81,7 +81,7 @@
     </div>
     <!-- 分页器 -->
     <div class="row page-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.currentPage" :page-sizes="[10, 20]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.pageNum" :page-sizes="[10, 20]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
       </el-pagination>
     </div>
 
@@ -100,7 +100,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="" prop="question">
-          <el-input v-model="addData.question" placeholder="请输入题目问题"></el-input>
+          <el-input v-model="addData.question" placeholder="请输入题目问题" type="textarea" rows="7"></el-input>
         </el-form-item>
         <el-form-item label="" prop="item1">
           <el-input v-model="addData.item1" placeholder="请输入题目选项A（必填）"></el-input>
@@ -121,7 +121,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="" prop="explains">
-          <el-input v-model="addData.explains" placeholder="请输入题目详解"></el-input>
+          <el-input v-model="addData.explains" placeholder="请输入题目详解" type="textarea" rows="7"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
@@ -145,7 +145,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="" prop="question">
-          <el-input v-model="editData.question" placeholder="请输入题目问题"></el-input>
+          <el-input v-model="editData.question" placeholder="请输入题目问题" type="textarea" rows="7"></el-input>
         </el-form-item>
         <el-form-item label="" prop="item1">
           <el-input v-model="editData.item1" placeholder="请输入题目选项A（必填）"></el-input>
@@ -166,7 +166,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="" prop="explains">
-          <el-input v-model="editData.explains" placeholder="请输入题目详解"></el-input>
+          <el-input v-model="editData.explains" placeholder="请输入题目详解" type="textarea" rows="7"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
@@ -204,14 +204,16 @@ export default {
       data: [],
       //   搜索数据
       search: {
-        id: '',
-        subject: '',
-        type: '',
-        question: '',
-        creatBeginDate: '',
-        creatEndDate: '',
-        updateBeginDate: '',
-        updateEndDate: ''
+        id: null,
+        subject: null,
+        type: null,
+        question: null,
+        createTimeBegin: null,
+        createTimeEnd: null,
+        updateTimeBegin: null,
+        updateTimeEnd: null,
+        pageNum: 1,
+        pageSize: 20
       },
       totalSize: 0,
       //   添加弹窗
@@ -298,23 +300,37 @@ export default {
     },
     // 获取列表数据
     getData() {
-      baseService.basePostData(this.apiPath.get, this.search).then(res => {
-        let result = res.data
-        this.data = result.data.list
-        this.totalSize = result.data.total
-        this.categoryIds = []
-        for (let i = 0; i < this.data.length; i++) {
-          this.categoryIds.push(this.data[i].categoryId)
-        }
-        let clientHieght = document.body.clientHeight
-        this.tabMaxHeight = clientHieght - 60 - 30 - 117 - 50 - 50
-        if (result.status !== '0x0000') {
-          this.$message({
-            message: result.message,
-            type: 'warning'
-          })
-        }
-      })
+      baseService
+        .basePostData(this.apiPath.get, {
+          id: this.search.id || null,
+          subject: this.search.subject || null,
+          type: this.search.type || null,
+          question: this.search.question || null,
+          createTimeBegin: this.search.createTimeBegin || null,
+          createTimeEnd: this.search.createTimeEnd || null,
+          updateTimeBegin: this.search.updateTimeBegin || null,
+          updateTimeEnd: this.search.updateTimeEnd || null,
+          pageNum: this.search.pageNum,
+          pageSize: this.search.pageSize
+        })
+        .then(res => {
+          this.data = []
+          let result = res.data
+          this.data = result.data.list
+          this.totalSize = result.data.total
+          this.categoryIds = []
+          for (let i = 0; i < this.data.length; i++) {
+            this.categoryIds.push(this.data[i].categoryId)
+          }
+          let clientHieght = document.body.clientHeight
+          this.tabMaxHeight = clientHieght - 60 - 30 - 117 - 50 - 50
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
+        })
 
       baseService.basePostData(this.categoryPath.getPath, {}).then(res => {
         let result = res.data.data
@@ -324,15 +340,19 @@ export default {
     // 重置
     reset() {
       this.search = {
-        id: '',
-        subject: '',
-        type: '',
-        question: '',
-        creatBeginDate: '',
-        creatEndDate: '',
-        updateBeginDate: '',
-        updateEndDate: ''
+        id: null,
+        subject: null,
+        type: null,
+        question: null,
+        createTimeBegin: null,
+        createTimeEnd: null,
+        updateTimeBegin: null,
+        updateTimeEnd: null,
+        pageNum: this.search.pageNum,
+        pageSize: this.search.pageSize
       }
+      this.creatTime = ''
+      this.updateTime = ''
       this.getData()
     },
     // 添加
@@ -344,6 +364,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.addDialogVisible = false
+          this.addData.type = this.addData.type.join(',')
           baseService.basePostData(this.apiPath.add, this.addData).then(res => {
             let result = res.data
             if (result.status !== '0x0000') {
@@ -362,7 +383,18 @@ export default {
     },
     // 编辑
     edit(row) {
-      this.editData = row
+      let data = row
+      this.editData.id = row.id
+      this.editData.subject = row.subject
+      this.editData.type = row.type.split(',')
+      this.editData.question = row.question
+      this.editData.item1 = row.item1
+      this.editData.item2 = row.item2
+      this.editData.item3 = row.item3
+      this.editData.item4 = row.item4
+      this.editData.answer = row.answer
+      this.editData.explains = row.explains
+
       this.editDialogVisible = true
     },
     // 编辑请求
@@ -370,6 +402,8 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.editDialogVisible = false
+          this.editData.type = this.editData.type.join(',')
+
           baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
             let result = res.data
             if (result.status !== '0x0000') {
@@ -424,6 +458,7 @@ export default {
       this.addDialogVisible = false
       this.editDialogVisible = false
       this.delDialogVisible = false
+      this.getData()
     },
     // --------------------------分页相关--------------------------
     handleSizeChange(val) {
@@ -431,16 +466,16 @@ export default {
       this.getData()
     },
     handleCurrentChange(val) {
-      this.search.currentPage = val
+      this.search.pageNum = val
       this.getData()
     },
     creatTimeChange(val) {
-      this.search.creatBeginDate = val[0]
-      this.search.creatEndDate = val[1]
+      this.search.createTimeBegin = val[0]
+      this.search.createTimeEnd = val[1]
     },
     updateTimeChange(val) {
-      this.search.updateBeginDate = val[0]
-      this.search.updateEndDate = val[1]
+      this.search.updateTimeBegin = val[0]
+      this.search.updateTimeEnd = val[1]
     }
   }
 }

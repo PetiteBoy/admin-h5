@@ -12,4 +12,5 @@
 
 .el-table {
   font-size: 12px;
+  min-height: 409px;
 }

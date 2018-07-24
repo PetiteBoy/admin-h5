@@ -51,6 +51,12 @@ const state = {
     },
     {
       name: 'B2'
+    }, {
+      name: 'C1'
+    }, {
+      name: 'C2'
+    }, {
+      name: 'C3'
     }
   ],
   // 审核状态
