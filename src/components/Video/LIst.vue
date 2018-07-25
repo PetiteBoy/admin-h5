@@ -3,7 +3,8 @@
 
         <!--面包屑导航-->
         <div class="row breadcrumb-container">
-            <el-breadcrumb separator="/">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item :to="{path:'/bm'}">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>视频列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -74,21 +75,21 @@
                     <el-input v-model="addVideoData.introduction"></el-input>
                 </el-form-item>
                 <el-form-item label="上传视频" prop="">
-                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/video/upload" :on-success="handleSuccessVideo" :headers="headers">
+                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/video/upload" accept="video/*" :on-success="handleSuccessVideo" :headers="headers">
                         <el-button size="small" type="primary">上传</el-button>
                         <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="上传缩略图" prop="">
-                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :headers="headers" :on-success="handleSuccessPic">
-                        <el-button size="small" type="primary">上传</el-button>
-                        <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="视频时长" prop="" class="video-druction">
                     <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> 时
                     <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> 分
                     <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
+                </el-form-item>
+                <el-form-item label="上传缩略图" prop="">
+                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" accept="image/*" :headers="headers" :on-success="handleSuccessPic">
+                        <el-button size="small" type="primary">上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
+                    </el-upload>
                 </el-form-item>
 
             </el-form>
@@ -114,15 +115,9 @@
                     <el-input v-model="editVideoData.introduction"></el-input>
                 </el-form-item>
                 <el-form-item label="上传视频" prop="">
-                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/video/upload" :on-success="handleSuccessVideoEdit" :headers="headers">
+                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/video/upload" accept="video/*" :on-success="handleSuccessVideoEdit" :headers="headers">
                         <el-button size="small" type="primary">上传</el-button>
                         <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="上传缩略图" prop="">
-                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :headers="headers" :on-success="handleSuccessPicEdit">
-                        <el-button size="small" type="primary">上传</el-button>
-                        <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="视频时长" prop="" class="video-druction">
@@ -130,6 +125,13 @@
                     <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> 分
                     <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
                 </el-form-item>
+                <el-form-item label="上传缩略图" prop="">
+                    <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" accept="image/*" :headers="headers" :on-success="handleSuccessPicEdit">
+                        <el-button size="small" type="primary">上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
+                    </el-upload>
+                </el-form-item>
+
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button size="small" @click="editVideoDialogVisible = false">取 消</el-button>
@@ -223,11 +225,17 @@ export default {
           pageSize: this.pageSize
         })
         .then(res => {
-          let result = res.data.data
-          this.videoDate = result.list
-          this.totalSize = result.total
+          let result = res.data
+          this.videoDate = result.data.list
+          this.totalSize = result.data.total
           let clientHieght = document.body.clientHeight
           this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
+          if (result.status !== '0x0000') {
+            this.$message({
+              message: result.message,
+              type: 'warning'
+            })
+          }
         })
     },
     //   添加视频
@@ -257,6 +265,13 @@ export default {
       this.addVideoData.duration = this.duration.hour * 60 * 60 + this.duration.minute * 60 + this.duration.second
       this.addVideoDialogVisible = false
       baseService.basePostData(this.videoPath.addPath, this.addVideoData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getVideoDate()
       })
     },
@@ -269,6 +284,13 @@ export default {
     submitDelVideo() {
       this.delVideoDialogVisible = false
       baseService.baseGetData(this.videoPath.delPath, this.delVideoId).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getVideoDate()
       })
     },
@@ -295,6 +317,13 @@ export default {
       this.editVideoData.duration = Number(this.duration.hour) * 60 * 60 + Number(this.duration.minute) * 60 + Number(this.duration.second)
       this.editVideoDialogVisible = false
       baseService.basePostData(this.videoPath.editPath, this.editVideoData).then(res => {
+        let result = res.data
+        if (result.status !== '0x0000') {
+          this.$message({
+            message: result.message,
+            type: 'warning'
+          })
+        }
         this.getVideoDate()
       })
     },

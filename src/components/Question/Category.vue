@@ -2,7 +2,8 @@
   <div class="view-container">
     <!--面包屑导航-->
     <div class="row breadcrumb-container">
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{path:'/bm'}">首页</el-breadcrumb-item>
         <el-breadcrumb-item>试题分类</el-breadcrumb-item>
       </el-breadcrumb>
     </div>

@@ -3,8 +3,9 @@
 
     <!--面包屑导航-->
     <div class="row breadcrumb-container">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{path:'/bm'}">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>驾驶人列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
 

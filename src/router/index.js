@@ -27,6 +27,7 @@ import DriverDetail from '@/components/Driver/Detail'
 import QuestionList from '@/components/Question/List'
 import QuestionCategory from '@/components/Question/Category'
 import QuestionCheck from '@/components/Question/CheckConfig'
+import QuestionDetail from '@/components/Question/Detail'
 
 // 预约管理
 import BookList from '@/components/Book/List'
@@ -60,6 +61,9 @@ export default new Router({
         }, {
           path: '/question/list',
           component: QuestionList
+        }, {
+          path: '/question/detail',
+          component: QuestionDetail
         }, {
           path: '/driver/list',
           component: DriverList

@@ -2,7 +2,8 @@
   <div class="view-container">
     <!--面包屑导航-->
     <div class="row breadcrumb-container">
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{path:'/bm'}">首页</el-breadcrumb-item>
         <el-breadcrumb-item>试题管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -169,7 +170,7 @@
           <el-input v-model="editData.explains" placeholder="请输入题目详解" type="textarea" rows="7"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
+          <el-button size="small" @click="editDialogVisible = false">取 消</el-button>
           <el-button type="primary" size="small" @click="submitEdit('editData')">确 定</el-button>
         </el-form-item>
       </el-form>
@@ -354,6 +355,9 @@ export default {
       this.creatTime = ''
       this.updateTime = ''
       this.getData()
+    },
+    detail(row) {
+      this.$router.push(`/question/detail?id=${row.id}`)
     },
     // 添加
     add() {
