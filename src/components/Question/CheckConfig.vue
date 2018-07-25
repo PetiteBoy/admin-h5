@@ -19,7 +19,9 @@
           <el-input v-model="ruleForm.period" placeholder="考试时间"></el-input>
         </el-form-item>
         <el-form-item v-for="(item,index) in ruleForm.detail" :key="item.categoryId" :label="item.categoryName">
-          <el-input v-model="ruleForm.detail[index].learnNum" placeholder="分类题目数"></el-input>
+          <el-input v-model="ruleForm.detail[index].learnNum" :disabled="!item.questionNum" placeholder="分类题目数">
+            <template slot="append">该分类共有{{item.questionNum || 0}}个试题</template>
+          </el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
@@ -61,7 +63,8 @@ export default {
             categoryName: item.categoryName,
             categoryId: item.categoryId,
             learnNum: item.learnNum,
-            id: item.id
+            id: item.id,
+            questionNum: item.questionNum
           })
         })
 
@@ -100,7 +103,7 @@ export default {
 </script>
 <style>
 .main-container .el-form {
-  width: 400px;
+  width: 600px;
 }
 </style>
 

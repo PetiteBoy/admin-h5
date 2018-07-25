@@ -1,23 +1,26 @@
 <template>
-    <div class="view-container">
-        <!--面包屑导航-->
-        <div class="row breadcrumb-container">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>审验教育视频学习设置</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-
-        <div class="row main-container">
-            <el-form ref="ruleForm" label-width="250px" class="demo-ruleForm">
-                <el-form-item v-for="(item,index) in data" :key="item.categoryId" :label="item.categoryName">
-                    <el-input v-model="data[index].learnNum" placeholder="分类视频数量"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+  <div class="view-container">
+    <!--面包屑导航-->
+    <div class="row breadcrumb-container">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>审验教育视频学习设置</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
+
+    <div class="row main-container">
+      <el-form ref="ruleForm" label-width="250px" class="demo-ruleForm">
+        <el-form-item v-for="(item,index) in data" :key="item.categoryId" :label="item.categoryName">
+          <el-input v-model="data[index].learnNum" :disabled="!item.videoNum" placeholder="分类视频数量">
+            <template slot="append">该分类共有{{item.videoNum || 0}}个视频</template>
+          </el-input>
+
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
 </template>
 <script>
 import baseService from '../../service/baseService.js'
@@ -44,6 +47,7 @@ export default {
             this.data.push({
               categoryId: item.categoryId,
               learnNum: item.learnNum,
+              videoNum: item.videoNum,
               id: item.id,
               categoryName: item.categoryName
             })
@@ -76,7 +80,7 @@ export default {
 </script>
 <style>
 .main-container .el-form {
-  width: 400px;
+  width: 600px;
 }
 </style>
 
