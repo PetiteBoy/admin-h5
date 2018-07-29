@@ -19,18 +19,18 @@
       <!-- 数据列表 -->
       <div class="row">
         <el-table :data="permissionData" border style="width: 100%">
-          <el-table-column label="ID" prop="id">
+          <el-table-column label="ID" prop="id" width="50">
           </el-table-column>
-          <el-table-column label="标识" prop="code">
+          <el-table-column label="标识" prop="code" width="150">
           </el-table-column>
-          <el-table-column label="名称" prop="name">
+          <el-table-column label="名称" prop="name" width="150">
           </el-table-column>
-          <el-table-column label="创建时间" prop="createTime" width="96">
+          <el-table-column label="创建时间" prop="createTime">
             <template slot-scope="scope">
               <div>{{moment(scope.row.createTime)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="更新时间" prop="updateTime" width="96">
+          <el-table-column label="更新时间" prop="updateTime" >
             <template slot-scope="scope">
               <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
             </template>

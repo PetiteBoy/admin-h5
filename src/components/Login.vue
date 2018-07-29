@@ -2,14 +2,15 @@
   <div id="login">
     <div class="wrapper">
       <div class="login">
+        <div class="login-title">满分审验教育后台管理系统</div>
         <div class="loginform">
           <div id="owl-login" :class="{'password': passwordStatus}">
-            <div class="hand"></div>
-            <div class="hand hand-r"></div>
-            <div class="arms">
-              <div class="arm"></div>
-              <div class="arm arm-r"></div>
-            </div>
+            <!-- <div class="hand"></div> -->
+            <!-- <div class="hand hand-r"></div> -->
+            <!-- <div class="arms"> -->
+              <!-- <div class="arm"></div> -->
+              <!-- <div class="arm arm-r"></div> -->
+            <!-- </div> -->
           </div>
           <div class="pad">
             <div class="control-group">
@@ -88,13 +89,22 @@ export default {
 </script>
 
 <style>
+.login-title{
+  text-align: center;
+  font-size: 24px;
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bolder;
+}
 #login {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: url('../assets/login.jpg') no-repeat;
+  /* background: url('../assets/login.jpg') no-repeat; */
   background-size: cover;
 }
 #login #owl-login,

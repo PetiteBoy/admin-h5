@@ -109,3 +109,18 @@ label .el-input{
   margin: 0 auto;
   margin-top: 10px;
 }
+.row-data{
+  margin-top: 30px;
+}
+.category-list .el-select .el-input{
+  width: 250px;
+}
+.strong .el-form-item__label{
+  font-weight: bold;
+}
+.hr{
+  margin-block-start: 10px;
+}
+.driver- .el-form-item__error{
+  margin-left: 150px;
+}

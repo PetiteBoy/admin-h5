@@ -10,17 +10,17 @@
 
     <div class="row main-page">
       <el-form :model="ruleForm" ref="ruleForm" label-width="250px" class="demo-ruleForm">
-        <el-form-item label="总题目数" prop="totalNum">
+        <el-form-item label="总题目数" prop="totalNum" class="strong">
           <el-input v-model="ruleForm.totalNum"  placeholder="总题目数">
             <template slot="append">个</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="合格题数" prop="">
+        <el-form-item label="合格题数" prop="" class="strong">
           <el-input disabled>
             <template slot="append">个</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="考试时间" prop="period">
+        <el-form-item label="考试时间" prop="period" class="strong">
           <el-input v-model="ruleForm.period" placeholder="考试时间">
             <template slot="append">分</template>
           </el-input>

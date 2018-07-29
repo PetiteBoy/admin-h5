@@ -5,11 +5,11 @@ const state = {
       val: ''
     },
     {
-      name: '黑名单',
+      name: '已拉黑',
       val: true
     },
     {
-      name: '白名单',
+      name: '正常',
       val: false
     }
   ],
@@ -18,6 +18,31 @@ const state = {
     name: '全部',
     val: ''
   },{
+      name: '居民身份证',
+      val: 'IDCARD'
+    },
+    {
+      name: '军官证',
+      val: 'OFFICER'
+    },
+    {
+      name: '士兵证',
+      val: 'SOLDIER'
+    },
+    {
+      name: '军官离退休证',
+      val: 'RETIRED'
+    },
+    {
+      name: '境外人员身份证',
+      val: 'OUTSIDE'
+    },
+    {
+      name: '外交人员身份证明',
+      val: 'DIPLOMATIC'
+    }
+  ],
+  idListone: [{
       name: '居民身份证',
       val: 'IDCARD'
     },

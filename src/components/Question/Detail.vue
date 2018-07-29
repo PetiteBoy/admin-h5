@@ -10,43 +10,43 @@
 
         <div class="row main-page">
             <el-form ref="form" label-width="200px">
-                <el-form-item label="题目id">
+                <el-form-item label="题目id：">
                     <div>{{data.id}}</div>
                 </el-form-item>
-                <el-form-item label="题目分类">
+                <el-form-item label="题目分类：">
                     <div>{{data.categoryName}}</div>
                 </el-form-item>
-                <el-form-item label="题目类型">
+                <el-form-item label="题目类型：">
                     <div>{{data.type}}</div>
                 </el-form-item>
-                <el-form-item label="题目题干">
+                <el-form-item label="题目题干：">
                     <div>{{data.question}}</div>
                 </el-form-item>
-                <el-form-item label="题目选项A">
+                <el-form-item label="题目选项A：">
                     <div>{{data.item1}}</div>
                 </el-form-item>
-                <el-form-item label="题目选项B">
+                <el-form-item label="题目选项B：">
                     <div>{{data.item2}}</div>
                 </el-form-item>
-                <el-form-item label="题目选项C" v-if="data.item3">
+                <el-form-item label="题目选项C：" v-if="data.item3">
                     <div>{{data.item3}}</div>
                 </el-form-item>
-                <el-form-item label="题目选项D" v-if="data.item4">
+                <el-form-item label="题目选项D：" v-if="data.item4">
                     <div>{{data.item4}}</div>
                 </el-form-item>
-                <el-form-item label="正确答案">
+                <el-form-item label="正确答案：">
                     <div>{{data.answer}}</div>
                 </el-form-item>
-                <el-form-item label="题目详解">
+                <el-form-item label="题目详解：">
                     <div>{{data.explains}}</div>
                 </el-form-item>
-                <el-form-item label="缩略图" v-if="data.url">
+                <el-form-item label="缩略图：" v-if="data.url">
                     <img :src="data.url" alt="">
                 </el-form-item>
-                <el-form-item label="添加时间">
+                <el-form-item label="添加时间：">
                     <div>{{moment(data.createTime)}}</div>
                 </el-form-item>
-                <el-form-item label="最近修改时间">
+                <el-form-item label="最近修改时间：">
                     <div v-if="data.updateTime">{{moment(data.updateTime)}}</div>
                 </el-form-item>
             </el-form>

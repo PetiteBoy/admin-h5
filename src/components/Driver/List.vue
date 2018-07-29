@@ -67,12 +67,12 @@
       <div class="row senior-search">
         <label for="">
           <span>注册时间范围：</span>
-          <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="creatTimeChange" value-format="timestamp">
+          <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="开始时间" end-placeholder="结束时间" @change="creatTimeChange" value-format="timestamp">
           </el-date-picker>
         </label>
         <label for="">
           <span>审核时间范围：</span>
-          <el-date-picker size="small" v-model="auditTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="auditTimeChange" value-format="timestamp">
+          <el-date-picker size="small" v-model="auditTime" type="daterange" range-separator="" start-placeholder="开始时间" end-placeholder="结束时间" @change="auditTimeChange" value-format="timestamp">
           </el-date-picker>
         </label>
         <div style="float:right;">
@@ -83,7 +83,7 @@
       </div>
 
       <!-- 数据列表 -->
-      <div class="row">
+      <div class="row-data">
         <el-table :data="data" border style="width: 100%" min-height="409">
           <el-table-column label="用户id" prop="id" width="60">
           </el-table-column>
@@ -108,11 +108,18 @@
           <el-table-column label="审核时间" prop="auditTime" width="96">
             <template slot-scope="scope">
               <div v-if="scope.row.auditTime">{{moment(scope.row.auditTime)}}</div>
+              <div v-if="!scope.row.auditTime">-</div>
             </template>
           </el-table-column>
           <el-table-column label="审核状态" prop="auditState" width="70">
             <template slot-scope="scope">
               <div>{{dataAuditStatus[scope.row.auditState]}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="拉黑状态" width="70">
+            <template slot-scope="scope">
+              <div v-if="scope.row.disabled">已拉黑</div>
+              <div v-if="!scope.row.disabled">正常</div>
             </template>
           </el-table-column>
           <el-table-column label="最近修改时间" prop="updateTime" width="96">
@@ -155,13 +162,13 @@
     </div>
 
     <!-- 添加弹窗 -->
-    <el-dialog title="添加驾驶人" :visible.sync="addDialogVisible" width="40%" :before-close="handleClose">
+    <el-dialog title="添加驾驶人" class="driver-" :visible.sync="addDialogVisible" width="40%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="addData" :rules="addRules" ref="addFrom">
         <el-form-item label="" prop="idType">
           <label for="" class="driver-label">
             <span class="label-span ">证件类型：</span>
             <el-select size="small" v-model="addData.idType" placeholder="用户证件类型">
-              <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
+              <el-option v-for="(item, index) in idListone" :key="index" :label="item.name" :value="item.val">
               </el-option>
             </el-select>
           </label>
@@ -178,7 +185,7 @@
           <label for="" class="driver-label">
             <span class="label-span ">驾驶证类型：</span>
             <el-select size="small" v-model="addData.licenseType" placeholder="驾驶证类型">
-              <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
+              <el-option v-for="(item, index) in licenseListone" :key="index" :label="item.name" :value="item.name">
               </el-option>
             </el-select>
           </label>
@@ -191,7 +198,7 @@
           </label>
 
         </el-form-item>
-        <el-form-item label="" prop="">
+        <el-form-item label="" prop="licenseBeginDate">
           <label for="" class="driver-label">
             <span class="label-span ">注册时间范围：</span>
             <el-date-picker size="small" v-model="driverTimeadd" type="daterange" range-separator="" start-placeholder="请选择注册时间范围" end-placeholder="" @change="driverTimeChangeadd" value-format="timestamp">
@@ -225,13 +232,13 @@
     </el-dialog>
 
     <!-- 编辑弹窗 -->
-    <el-dialog title="编辑驾驶人" :visible.sync="editDialogVisible" width="40%" :before-close="handleClose">
+    <el-dialog title="编辑驾驶人" class="driver-" :visible.sync="editDialogVisible" width="40%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="editData" :rules="addRules" ref="editFrom">
         <el-form-item label="" prop="idType">
           <label for="" class="driver-label">
             <span class="label-span ">证件类型：</span>
             <el-select size="small" v-model="editData.idType" placeholder="证件类型">
-              <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
+              <el-option v-for="(item, index) in idListone" :key="index" :label="item.name" :value="item.val">
               </el-option>
             </el-select>
           </label>
@@ -246,7 +253,7 @@
           <label for="" class="driver-label">
             <span class="label-span ">驾驶证类型：</span>
             <el-select size="small" v-model="editData.licenseType" placeholder="驾驶证类型">
-              <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
+              <el-option v-for="(item, index) in licenseListone" :key="index" :label="item.name" :value="item.name">
               </el-option>
             </el-select>
           </label>
@@ -257,7 +264,7 @@
             <el-input size="small" v-model="editData.licenseNo" placeholder="请输入驾驶证档案编号"></el-input>
           </label>
         </el-form-item>
-        <el-form-item label="" prop="">
+        <el-form-item label="" prop="licenseBeginDate">
           <label for="" class="driver-label">
             <span class="label-span ">注册时间范围：</span>
             <el-date-picker size="small" v-model="driverTimeedit" type="daterange" range-separator="" start-placeholder="请选择注册时间范围" end-placeholder="" @change="driverTimeChangeedit" value-format="timestamp">
@@ -413,7 +420,8 @@ export default {
         idNo: [{ required: true, message: '请输入证件号', trigger: 'blur' }],
         licenseType: [{ required: true, message: '请选择驾照', trigger: 'change' }],
         licenseNo: [{ required: true, message: '请输入驾照编号', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }]
+        phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+        licenseBeginDate: [{ required: true, message: '选择注册时间', trigger: 'blur' }]
       },
       // 编辑弹窗
       editDialogVisible: false,
@@ -450,6 +458,12 @@ export default {
     },
     dataAuditStatus() {
       return this.$store.state.data.dataAuditStatus
+    },
+    licenseListone() {
+      return this.$store.state.data.licenseListone
+    },
+    idListone() {
+      return this.$store.state.data.idListone
     }
   },
   mounted() {
@@ -531,7 +545,6 @@ export default {
     submitAdd(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.addDialogVisible = false
           baseService.basePostData(this.apiPath.add, this.addData).then(res => {
             this.getData()
             let result = res.data
@@ -541,6 +554,7 @@ export default {
                 type: 'warning'
               })
             } else {
+              this.addDialogVisible = false
               this.$message({
                 message: '添加成功',
                 type: 'success'
@@ -572,7 +586,6 @@ export default {
     submitEdit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.editDialogVisible = false
           baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
             let result = res.data
             if (result.status !== '0x0000') {
@@ -581,6 +594,7 @@ export default {
                 type: 'warning'
               })
             } else {
+              this.editDialogVisible = false
               this.$message({
                 message: '编辑成功',
                 type: 'success'

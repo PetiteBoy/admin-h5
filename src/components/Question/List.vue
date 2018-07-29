@@ -34,16 +34,23 @@
             </el-option>
           </el-select>
         </label>
+        <label for="" class="category-list">
+          <span class="label-span">题目分类：</span>
+          <el-select size="small" v-model="search.categoryId">
+            <el-option v-for="(item, index) in categoryDate" :key="index" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </label>
       </div>
       <div class="row senior-search">
         <label for="">
           <span class="label-span">创建时间范围：</span>
-          <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="creatTimeChange" value-format="timestamp">
+          <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="开始时间" end-placeholder="结束时间" @change="creatTimeChange" value-format="timestamp">
           </el-date-picker>
         </label>
         <label for="">
           <span class="label-span">更新时间范围：</span>
-          <el-date-picker size="small" v-model="updateTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="updateTimeChange" value-format="timestamp">
+          <el-date-picker size="small" v-model="updateTime" type="daterange" range-separator="" start-placeholder="开始时间" end-placeholder="结束时间" @change="updateTimeChange" value-format="timestamp">
           </el-date-picker>
         </label>
         <div style="float: right;">
@@ -54,7 +61,7 @@
       </div>
 
       <!-- 数据列表 -->
-      <div class="row ">
+      <div class="row-data ">
         <el-table :data="data" border style="width: 100%">
           <el-table-column label="题目id" prop="id" width="60">
           </el-table-column>
@@ -84,6 +91,7 @@
           <el-table-column label="最近修改时间" prop="updateTime" width="96">
             <template slot-scope="scope">
               <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+              <div v-if="!scope.row.updateTime">-</div>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="150">
@@ -114,8 +122,8 @@
     </div>
 
     <!-- 添加 -->
-    <el-dialog title="添加试题" :visible.sync="addDialogVisible" width="30%" :before-close="handleClose">
-      <el-form class="add-form" label-position="left" label-width="0px" :model="addData" :rules="addRules" ref="addFrom">
+    <el-dialog title="添加试题" :visible.sync="addDialogVisible" width="40%" :before-close="handleClose">
+      <el-form class="add-form" label-position="left" label-width="0" :model="addData" :rules="addRules" ref="addFrom">
         <el-form-item label="" prop="subject">
           <label for="" class="driver-label">
             <span class="">科目类别：</span>
@@ -195,7 +203,7 @@
     </el-dialog>
 
     <!-- 编辑 -->
-    <el-dialog title="编辑试题" :visible.sync="editDialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog title="编辑试题" :visible.sync="editDialogVisible" width="40%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="editData" :rules="addRules" ref="editData">
         <el-form-item label="" prop="subject">
           <label for="" class="driver-label">
@@ -304,7 +312,8 @@ export default {
         updateTimeBegin: null,
         updateTimeEnd: null,
         pageNum: 1,
-        pageSize: 20
+        pageSize: 20,
+        categoryId: null
       },
       totalSize: 0,
       //   添加弹窗
@@ -402,7 +411,8 @@ export default {
           updateTimeBegin: this.search.updateTimeBegin || null,
           updateTimeEnd: this.search.updateTimeEnd || null,
           pageNum: this.search.pageNum,
-          pageSize: this.search.pageSize
+          pageSize: this.search.pageSize,
+          categoryId: this.search.categoryId || null
         })
         .then(res => {
           this.data = []
@@ -457,7 +467,6 @@ export default {
     submitAdd(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.addDialogVisible = false
           this.addData.type = this.addData.type.join(',')
           baseService.basePostData(this.apiPath.add, this.addData).then(res => {
             let result = res.data
@@ -466,6 +475,12 @@ export default {
                 message: result.message,
                 type: 'warning'
               })
+            }else{
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+              this.addDialogVisible = false
             }
             this.getData()
           })
@@ -494,7 +509,6 @@ export default {
     submitEdit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.editDialogVisible = false
           this.editData.type = this.editData.type.join(',')
 
           baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
@@ -504,6 +518,12 @@ export default {
                 message: result.message,
                 type: 'warning'
               })
+            }else{
+              this.$message({
+                message: '编辑成功',
+                type: 'success'
+              })
+              this.editDialogVisible = false
             }
             this.getData()
           })
