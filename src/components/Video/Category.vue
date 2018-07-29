@@ -8,23 +8,24 @@
       </el-breadcrumb>
     </div>
 
-    <!-- 操作按钮 -->
-    <div class="row ope-container">
-      <!-- <el-button type="success" size="small" @click="addCategory()">新增分类 </el-button> -->
-    </div>
+    <div class="main-page">
+      <!-- 操作按钮 -->
+      <div class="row ope-container">
+        <!-- <el-button type="success" size="small" @click="addCategory()">新增分类 </el-button> -->
+      </div>
 
-    <!-- 数据列表 -->
-    <div class="row data-container">
-      <el-table :data="categoryDate" border style="width: 100%" :max-height="tabMaxHeight">
-        <el-table-column label="ID" prop="id">
-        </el-table-column>
-        <el-table-column label="分类名称" prop="name">
-        </el-table-column>
-        <!-- <el-table-column label="创建时间" prop="">
+      <!-- 数据列表 -->
+      <div class="row data-container">
+        <el-table :data="categoryDate" border style="width: 100%" :max-height="tabMaxHeight">
+          <el-table-column label="ID" prop="id">
+          </el-table-column>
+          <el-table-column label="分类名称" prop="name">
+          </el-table-column>
+          <!-- <el-table-column label="创建时间" prop="">
                 </el-table-column> -->
-        <!-- <el-table-column label="最近修改时间" prop="">
+          <!-- <el-table-column label="最近修改时间" prop="">
                 </el-table-column> -->
-        <!-- <el-table-column label="操作">
+          <!-- <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button type="danger" size="mini" @click="delCategoryItem(scope.row)">
                             <i class="el-icon-delete"></i>
@@ -35,14 +36,15 @@
                     </template>
                 </el-table-column> -->
 
-      </el-table>
-    </div>
+        </el-table>
+      </div>
 
-    <!-- 分页器 -->
-    <!-- <div class="row page-container">
+      <!-- 分页器 -->
+      <!-- <div class="row page-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
       </el-pagination>
     </div> -->
+    </div>
 
     <!-- 新增分类弹窗 -->
     <el-dialog title="新增分类" :visible.sync="addCategoryDialogVisible" width="30%" :before-close="handleClose">

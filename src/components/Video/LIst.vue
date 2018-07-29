@@ -9,60 +9,58 @@
       </el-breadcrumb>
     </div>
 
-    <!-- 操作按钮 -->
-    <div class="row ope-container">
-      <el-button type="success" size="small" @click="addVideo()">新增视频</el-button>
-    </div>
+    <div class="main-page">
+      <!-- 操作按钮 -->
+      <div>
+        <el-button type="primary" size="small" @click="addVideo()">新增视频</el-button>
+      </div>
+      <!-- 数据列表 -->
+      <div class="row">
+        <el-table :data="videoDate" border style="width: 100%" >
+          <el-table-column label="ID" prop="id">
+          </el-table-column>
+          <el-table-column label="所属分类" prop="categoryName">
+          </el-table-column>
+          <el-table-column label="视频名称" prop="name">
+          </el-table-column>
+          <el-table-column label="原始文件名" prop="originName">
+          </el-table-column>
+          <el-table-column label="视频时长" prop="duration">
+            <template slot-scope="scope">
+              <div>{{Math.floor((scope.row.duration/ 3600)%24)}} 时 {{Math.floor((scope.row.duration / 60) % 60)}} 分 {{Math.floor(scope.row.duration % 60) }}秒</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="视频大小" prop="fileSize">
+          </el-table-column>
+          <el-table-column label="创建时间" prop="createTime">
+            <template slot-scope="scope">
+              <div>{{moment(scope.row.createTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="最近修改时间" prop="updateTime">
+            <template slot-scope="scope">
+              <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="250">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="editVideoItem(scope.row)">编辑
+              </el-button>
+              <el-button type="primary" size="mini" @click="detailVideoItem(scope.row)">查看
+              </el-button>
+              <el-button type="danger" size="mini" @click="delVideoItem(scope.row)">删除
+              </el-button>
+            </template>
+          </el-table-column>
 
-    <!-- 数据列表 -->
-    <div class="row data-container">
-      <el-table :data="videoDate" border style="width: 100%" :max-height="tabMaxHeight">
-        <el-table-column label="ID" prop="id">
-        </el-table-column>
-        <el-table-column label="所属分类" prop="categoryName">
-        </el-table-column>
-        <el-table-column label="视频名称" prop="name">
-        </el-table-column>
-        <el-table-column label="原始文件名" prop="originName">
-        </el-table-column>
-        <el-table-column label="视频时长" prop="duration">
-          <template slot-scope="scope">
-            <div>{{Math.floor((scope.row.duration/ 3600)%24)}} 时 {{Math.floor((scope.row.duration / 60) % 60)}} 分 {{Math.floor(scope.row.duration % 60) }}秒</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="视频大小" prop="fileSize">
-        </el-table-column>
-        <el-table-column label="创建时间" prop="createTime">
-          <template slot-scope="scope">
-            <div>{{moment(scope.row.createTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="最近修改时间" prop="updateTime">
-          <template slot-scope="scope">
-            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="editVideoItem(scope.row)">
-              <i class="el-icon-edit"></i>
-            </el-button>
-            <el-button type="primary" size="mini" @click="detailVideoItem(scope.row)">
-              <i class="el-icon-tickets"></i>
-            </el-button>
-            <el-button type="danger" size="mini" @click="delVideoItem(scope.row)">
-              <i class="el-icon-delete"></i>
-            </el-button>
-          </template>
-        </el-table-column>
+        </el-table>
+      </div>
 
-      </el-table>
-    </div>
-
-     <!-- 分页器 -->
-    <div class="row page-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
-      </el-pagination>
+      <!-- 分页器 -->
+      <div class="row">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+        </el-pagination>
+      </div>
     </div>
 
     <!-- 新增视频弹窗 -->
@@ -213,10 +211,10 @@ export default {
       categoryPath: {
         getPath: '/category/video'
       },
-       //页码相关
+      //页码相关
       currentPage: 1,
       pageSize: 20,
-      totalSize: 0,
+      totalSize: 0
     }
   },
   mounted() {
@@ -320,13 +318,13 @@ export default {
         this.categoryData = result
       })
 
-       //   编辑视频数据
+      //   编辑视频数据
       this.editVideoData.id = row.id
       this.editVideoData.categoryId = row.categoryId
       this.editVideoData.name = row.name
       this.editVideoData.introduction = row.introduction
       this.editVideoData.duration = row.duration
-       
+
       this.editVideoDialogVisible = true
     },
     // 编辑视频请求
@@ -354,7 +352,7 @@ export default {
       this.editVideoDialogVisible = false
       this.delVideoDialogVisible = false
     },
-     // --------------------------分页相关--------------------------
+    // --------------------------分页相关--------------------------
     handleSizeChange(val) {
       this.pageSize = val
       this.getVideoDate()

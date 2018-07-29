@@ -9,15 +9,16 @@
       </el-breadcrumb>
     </div>
 
-    <!-- 操作按钮 -->
-    <div class="row ope-container">
+    <div class="main-page">
+      <!-- 操作按钮 -->
+    <div>
       <el-button type="primary" icon="el-icon-refresh" size="small" @click="getRoleData()">刷新</el-button>
       <el-button type="success" size="small" @click="addRole()">新增</el-button>
       <Search v-on:search="getRoleData()"></Search>
     </div>
     <!-- 数据列表 -->
     <div class="row">
-      <el-table :data="roleData" border style="width: 100%" :max-height="tabMaxHeight">
+      <el-table :data="roleData" border style="width: 100%">
         <el-table-column label="ID" prop="id">
         </el-table-column>
         <el-table-column label="名称" prop="name">
@@ -51,10 +52,12 @@
     </div>
 
     <!-- 分页器 -->
-    <div class="row page-container ">
+    <div class="row">
       <el-pagination @size-change="handleSizeChange " @current-change="handleCurrentChange " :current-page="currentPage " :page-sizes="[10, 20] " :page-size="pageSize " layout="total, sizes, prev, pager, next, jumper " :total="totalSize ">
       </el-pagination>
     </div>
+    </div>
+    
 
     <!-- 新增角色弹窗 -->
     <el-dialog title="新增角色" :visible.sync="addRoleDialogVisible" width="30%" :before-close="handleClose">
@@ -388,26 +391,4 @@ export default {
 }
 </script>
 
-<style>
-.view-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-}
-.breadcrumb-container {
-  height: 20px;
-}
-.ope-container {
-  height: 40px;
-}
-.data-container {
-  flex: 1;
-  overflow: auto;
-  display: flex;
-}
-.page-container {
-  height: 40px;
-}
-</style>
 

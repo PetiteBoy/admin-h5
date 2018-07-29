@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
 
-    <div class="row main-container">
+    <div class="row main-page">
       <el-form ref="ruleForm" label-width="250px" class="demo-ruleForm">
         <el-form-item v-for="(item,index) in data" :key="item.categoryId" :label="item.categoryName">
           <el-input v-model="data[index].learnNum" :disabled="!item.videoNum" placeholder="分类视频数量">
@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     getData() {
+      this.data = []
       baseService.baseGetData(this.checkPath.getPath, '').then(res => {
         let result = res.data
         if (result.status === '0x0000') {
@@ -73,14 +74,21 @@ export default {
             message: result.message,
             type: 'warning'
           })
+        }else{
+          this.$message({
+            showClose: true,
+            message: '保存成功',
+            type: 'success'
+          })
         }
+        this.getData()
       })
     }
   }
 }
 </script>
 <style>
-.main-container .el-form {
+.main-page .el-form {
   width: 600px;
 }
 </style>

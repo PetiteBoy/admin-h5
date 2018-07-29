@@ -72,13 +72,8 @@ export default {
 }
 .content {
   flex: 1;
-  margin: 10px;
-  padding: 10px;
   box-sizing: border-box;
   overflow: auto;
-  border-radius: 4px;
-  box-shadow: 0px 1px 3px 0px rgba(140, 140, 140, 0.5);
-  background: #ffffff;
 }
 </style>
 

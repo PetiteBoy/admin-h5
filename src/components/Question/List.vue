@@ -7,83 +7,105 @@
         <el-breadcrumb-item>试题管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-
-    <div class="row ope-container">
-      <div class="row base-search">
-        <el-input size="small" v-model="search.id" placeholder="请输入题目id"></el-input>
-        <el-select size="small" v-model="search.subject" placeholder="请选择科目类别">
-          <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
-          </el-option>
-        </el-select>
-        <el-select size="small" v-model="search.type" placeholder="请选择题目类型">
-          <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
-          </el-option>
-        </el-select>
-        <el-input size="small" v-model="search.question" placeholder="请输入题目关键字"></el-input>
+    <div class="main-page">
+      <div class="btn-list">
         <el-button size="small" type="primary" @click="getData()">搜索</el-button>
         <el-button size="small" type="primary" @click="reset()">重置</el-button>
         <el-button size="small" type="primary" @click="add()">添加</el-button>
       </div>
-      <div class="row senior-search">
-        <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="请选择创建时间范围" end-placeholder="" @change="creatTimeChange" value-format="timestamp">
-        </el-date-picker>
-        <el-date-picker size="small" v-model="updateTime" type="daterange" range-separator="" start-placeholder="请选择更新时间范围" end-placeholder="" @change="updateTimeChange" value-format="timestamp">
-        </el-date-picker>
+      <div class="row base-search">
+        <label for="">
+          <span class="label-span">题目id：</span>
+          <el-input size="small" v-model="search.id"></el-input>
+        </label>
+        <label for="">
+          <span class="label-span">题目关键字：</span>
+          <el-input size="small" v-model="search.question"></el-input>
+        </label>
       </div>
-    </div>
+      <div class="row base-search">
+        <label for="">
+          <span class="label-span">科目类别：</span>
+          <el-select size="small" v-model="search.subject">
+            <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
+            </el-option>
+          </el-select>
+        </label>
+        <label for="">
+          <span class="label-span">题目类型：</span>
+          <el-select size="small" v-model="search.type">
+            <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
+            </el-option>
+          </el-select>
+        </label>
+      </div>
+      <div class="row senior-search">
+        <label for="">
+          <span class="label-span">创建时间范围：</span>
+          <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="creatTimeChange" value-format="timestamp">
+          </el-date-picker>
+        </label>
+        <label for="">
+          <span class="label-span">更新时间范围：</span>
+          <el-date-picker size="small" v-model="updateTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="updateTimeChange" value-format="timestamp">
+          </el-date-picker>
+        </label>
 
-    <!-- 数据列表 -->
-    <div class="row data-container">
-      <el-table :data="data" border style="width: 100%" :max-height="tabMaxHeight">
-        <el-table-column label="题目id" prop="id">
-        </el-table-column>
-        <el-table-column label="科目类别" prop="phone">
-          <template slot-scope="scope">
-            <div v-if="scope.row.subject === '1'">科目一</div>
-            <div v-if="scope.row.subject === '4'">科目四</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="题目类型" prop="type">
-        </el-table-column>
-        <el-table-column label="题目分类" prop="licenseType">
-          <template slot-scope="scope">
-            <el-select size="small" v-model="categoryIds[scope.$index]" placeholder="请选择" @change="change(scope.$index,scope.row)">
-              <el-option v-for="(item, index) in categoryDate" :key="index" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="题目问题" prop="question">
-        </el-table-column>
-        <el-table-column label="创建时间" prop="createTime">
-          <template slot-scope="scope">
-            <div>{{moment(scope.row.createTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="最近修改时间" prop="updateTime">
-          <template slot-scope="scope">
-            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="300">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="detail(scope.row)">
-              查看
-            </el-button>
-            <el-button type="primary" size="mini" @click="edit(scope.row)">
-              编辑
-            </el-button>
-            <el-button type="primary" size="mini" @click="del(scope.row)">
-              删除
-            </el-button>
-          </template>
-        </el-table-column>s
-      </el-table>
-    </div>
-    <!-- 分页器 -->
-    <div class="row page-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.pageNum" :page-sizes="[10, 20]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
-      </el-pagination>
+      </div>
+
+      <!-- 数据列表 -->
+      <div class="row data-container">
+        <el-table :data="data" border style="width: 100%">
+          <el-table-column label="题目id" prop="id">
+          </el-table-column>
+          <el-table-column label="科目类别" prop="phone">
+            <template slot-scope="scope">
+              <div v-if="scope.row.subject === '1'">科目一</div>
+              <div v-if="scope.row.subject === '4'">科目四</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="题目类型" prop="type">
+          </el-table-column>
+          <el-table-column label="题目分类" prop="licenseType">
+            <template slot-scope="scope">
+              <el-select size="small" v-model="categoryIds[scope.$index]" placeholder="请选择" @change="change(scope.$index,scope.row)">
+                <el-option v-for="(item, index) in categoryDate" :key="index" :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="题目问题" prop="question">
+          </el-table-column>
+          <el-table-column label="创建时间" prop="createTime">
+            <template slot-scope="scope">
+              <div>{{moment(scope.row.createTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="最近修改时间" prop="updateTime">
+            <template slot-scope="scope">
+              <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="300">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="detail(scope.row)">
+                查看
+              </el-button>
+              <el-button type="primary" size="mini" @click="edit(scope.row)">
+                编辑
+              </el-button>
+              <el-button type="primary" size="mini" @click="del(scope.row)">
+                删除
+              </el-button>
+            </template>
+          </el-table-column>s
+        </el-table>
+      </div>
+      <!-- 分页器 -->
+      <div class="row page-container">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.pageNum" :page-sizes="[10, 50]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+        </el-pagination>
+      </div>
     </div>
 
     <!-- 添加 -->
@@ -484,12 +506,4 @@ export default {
   }
 }
 </script>
-<style>
-.base-search .el-input {
-  width: 150px;
-}
-.senior-search .el-input {
-  width: 200px;
-}
-</style>
 

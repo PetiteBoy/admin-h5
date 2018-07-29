@@ -9,7 +9,7 @@
       </el-breadcrumb>
     </div>
 
-    <div class="row data-container">
+    <div class="main-page">
       <el-tree node-key="id" default-expand-all :expand-on-click-node="false" :render-content="renderContent" :data="menuList" :props="defaultProps">
       </el-tree>
     </div>

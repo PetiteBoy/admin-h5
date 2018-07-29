@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
 
-    <div class="row main-container">
+    <div class="row main-page">
       <el-form :model="ruleForm" ref="ruleForm" label-width="250px" class="demo-ruleForm">
         <el-form-item label="总题目数" prop="totalNum">
           <el-input v-model="ruleForm.totalNum" placeholder="总题目数"></el-input>
@@ -54,6 +54,12 @@ export default {
   },
   methods: {
     getData() {
+      this.ruleForm = {
+        id: '',
+        totalNum: '',
+        period: '',
+        detail: []
+      }
       baseService.baseGetData(this.checkPath.getPath, '').then(res => {
         let result = res.data
         this.ruleForm.id = result.data.id
@@ -90,7 +96,14 @@ export default {
               message: result.message,
               type: 'warning'
             })
+          } else {
+            this.$message({
+              showClose: true,
+              message: '保存成功',
+              type: 'success'
+            })
           }
+          this.getData()
         })
       } else {
         this.$message({
@@ -103,7 +116,7 @@ export default {
 }
 </script>
 <style>
-.main-container .el-form {
+.main-page .el-form {
   width: 600px;
 }
 </style>

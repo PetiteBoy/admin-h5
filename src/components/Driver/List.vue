@@ -9,107 +9,140 @@
       </el-breadcrumb>
     </div>
 
-    <!-- 操作按钮 -->
-    <div class="row ope-container">
-      <div class="row base-search">
-        <el-input size="small" v-model="search.id" placeholder="请输入用户id"></el-input>
-        <el-input size="small" v-model="search.phone" placeholder="请输入手机号"></el-input>
-        <el-select size="small" v-model="search.disabled" placeholder="请选择">
-          <el-option v-for="(item, index) in typeList" :key="index" :label="item.name" :value="item.val">
-          </el-option>
-        </el-select>
-        <el-select size="small" v-model="search.auditState" placeholder="用户审核状态">
-          <el-option v-for="(item, index) in auditList" :key="index" :label="item.name" :value="item.val">
-          </el-option>
-        </el-select>
+    <div class="main-page">
+      <!-- 操作按钮 -->
+      <div class="btn-list">
         <el-button size="small" type="primary" @click="getData()">搜索</el-button>
         <el-button size="small" type="primary" @click="reset()">重置</el-button>
         <el-button size="small" type="primary" @click="add()">添加</el-button>
       </div>
+      <div class="row base-search">
+        <label for="">
+          <span class="label-span">用户id：</span>
+          <el-input size="small" v-model="search.id"></el-input>
+        </label>
+        <label for="">
+          <span class="label-span">手机号：</span>
+          <el-input size="small" v-model="search.phone"></el-input>
+        </label>
+        <label for="">
+          <span class="label-span">名单类型：</span>
+          <el-select size="small" v-model="search.disabled">
+            <el-option v-for="(item, index) in typeList" :key="index" :label="item.name" :value="item.val">
+            </el-option>
+          </el-select>
+        </label>
+        <label for="">
+          <span class="label-span">审核状态：</span>
+          <el-select size="small" v-model="search.auditState">
+            <el-option v-for="(item, index) in auditList" :key="index" :label="item.name" :value="item.val">
+            </el-option>
+          </el-select>
+        </label>
+      </div>
       <div class="row senior-search">
-        <el-select size="small" v-model="search.idType" placeholder="用户证件类型">
-          <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
-          </el-option>
-        </el-select>
-        <el-input size="small" v-model="search.idNo" placeholder="请输入证件号"></el-input>
-        <el-select size="small" v-model="search.licenseType" placeholder="用户驾驶证类型">
-          <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
-          </el-option>
-        </el-select>
-        <el-input size="small" v-model="search.licenseNo" placeholder="请输入驾驶证号"></el-input>
+        <label for="">
+          <span class="label-span">证件类型：</span>
+          <el-select size="small" v-model="search.idType">
+            <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
+            </el-option>
+          </el-select>
+        </label>
+        <label for="">
+          <span class="label-span">证件号：</span>
+          <el-input size="small" v-model="search.idNo"></el-input>
+        </label>
       </div>
-      <div class="row">
-        <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="请选择注册时间范围" end-placeholder="" @change="creatTimeChange" value-format="timestamp">
-        </el-date-picker>
-        <el-date-picker size="small" v-model="auditTime" type="daterange" range-separator="" start-placeholder="请选择审核时间范围" end-placeholder="" @change="auditTimeChange" value-format="timestamp">
-        </el-date-picker>
+      <div class="row senior-search">
+        <label for="">
+          <span class="label-span">驾驶证类型：</span>
+          <el-select size="small" v-model="search.licenseType">
+            <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
+            </el-option>
+          </el-select>
+        </label>
+        <label for="">
+          <span class="label-span">驾驶证号：</span>
+          <el-input size="small" v-model="search.licenseNo"></el-input>
+        </label>
+      </div>
+      <div class="row senior-search">
+        <label for="">
+          <span>注册时间范围：</span>
+          <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="creatTimeChange" value-format="timestamp">
+          </el-date-picker>
+        </label>
+        <label for="">
+          <span>审核时间范围：</span>
+          <el-date-picker size="small" v-model="auditTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="auditTimeChange" value-format="timestamp">
+          </el-date-picker>
+        </label>
       </div>
 
-    </div>
-
-    <!-- 数据列表 -->
-    <div class="row data-container">
-      <el-table :data="data" border style="width: 100%" :max-height="tabMaxHeight" min-height="409">
-        <el-table-column label="用户id" prop="id">
-        </el-table-column>
-        <el-table-column label="用户手机" prop="phone">
-        </el-table-column>
-        <el-table-column label="证件类型" prop="idType">
-          <template slot-scope="scope">
-            <div>{{dataIdType[scope.row.idType]}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="证件号" prop="idNo">
-        </el-table-column>
-        <el-table-column label="准驾车型" prop="licenseType">
-        </el-table-column>
-        <el-table-column label="驾驶证档案编号" prop="licenseNo">
-        </el-table-column>
-        <el-table-column label="注册时间" prop="createTime">
-          <template slot-scope="scope">
-            <div>{{moment(scope.row.createTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="审核时间" prop="auditTime">
-          <template slot-scope="scope">
-            <div v-if="scope.row.auditTime">{{moment(scope.row.auditTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="审核状态" prop="auditState">
-          <template slot-scope="scope">
-            <div>{{dataAuditStatus[scope.row.auditState]}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="最近修改时间" prop="updateTime">
-          <template slot-scope="scope">
-            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="300">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="detail(scope.row)">
-              查看
-            </el-button>
-            <el-button :disabled="scope.row.auditState !== 'INHAND'" type="primary" size="mini" @click="auditItem(scope.row)">
-              审核
-            </el-button>
-            <el-button type="primary" size="mini" @click="edit(scope.row)">
-              修改
-            </el-button>
-            <el-button type="primary" size="mini" v-if="!scope.row.disabled" @click="blackItem(scope.row)">
-              拉黑
-            </el-button>
-            <el-button type="primary" size="mini" v-if="scope.row.disabled" @click="whiteItem(scope.row)">
-              解封
-            </el-button>
-          </template>
-        </el-table-column>s
-      </el-table>
-    </div>
-    <!-- 分页器 -->
-    <div class="row page-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.currentPage" :page-sizes="[10, 20]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
-      </el-pagination>
+      <!-- 数据列表 -->
+      <div class=" data-container">
+        <el-table :data="data" border style="width: 100%" min-height="409">
+          <el-table-column label="用户id" prop="id">
+          </el-table-column>
+          <el-table-column label="用户手机" prop="phone">
+          </el-table-column>
+          <el-table-column label="证件类型" prop="idType">
+            <template slot-scope="scope">
+              <div>{{dataIdType[scope.row.idType]}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="证件号" prop="idNo">
+          </el-table-column>
+          <el-table-column label="准驾车型" prop="licenseType">
+          </el-table-column>
+          <el-table-column label="驾驶证档案编号" prop="licenseNo">
+          </el-table-column>
+          <el-table-column label="注册时间" prop="createTime">
+            <template slot-scope="scope">
+              <div>{{moment(scope.row.createTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="审核时间" prop="auditTime">
+            <template slot-scope="scope">
+              <div v-if="scope.row.auditTime">{{moment(scope.row.auditTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="审核状态" prop="auditState">
+            <template slot-scope="scope">
+              <div>{{dataAuditStatus[scope.row.auditState]}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="最近修改时间" prop="updateTime">
+            <template slot-scope="scope">
+              <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="300">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="detail(scope.row)">
+                查看
+              </el-button>
+              <el-button :disabled="scope.row.auditState !== 'INHAND'" type="primary" size="mini" @click="auditItem(scope.row)">
+                审核
+              </el-button>
+              <el-button type="primary" size="mini" @click="edit(scope.row)">
+                编辑
+              </el-button>
+              <el-button type="primary" size="mini" v-if="!scope.row.disabled" @click="blackItem(scope.row)">
+                拉黑
+              </el-button>
+              <el-button type="primary" size="mini" v-if="scope.row.disabled" @click="whiteItem(scope.row)">
+                解封
+              </el-button>
+            </template>
+          </el-table-column>s
+        </el-table>
+      </div>
+      <!-- 分页器 -->
+      <div class=" page-container">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.currentPage" :page-sizes="[10, 50]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+        </el-pagination>
+      </div>
     </div>
 
     <!-- 添加弹窗 -->
@@ -260,7 +293,7 @@ export default {
       // 搜索数据
       search: {
         pageSize: 20,
-        currentPage: 1,
+        pageNum: 1,
         // id
         id: '',
         // 手机号
@@ -449,6 +482,11 @@ export default {
                 message: result.message,
                 type: 'warning'
               })
+            } else {
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
             }
           })
         } else {
@@ -479,6 +517,11 @@ export default {
               this.$message({
                 message: result.message,
                 type: 'warning'
+              })
+            } else {
+              this.$message({
+                message: '编辑成功',
+                type: 'success'
               })
             }
             this.getData()
@@ -572,7 +615,7 @@ export default {
       this.getData()
     },
     handleCurrentChange(val) {
-      this.search.currentPage = val
+      this.search.pageNum = val
       this.getData()
     },
     creatTimeChange(val) {
@@ -601,16 +644,4 @@ export default {
 }
 </script>
 
-<style>
-.base-search .el-input {
-  width: 150px;
-}
-.senior-search .el-input {
-  width: 200px;
-}
-.add-form {
-  width: 200px;
-  margin: 0 auto;
-}
-</style>
 

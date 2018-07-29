@@ -9,50 +9,51 @@
       </el-breadcrumb>
     </div>
 
-    <!-- 操作按钮 -->
-    <div class="row ope-container">
-      <el-button type="primary" icon="el-icon-refresh" size="small" @click="getPermissionData()">刷新</el-button>
-      <el-button type="success" size="small" @click="addPermission()">新增</el-button>
-      <Search v-on:search="getPermissionData()"></Search>
-    </div>
+    <div class="main-page">
+      <!-- 操作按钮 -->
+      <div>
+        <el-button type="success" size="small" @click="addPermission()">新增</el-button>
+        <Search v-on:search="getPermissionData()"></Search>
+      </div>
 
-    <!-- 数据列表 -->
-    <div class="row data-container">
-      <el-table :data="permissionData" border style="width: 100%" :max-height="tabMaxHeight">
-        <el-table-column label="ID" prop="id">
-        </el-table-column>
-        <el-table-column label="标识" prop="code">
-        </el-table-column>
-        <el-table-column label="名称" prop="name">
-        </el-table-column>
-        <el-table-column label="创建时间" prop="createTime">
-          <template slot-scope="scope">
-            <div>{{moment(scope.row.createTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="更新时间" prop="updateTime">
-          <template slot-scope="scope">
-            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
+      <!-- 数据列表 -->
+      <div class="row">
+        <el-table :data="permissionData" border style="width: 100%">
+          <el-table-column label="ID" prop="id">
+          </el-table-column>
+          <el-table-column label="标识" prop="code">
+          </el-table-column>
+          <el-table-column label="名称" prop="name">
+          </el-table-column>
+          <el-table-column label="创建时间" prop="createTime">
+            <template slot-scope="scope">
+              <div>{{moment(scope.row.createTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="更新时间" prop="updateTime">
+            <template slot-scope="scope">
+              <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
 
-            <el-button type="primary" size="mini" @click="editPermissionItem(scope.row)">
-              <i class="el-icon-edit"></i>
-            </el-button>
-            <el-button type="danger" size="mini" @click="delPermissionItem(scope.row)">
-              <i class="el-icon-delete"></i>
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+              <el-button type="primary" size="mini" @click="editPermissionItem(scope.row)">
+                编辑
+              </el-button>
+              <el-button type="danger" size="mini" @click="delPermissionItem(scope.row)">
+               删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
-    <!-- 分页器 -->
-    <div class="row page-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
-      </el-pagination>
+      <!-- 分页器 -->
+      <div class="row">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+        </el-pagination>
+      </div>
     </div>
 
     <!-- 新增权限弹窗 -->
@@ -310,26 +311,4 @@ export default {
   }
 }
 </script>
-<style>
-.view-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-}
-.breadcrumb-container {
-  height: 20px;
-}
-.ope-container {
-  height: 40px;
-}
-.data-container {
-  flex: 1;
-  overflow: auto;
-  display: flex;
-}
-.page-container {
-  height: 40px;
-}
-</style>
 

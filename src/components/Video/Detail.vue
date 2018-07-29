@@ -8,7 +8,7 @@
                 <el-breadcrumb-item>视频详情</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="row">
+        <div class="row main-page">
             <el-form ref="form" label-width="150px" label-position="left">
                 <el-form-item label="视频id">
                     <div>{{data.id}}</div>

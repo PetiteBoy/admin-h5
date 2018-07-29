@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="row">
+    <div class="view-container">
+        <div class="row breadcrumb-container">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{path:'/bm'}">首页</el-breadcrumb-item>
                 <el-breadcrumb-item :to="{path:'/driver/list'}">驾驶人列表</el-breadcrumb-item>
@@ -8,7 +8,7 @@
             </el-breadcrumb>
         </div>
 
-        <div class="row">
+        <div class="row main-page">
             <el-form ref="form" label-width="200px">
                 <el-form-item label="用户id">
                     <div>{{data.id}}</div>

@@ -9,58 +9,56 @@
       </el-breadcrumb>
     </div>
 
-    <!-- 操作按钮 -->
-    <div class="row ope-container">
-      <el-button type="primary" icon="el-icon-refresh" size="small" @click="getAdminData()">刷新</el-button>
-      <el-button type="success" size="small" @click="addAdmin()">新增</el-button>
-      <Search v-on:search="getAdminData()"></Search>
-    </div>
+    <div class="main-page">
+      <!-- 操作按钮 -->
+      <div>
+        <el-button type="success" size="small" @click="addAdmin()">新增</el-button>
+        <Search v-on:search="getAdminData()"></Search>
+      </div>
 
-    <!-- 数据列表 -->
-    <div class="row data-container">
-      <el-table :data="adminData" border style="width: 100%" :max-height="tabMaxHeight">
-        <el-table-column label="ID" prop="id">
-        </el-table-column>
-        <el-table-column label="用户名" prop="username">
-        </el-table-column>
-        <el-table-column label="真实姓名" prop="realname">
-        </el-table-column>
-        <el-table-column label="邮箱" prop="email">
-        </el-table-column>
-        <el-table-column label="创建时间" prop="createTime">
-          <template slot-scope="scope">
-            <div>{{moment(scope.row.createTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="更新时间" prop="updateTime">
-          <template slot-scope="scope">
-            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="350">
-          <template slot-scope="scope">
+      <!-- 数据列表 -->
+      <div class="row">
+        <el-table :data="adminData" border style="width: 100%">
+          <el-table-column label="ID" prop="id">
+          </el-table-column>
+          <el-table-column label="用户名" prop="username">
+          </el-table-column>
+          <el-table-column label="真实姓名" prop="realname">
+          </el-table-column>
+          <el-table-column label="邮箱" prop="email">
+          </el-table-column>
+          <el-table-column label="创建时间" prop="createTime">
+            <template slot-scope="scope">
+              <div>{{moment(scope.row.createTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="更新时间" prop="updateTime">
+            <template slot-scope="scope">
+              <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="400">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="editAdminItem(scope.row)">编辑
+              </el-button>
+              <el-button type="primary " size="mini " @click="addAdminPermission(scope.row) ">权限
+              </el-button>
+              <el-button type="primary " size="mini " @click="addAdminMenu(scope.row) ">菜单
+              </el-button>
+              <el-button type="primary " size="mini " @click="addAdminRole(scope.row) ">角色
+              </el-button>
+              <el-button type="danger" size="mini" @click="delAdminItem(scope.row)">删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
-            <el-button type="primary" size="mini" @click="editAdminItem(scope.row)">
-              <i class="el-icon-edit"></i>
-            </el-button>
-            <el-button type="primary " size="mini " @click="addAdminPermission(scope.row) ">权限
-            </el-button>
-            <el-button type="primary " size="mini " @click="addAdminMenu(scope.row) ">菜单
-            </el-button>
-            <el-button type="primary " size="mini " @click="addAdminRole(scope.row) ">角色
-            </el-button>
-            <el-button type="danger" size="mini" @click="delAdminItem(scope.row)">
-              <i class="el-icon-delete"></i>
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-
-    <!-- 分页器 -->
-    <div class="row page-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
-      </el-pagination>
+      <!-- 分页器 -->
+      <div class="row">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNum" :page-sizes="[10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+        </el-pagination>
+      </div>
     </div>
 
     <!-- 新增管理员弹窗 -->
@@ -193,12 +191,9 @@ export default {
       // 列表数据
       adminData: [],
       //页码相关
-      currentPage: 1,
+      pageNum: 1,
       pageSize: 20,
       totalSize: 0,
-      // 表格最大高度
-      tabMaxHeight: 0,
-
       // 当前用户Id
       currentAdminId: '',
       // 用户权限弹窗
@@ -214,7 +209,6 @@ export default {
       roleData: [],
       // 用户已有角色
       adminRoleData: [],
-
       // 用户菜单弹窗
       editAdminMenuDialogVisible: false,
       // 菜单列表
@@ -270,7 +264,7 @@ export default {
     getAdminData() {
       baseService
         .basePostData(this.adminPath.getPath, {
-          pageNum: this.currentPage,
+          pageNum: this.pageNum,
           pageSize: this.pageSize,
           name: this.searchId
         })
@@ -278,8 +272,6 @@ export default {
           let result = res.data
           this.adminData = result.data.list
           this.totalSize = result.data.total
-          let clientHieght = document.body.clientHeight
-          this.tabMaxHeight = clientHieght - 60 - 30 - 30 - 50 - 50
           if (result.status !== '0x0000') {
             this.$message({
               message: result.message,
@@ -480,7 +472,7 @@ export default {
       this.getAdminData()
     },
     handleCurrentChange(val) {
-      this.currentPage = val
+      this.pageNum = val
       this.getAdminData()
     }
   }

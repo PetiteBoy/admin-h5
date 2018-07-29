@@ -14,3 +14,63 @@
   font-size: 12px;
   min-height: 409px;
 }
+.breadcrumb-container{
+  margin: 10px;
+  border-radius: 4px;
+  padding: 10px;
+  background: #ffffff;
+  box-shadow: 0px 1px 3px 0px rgba(140, 140, 140, 0.5);
+  box-sizing: border-box;
+}
+.el-breadcrumb{
+  height: 30px;
+  line-height: 30px;
+}
+.ope-container{
+  background: #ffffff;
+  padding: 10px;
+}
+.data-container{
+  background: #ffffff;
+  padding: 10px;
+}
+.page-container{
+  padding: 10px;
+  background: #ffffff;
+}
+
+.main-page{
+  margin: 10px;
+  border-radius: 4px;
+  padding: 10px;
+  background: #ffffff;
+  box-shadow: 0px 1px 3px 0px rgba(140, 140, 140, 0.5);
+  box-sizing: border-box;
+}
+label +label{
+  margin-left: 20px;
+}
+label span{
+  display: inline-block;
+  text-align: left;
+  color: #606266;
+  font-size: 14px;
+  
+}
+.label-span{
+  width: 100px;
+}
+.btn-list{
+  text-align: right;
+}
+
+.base-search .el-input {
+  width: 150px;
+}
+.senior-search .el-input {
+  width: 150px;
+}
+.add-form {
+  width: 200px;
+  margin: 0 auto;
+}
