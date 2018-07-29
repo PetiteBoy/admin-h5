@@ -88,15 +88,13 @@
         </el-form-item>
         <el-form-item label="上传视频：" prop="videoToken">
           <el-upload :action="upload.video" :on-error="handleErrVideo" accept="video/*" :disabled="uploading" :before-upload="handlePreviewVideo" :on-success="handleSuccessVideo" :headers="headers">
-            <el-button size="small" type="primary" :loading="uploading" >上传</el-button>
+            <el-button size="small" type="primary" :loading="uploading">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
-          <video :src="videoUrl" controls v-if="videoUrl"></video>
+          <video :src="videoUrl" controls v-if="videoUrl" id="addVideoTime" preload></video>
         </el-form-item>
         <el-form-item label="视频时长：" prop="duration" class="video-druction">
-          <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> 时
-          <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> 分
-          <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
+          <el-input v-model="addVideoData.duration" size="small" disabled=""></el-input>
         </el-form-item>
         <el-form-item label="上传缩略图：" prop="thumbToken">
           <el-upload :action="upload.pic" accept="image/*" :headers="headers" :on-success="handleSuccessPic">
@@ -133,16 +131,14 @@
             <el-button size="small" type="primary" :loading="uploading" :disabled="uploading">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
-          <video :src="videoUrl" controls v-if="videoUrl"></video>
+          <video :src="videoUrledit" controls v-if="videoUrledit" id="editVideoTime"></video>
         </el-form-item>
         <el-form-item label="视频时长" prop="duration" class="video-druction">
-          <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> 时
-          <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> 分
-          <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
+          <el-input v-model="editVideoData.duration" size="small" disabled=""></el-input>
         </el-form-item>
         <el-form-item label="上传缩略图" prop="">
           <el-upload :action="upload.pic" accept="image/*" :headers="headers" :on-success="handleSuccessPicEdit">
-            <el-button size="small" type="primary" >上传</el-button>
+            <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
           </el-upload>
           <img :src="imgUrl" alt="" class="pic-1" v-if="imgUrl">
@@ -183,7 +179,8 @@ export default {
         video: `${config.service.host}/file/video/upload`
       },
       imgUrl: '',
-      videoUrl:'',
+      videoUrl: '',
+      videoUrledit:'',
       // 视频列表
       videoDate: [],
       tabMaxHeight: 0,
@@ -204,7 +201,7 @@ export default {
         introduction: [{ required: true, message: '请输入视频简介', trigger: 'blur' }],
         videoToken: [{ required: true, message: '请上传视频', trigger: 'blur' }],
         thumbToken: [{ required: true, message: '请上传图片', trigger: 'blur' }],
-        duration: [{ required: true, message: '请输入视频时长', trigger: 'change' }, { type: 'number', message: '请输入视频时长', min: 1 }]
+        duration: [{ required: true, message: '请输入视频时长', trigger: 'change' }]
       },
       //   编辑视频弹窗
       editVideoDialogVisible: false,
@@ -306,7 +303,6 @@ export default {
     },
     // 添加视频请求
     submitAddVideo(formName) {
-      this.addVideoData.duration = Number(this.duration.hour) * 60 * 60 + Number(this.duration.minute) * 60 + Number(this.duration.second)
       this.$refs[formName].validate(valid => {
         if (valid) {
           baseService.basePostData(this.videoPath.addPath, this.addVideoData).then(res => {
@@ -354,14 +350,7 @@ export default {
     editVideoItem(row) {
       this.uploading = false
       this.imgUrl = ''
-       this.videoUrl = ''
-      let t = Number(row.duration)
-      let h = Math.floor((t / 3600) % 24)
-      let m = Math.floor((t / 60) % 60)
-      let s = Math.floor(t % 60)
-      this.duration.hour = h
-      this.duration.minute = m
-      this.duration.second = s
+      this.videoUrledit = ''
 
       //获取分类列表
       baseService.basePostData(this.categoryPath.getPath).then(res => {
@@ -376,13 +365,12 @@ export default {
       this.editVideoData.introduction = row.introduction
       this.editVideoData.duration = row.duration
       this.imgUrl = row.thumbUrl
-       this.videoUrl = row.url
+      this.videoUrledit = row.url
 
       this.editVideoDialogVisible = true
     },
     // 编辑视频请求
     submitEditVideo(formName) {
-      this.editVideoData.duration = Number(this.duration.hour) * 60 * 60 + Number(this.duration.minute) * 60 + Number(this.duration.second)
       this.$refs[formName].validate(valid => {
         if (valid) {
           baseService.basePostData(this.videoPath.editPath, this.editVideoData).then(res => {
@@ -433,7 +421,14 @@ export default {
       })
       this.uploading = false
       this.addVideoData.videoToken = val.data.token
-       this.videoUrl = val.data.url
+      this.videoUrl = val.data.url
+      let _this = this
+      setTimeout(() => {
+        let addVideoTime = document.getElementById('addVideoTime')
+        addVideoTime.oncanplay = function() {
+          _this.addVideoData.duration = parseInt(addVideoTime.duration)
+        } 
+      }, 100)
     },
     handleSuccessPic(val) {
       this.addVideoData.thumbToken = val.data.token
@@ -446,7 +441,15 @@ export default {
       })
       this.uploading = false
       this.editVideoData.videoToken = val.data.token
-      this.videoUrl = val.data.url
+      this.videoUrledit = val.data.url
+      let _this = this
+      setTimeout(() => {
+        let editVideoTime = document.getElementById('editVideoTime')
+        editVideoTime.oncanplay = function() {
+          _this.editVideoData.duration = parseInt(editVideoTime.duration)
+          console.log(editVideoTime.duration)
+        } 
+      }, 100)
     },
     handleSuccessPicEdit(val) {
       this.editVideoData.thumbToken = val.data.token
@@ -481,10 +484,10 @@ export default {
 .video-druction .el-input__inner {
   padding: 2px;
 }
-video{
+video {
   width: 200px;
 }
-.pic-1{
+.pic-1 {
   width: 200px;
 }
 </style>
