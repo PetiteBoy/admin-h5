@@ -45,22 +45,60 @@ const state = {
   //驾驶证类别列表
   licenseList: [
     {
-      name: 'A1'
+      name: '全部',
+      val:''
     },
     {
-      name: 'A2'
+      name: 'A1',
+      val:'A1'
     },
     {
-      name: 'B1'
+      name: 'A2',
+      val:'A2'
     },
     {
-      name: 'B2'
+      name: 'B1',
+      val:'B1'
+    },
+    {
+      name: 'B2',
+      val:'B2'
     }, {
-      name: 'C1'
+      name: 'C1',
+      val:'C1'
     }, {
-      name: 'C2'
+      name: 'C2',
+      val:'C2'
     }, {
-      name: 'C3'
+      name: 'C3',
+      val:'C3'
+    }
+  ],
+  licenseListone: [
+    {
+      name: 'A1',
+      val:'A1'
+    },
+    {
+      name: 'A2',
+      val:'A2'
+    },
+    {
+      name: 'B1',
+      val:'B1'
+    },
+    {
+      name: 'B2',
+      val:'B2'
+    }, {
+      name: 'C1',
+      val:'C1'
+    }, {
+      name: 'C2',
+      val:'C2'
+    }, {
+      name: 'C3',
+      val:'C3'
     }
   ],
   // 审核状态

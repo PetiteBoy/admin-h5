@@ -9,14 +9,14 @@
     </div>
 
     <!-- 操作按钮 -->
-    <div class="row ope-container">
+    <!-- <div class="row ope-container"> -->
       <!-- <el-button type="success" size="small" @click="addCategory()">新增分类 </el-button> -->
-    </div>
+    <!-- </div> -->
 
     <!-- 数据列表 -->
-    <div class="row data-container">
+    <div class="main-page">
       <el-table :data="categoryDate" border style="width: 100%" :max-height="tabMaxHeight">
-        <el-table-column label="ID" prop="id">
+        <el-table-column label="ID" prop="id" width="50">
         </el-table-column>
         <el-table-column label="分类名称" prop="name">
         </el-table-column>

@@ -17,7 +17,7 @@
 .breadcrumb-container{
   margin: 10px;
   border-radius: 4px;
-  padding: 10px;
+  padding: 10px 20px;
   background: #ffffff;
   box-shadow: 0px 1px 3px 0px rgba(140, 140, 140, 0.5);
   box-sizing: border-box;
@@ -41,11 +41,12 @@
 
 .main-page{
   margin: 10px;
+  padding: 20px;
   border-radius: 4px;
-  padding: 10px;
   background: #ffffff;
   box-shadow: 0px 1px 3px 0px rgba(140, 140, 140, 0.5);
   box-sizing: border-box;
+
 }
 label +label{
   margin-left: 20px;
@@ -83,7 +84,7 @@ label .el-input{
   width: 120px;
 }
 .el-range-editor--small.el-input__inner{
-  width: 300px;
+  width: 261px;
 }
 .driver-label .label-span{
   width: 150px;
@@ -97,4 +98,14 @@ label .el-input{
 }
 .el-table__row .el-select { 
   width: 100%;
+}
+.el-upload-list {
+  display: none;
+}
+.pic{
+  width: 100px;
+  height: 75px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 10px;
 }

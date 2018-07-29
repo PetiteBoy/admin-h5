@@ -11,17 +11,23 @@
     <div class="row main-page">
       <el-form :model="ruleForm" ref="ruleForm" label-width="250px" class="demo-ruleForm">
         <el-form-item label="总题目数" prop="totalNum">
-          <el-input v-model="ruleForm.totalNum" placeholder="总题目数"></el-input>
+          <el-input v-model="ruleForm.totalNum"  placeholder="总题目数">
+            <template slot="append">个</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="合格题数" prop="">
-          <el-input disabled></el-input>
+          <el-input disabled>
+            <template slot="append">个</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="考试时间" prop="period">
-          <el-input v-model="ruleForm.period" placeholder="考试时间"></el-input>
+          <el-input v-model="ruleForm.period" placeholder="考试时间">
+            <template slot="append">分</template>
+          </el-input>
         </el-form-item>
         <el-form-item v-for="(item,index) in ruleForm.detail" :key="item.categoryId" :label="item.categoryName">
           <el-input v-model="ruleForm.detail[index].learnNum" :disabled="!item.questionNum" placeholder="分类题目数">
-            <template slot="append">该分类共有{{item.questionNum || 0}}个试题</template>
+            <template slot="append">共{{item.questionNum || 0}}个</template>
           </el-input>
         </el-form-item>
         <el-form-item>
@@ -39,7 +45,7 @@ export default {
     return {
       ruleForm: {
         id: '',
-        totalNum: '',
+        totalNum: 0,
         period: '',
         detail: []
       },
@@ -56,7 +62,7 @@ export default {
     getData() {
       this.ruleForm = {
         id: '',
-        totalNum: '',
+        totalNum: 0,
         period: '',
         detail: []
       }
@@ -86,9 +92,9 @@ export default {
     submitForm() {
       let sum = 0
       this.ruleForm.detail.forEach(item => {
-        sum += item.learnNum
+        sum += Number(item.learnNum)
       })
-      if (sum === 100) {
+      if (sum === Number(this.ruleForm.totalNum)) {
         baseService.basePostData(this.checkPath.savePath, this.ruleForm).then(res => {
           let result = res.data
           if (result.status !== '0x0000') {

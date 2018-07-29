@@ -114,7 +114,7 @@
     </div>
 
     <!-- 添加 -->
-    <el-dialog title="添加" :visible.sync="addDialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog title="添加试题" :visible.sync="addDialogVisible" width="30%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="addData" :rules="addRules" ref="addFrom">
         <el-form-item label="" prop="subject">
           <label for="" class="driver-label">
@@ -195,7 +195,7 @@
     </el-dialog>
 
     <!-- 编辑 -->
-    <el-dialog title="编辑" :visible.sync="editDialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog title="编辑试题" :visible.sync="editDialogVisible" width="30%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="editData" :rules="addRules" ref="editData">
         <el-form-item label="" prop="subject">
           <label for="" class="driver-label">
@@ -377,7 +377,7 @@ export default {
   },
   computed: {
     licenseList() {
-      return this.$store.state.data.licenseList
+      return this.$store.state.data.licenseListone
     }
   },
   mounted() {

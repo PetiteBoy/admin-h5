@@ -9,35 +9,35 @@
             </el-breadcrumb>
         </div>
         <div class="row main-page">
-            <el-form ref="form" label-width="150px" label-position="left">
-                <el-form-item label="视频id">
+            <el-form ref="form" label-width="150px" label-position="right">
+                <el-form-item label="视频id：">
                     <div>{{data.id}}</div>
                 </el-form-item>
-                <el-form-item label="所属分类">
+                <el-form-item label="所属分类：">
                     <div>{{data.categoryName}}</div>
                 </el-form-item>
-                <el-form-item label="视频名称">
+                <el-form-item label="视频名称：">
                     <div>{{data.name}}</div>
                 </el-form-item>
-                <el-form-item label="视频文件名">
+                <el-form-item label="视频文件名：">
                     <div>{{data.originName}}</div>
                 </el-form-item>
-                <el-form-item label="文件大小">
+                <el-form-item label="文件大小：">
                     <div>{{data.fileSize}}</div>
                 </el-form-item>
-                <el-form-item label="视频时长">
+                <el-form-item label="视频时长：">
                     <div>{{Math.floor((data.duration/ 3600)%24)}} 时 {{Math.floor((data.duration / 60) % 60)}} 分 {{Math.floor(data.duration % 60) }}秒</div>
                 </el-form-item>
-                <el-form-item label="缩略图">
+                <el-form-item label="缩略图：">
                     <img :src="data.thumbUrl" alt="">
                 </el-form-item>
-                <el-form-item label="视频预览">
+                <el-form-item label="视频预览：">
                     <video :src="data.url" controls></video>
                 </el-form-item>
-                <el-form-item label="添加时间">
+                <el-form-item label="添加时间：">
                     <div>{{moment(data.updateTime)}}</div>
                 </el-form-item>
-                <el-form-item label="最近修改时间">
+                <el-form-item label="最近修改时间：">
                     <div v-if="data.updateTime">{{moment(data.updateTime)}}</div>
                 </el-form-item>
             </el-form>

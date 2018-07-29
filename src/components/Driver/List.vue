@@ -16,11 +16,41 @@
           <el-input size="small" v-model="search.id" placeholder="用户id"></el-input>
         </label>
         <label for="">
-          <span class="label-span">手机号：</span>
-          <el-input size="small" v-model="search.phone" placeholder="手机号"></el-input>
+          <span class="label-span">手机号码：</span>
+          <el-input size="small" v-model="search.phone" placeholder="请输入手机号码"></el-input>
+        </label>
+
+      </div>
+      <div class="row senior-search">
+        <label for="">
+          <span class="label-span">证件类型：</span>
+          <el-select size="small" v-model="search.idType">
+            <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
+            </el-option>
+          </el-select>
         </label>
         <label for="">
-          <span class="label-span">名单类型：</span>
+          <span class="label-span">证件号码：</span>
+          <el-input size="small" v-model="search.idNo" placeholder="请输入证件号码"></el-input>
+        </label>
+      </div>
+
+      <div class="row senior-search">
+        <label for="">
+          <span class="label-span">驾驶证类型：</span>
+          <el-select size="small" v-model="search.licenseType">
+            <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.val">
+            </el-option>
+          </el-select>
+        </label>
+        <label for="">
+          <span class="label-span">档案编号：</span>
+          <el-input size="small" v-model="search.licenseNo" placeholder="请输入档案编号"></el-input>
+        </label>
+      </div>
+      <div class="row senior-search">
+        <label for="">
+          <span class="label-span">黑白名单：</span>
           <el-select size="small" v-model="search.disabled">
             <el-option v-for="(item, index) in typeList" :key="index" :label="item.name" :value="item.val">
             </el-option>
@@ -32,32 +62,6 @@
             <el-option v-for="(item, index) in auditList" :key="index" :label="item.name" :value="item.val">
             </el-option>
           </el-select>
-        </label>
-      </div>
-      <div class="row senior-search">
-        <label for="">
-          <span class="label-span">证件类型：</span>
-          <el-select size="small" v-model="search.idType">
-            <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
-            </el-option>
-          </el-select>
-        </label>
-        <label for="">
-          <span class="label-span">证件号：</span>
-          <el-input size="small" v-model="search.idNo" placeholder="证件号"></el-input>
-        </label>
-      </div>
-      <div class="row senior-search">
-        <label for="">
-          <span class="label-span">驾驶证类型：</span>
-          <el-select size="small" v-model="search.licenseType" placeholder="全部">
-            <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
-            </el-option>
-          </el-select>
-        </label>
-        <label for="">
-          <span class="label-span">驾驶证号：</span>
-          <el-input size="small" v-model="search.licenseNo" placeholder="驾驶证号"></el-input>
         </label>
       </div>
       <div class="row senior-search">
@@ -151,11 +155,11 @@
     </div>
 
     <!-- 添加弹窗 -->
-    <el-dialog title="添加" :visible.sync="addDialogVisible" width="40%" :before-close="handleClose">
+    <el-dialog title="添加驾驶人" :visible.sync="addDialogVisible" width="40%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="addData" :rules="addRules" ref="addFrom">
         <el-form-item label="" prop="idType">
           <label for="" class="driver-label">
-            <span class="label-span ">用户证件类型：</span>
+            <span class="label-span ">证件类型：</span>
             <el-select size="small" v-model="addData.idType" placeholder="用户证件类型">
               <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
               </el-option>
@@ -165,15 +169,15 @@
 
         <el-form-item label="" prop="idNo">
           <label for="" class="driver-label">
-            <span class="label-span ">证件号：</span>
-            <el-input size="small" v-model="addData.idNo" placeholder="请输入证件号"></el-input>
+            <span class="label-span ">证件号码：</span>
+            <el-input size="small" v-model="addData.idNo" placeholder="请输入证件号码"></el-input>
           </label>
         </el-form-item>
 
         <el-form-item label="" prop="licenseType">
           <label for="" class="driver-label">
-            <span class="label-span ">用户驾驶证类型：</span>
-            <el-select size="small" v-model="addData.licenseType" placeholder="用户驾驶证类型">
+            <span class="label-span ">驾驶证类型：</span>
+            <el-select size="small" v-model="addData.licenseType" placeholder="驾驶证类型">
               <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
               </el-option>
             </el-select>
@@ -199,21 +203,21 @@
           <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessIdCard" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人证件图片 （选填）</el-button>
           </el-upload>
-
+          <img :src="idCardImgUrl" alt="" class="pic" v-if="idCardImgUrl">
         </el-form-item>
         <el-form-item label="" prop="headUrlToken">
           <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessHead" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人本人头像（选填） </el-button>
           </el-upload>
-
+          <img :src="headUrl" alt="" class="pic" v-if="headUrl">
         </el-form-item>
         <el-form-item label="" prop="phone">
           <label for="" class="driver-label">
-            <span class="label-span ">手机号：</span>
-            <el-input size="small" v-model="addData.phone" placeholder="手机号"></el-input>
+            <span class="label-span ">手机号码：</span>
+            <el-input size="small" v-model="addData.phone" placeholder="手机号码"></el-input>
           </label>
         </el-form-item>
-         <el-form-item class="btn-">
+        <el-form-item class="btn-">
           <el-button type="primary" size="small" @click="submitAdd('addFrom')">提 交</el-button>
           <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
         </el-form-item>
@@ -221,12 +225,12 @@
     </el-dialog>
 
     <!-- 编辑弹窗 -->
-    <el-dialog title="编辑" :visible.sync="editDialogVisible" width="40%" :before-close="handleClose">
+    <el-dialog title="编辑驾驶人" :visible.sync="editDialogVisible" width="40%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="editData" :rules="addRules" ref="editFrom">
         <el-form-item label="" prop="idType">
           <label for="" class="driver-label">
-            <span class="label-span ">用户证件类型：</span>
-            <el-select size="small" v-model="editData.idType" placeholder="用户证件类型">
+            <span class="label-span ">证件类型：</span>
+            <el-select size="small" v-model="editData.idType" placeholder="证件类型">
               <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
               </el-option>
             </el-select>
@@ -234,14 +238,14 @@
         </el-form-item>
         <el-form-item label="" prop="idNo">
           <label for="" class="driver-label">
-            <span class="label-span ">证件号：</span>
-            <el-input size="small" v-model="editData.idNo" placeholder="请输入证件号"></el-input>
+            <span class="label-span ">证件号码：</span>
+            <el-input size="small" v-model="editData.idNo" placeholder="请输入证件号码"></el-input>
           </label>
         </el-form-item>
         <el-form-item label="" prop="licenseType">
           <label for="" class="driver-label">
-            <span class="label-span ">用户驾驶证类型：</span>
-            <el-select size="small" v-model="editData.licenseType" placeholder="用户驾驶证类型">
+            <span class="label-span ">驾驶证类型：</span>
+            <el-select size="small" v-model="editData.licenseType" placeholder="驾驶证类型">
               <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
               </el-option>
             </el-select>
@@ -261,20 +265,21 @@
           </label>
         </el-form-item>
         <el-form-item label="" prop="idCardImgUrlToken">
-            <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessIdCard" :headers="headers">
+          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :show-file-list="false" :on-success="handleSuccessIdCard" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人证件图片 （选填）</el-button>
           </el-upload>
-          
+          <img :src="idCardImgUrl" alt="" class="pic" v-if="idCardImgUrl">
         </el-form-item>
         <el-form-item label="" prop="headUrlToken">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessHead" :headers="headers">
+          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :show-file-list="false" :on-success="handleSuccessHead" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人本人头像（选填） </el-button>
           </el-upload>
+          <img :src="headUrl" alt="" class="pic" v-if="headUrl">
         </el-form-item>
         <el-form-item label="" prop="phone">
           <label for="" class="driver-label">
-            <span class="label-span ">手机号：</span>
-            <el-input size="small" v-model="editData.phone" placeholder="手机号"></el-input>
+            <span class="label-span ">手机号码：</span>
+            <el-input size="small" v-model="editData.phone" placeholder="手机号码"></el-input>
           </label>
         </el-form-item>
         <el-form-item class="btn-">
@@ -401,6 +406,8 @@ export default {
         headUrlToken: '',
         phone: ''
       },
+      idCardImgUrl: '',
+      headUrl: '',
       addRules: {
         idType: [{ required: true, message: '请选择证件类型', trigger: 'change' }],
         idNo: [{ required: true, message: '请输入证件号', trigger: 'blur' }],
@@ -504,6 +511,8 @@ export default {
     },
     // 添加
     add() {
+      this.idCardImgUrl = ''
+      this.headUrl = ''
       this.addData = {
         idType: '',
         idNo: '',
@@ -545,6 +554,8 @@ export default {
       })
     },
     edit(row) {
+      this.idCardImgUrl = ''
+      this.headUrl = ''
       this.editData.id = row.id
       this.editData.idType = row.idType
       this.editData.idNo = row.idNo
@@ -552,7 +563,7 @@ export default {
       this.editData.licenseNo = row.licenseNo
       this.editData.licenseBeginDate = row.licenseBeginDate
       this.editData.licenseEndDate = row.licenseEndDate
-      this.editData.phone = row.phone 
+      this.editData.phone = row.phone
       this.editDialogVisible = true
       this.driverTimeedit[0] = row.licenseBeginDate
       this.driverTimeedit[1] = row.licenseEndDate
@@ -687,9 +698,11 @@ export default {
     },
     handleSuccessIdCard(val) {
       this.addData.idCardImgUrlToken = val.data.token
+      this.idCardImgUrl = val.data.url
     },
     handleSuccessHead(val) {
       this.addData.headUrlToken = val.data.token
+      this.headUrl = val.data.url
     }
   }
 }

@@ -40,8 +40,8 @@
                 <el-form-item label="题目详解">
                     <div>{{data.explains}}</div>
                 </el-form-item>
-                <el-form-item label="缩略图" v-if="data.originUrl">
-                    <img :src="data.originUrl" alt="">
+                <el-form-item label="缩略图" v-if="data.url">
+                    <img :src="data.url" alt="">
                 </el-form-item>
                 <el-form-item label="添加时间">
                     <div>{{moment(data.createTime)}}</div>

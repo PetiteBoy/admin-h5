@@ -12,9 +12,8 @@
       <el-form ref="ruleForm" label-width="250px" class="demo-ruleForm">
         <el-form-item v-for="(item,index) in data" :key="item.categoryId" :label="item.categoryName">
           <el-input v-model="data[index].learnNum" :disabled="!item.videoNum" placeholder="分类视频数量">
-            <template slot="append">该分类共有{{item.videoNum || 0}}个视频</template>
+            <template slot="append">共{{item.videoNum || 0}}个</template>
           </el-input>
-
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>

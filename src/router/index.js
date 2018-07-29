@@ -17,6 +17,7 @@ import VideoList from '@/components/Video/List'
 import VideoDetail from '@/components/Video/Detail'
 import VideoCategory from '@/components/Video/Category'
 import VideoCheck from '@/components/Video/CheckConfig'
+import VideoNotice from '@/components/Video/Notice'
 
 
 // 驾驶人管理
@@ -28,6 +29,7 @@ import QuestionList from '@/components/Question/List'
 import QuestionCategory from '@/components/Question/Category'
 import QuestionCheck from '@/components/Question/CheckConfig'
 import QuestionDetail from '@/components/Question/Detail'
+import QuestionNotice from '@/components/Question/Notice'
 
 // 预约管理
 import BookList from '@/components/Book/List'
@@ -68,6 +70,9 @@ export default new Router({
         }, {
           path: '/question/detail',
           component: QuestionDetail
+        },{
+          path: '/question/notice',
+          component: QuestionNotice
         }, {
           path: '/driver/list',
           component: DriverList
@@ -86,6 +91,9 @@ export default new Router({
         }, {
           path: '/video/check',
           component: VideoCheck
+        },{
+          path: '/video/notice',
+          component: VideoNotice
         }, {
           path: '/user/admin',
           name: 'admin',

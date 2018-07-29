@@ -25,12 +25,15 @@
           </el-table-column>
           <el-table-column label="原始文件名" prop="originName">
           </el-table-column>
-          <el-table-column label="视频时长" prop="duration" width="100">
+          <el-table-column label="视频时长" prop="duration" width="80">
             <template slot-scope="scope">
-              <div>{{Math.floor((scope.row.duration/ 3600)%24)}} 时 {{Math.floor((scope.row.duration / 60) % 60)}} 分 {{Math.floor(scope.row.duration % 60) }}秒</div>
+              <div>{{timer(scope.row.duration)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="视频大小" prop="fileSize" width="96">
+          <el-table-column label="视频大小" prop="fileSize" width="70">
+            <template slot-scope="scope">
+              <div>{{(Number(scope.row.fileSize)/1000/1000).toFixed(2)}}M</div>
+            </template>
           </el-table-column>
           <el-table-column label="创建时间" prop="createTime" width="96">
             <template slot-scope="scope">
@@ -57,7 +60,6 @@
 
             </template>
           </el-table-column>
-
         </el-table>
       </div>
 
@@ -70,35 +72,36 @@
 
     <!-- 新增视频弹窗 -->
     <el-dialog title="新增视频" class="add-video" :visible.sync="addVideoDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="120px" :model="addVideoData">
-        <el-form-item label="视频分类" prop="">
+      <el-form label-position="right" label-width="120px" :model="addVideoData">
+        <el-form-item label="视频分类：" prop="">
           <el-select v-model="addVideoData.categoryId" placeholder="请选择">
             <el-option v-for="item in categoryData" :key="item.name" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="视频名称" prop="">
-          <el-input v-model="addVideoData.name"></el-input>
+        <el-form-item label="视频名称：" prop="">
+          <el-input v-model="addVideoData.name" placeholder="请输入视频名称"></el-input>
         </el-form-item>
-        <el-form-item label="视频简介" prop="">
-          <el-input v-model="addVideoData.introduction" type="textarea" rows="7"></el-input>
+        <el-form-item label="视频简介：" prop="">
+          <el-input v-model="addVideoData.introduction" type="textarea" placeholder="请输入视频简介" rows="7"></el-input>
         </el-form-item>
-        <el-form-item label="上传视频" prop="">
-          <el-upload action="http://47.95.250.247/admin-api/file/video/upload" accept="video/*" :on-success="handleSuccessVideo" :headers="headers">
+        <el-form-item label="上传视频：" prop="">
+          <el-upload :action="upload.video" :on-error="handleErrVideo" accept="video/*" :on-success="handleSuccessVideo" :headers="headers">
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="视频时长" prop="" class="video-druction">
+        <el-form-item label="视频时长：" prop="" class="video-druction">
           <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> 时
           <el-input v-model="duration.minute" size="small" min='0' max="59" type="number"></el-input> 分
           <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
         </el-form-item>
-        <el-form-item label="上传缩略图" prop="">
-          <el-upload action="http://47.95.250.247/admin-api/file/image/upload" accept="image/*" :headers="headers" :on-success="handleSuccessPic">
+        <el-form-item label="上传缩略图：" prop="">
+          <el-upload :action="upload.pic" accept="image/*" :headers="headers" :on-success="handleSuccessPic">
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
           </el-upload>
+          <img :src="imgUrl" alt="" class="pic" v-if="imgUrl">
         </el-form-item>
 
       </el-form>
@@ -110,21 +113,21 @@
 
     <!-- 编辑视频弹窗 -->
     <el-dialog title="编辑视频" class="add-video" :visible.sync="editVideoDialogVisible" width="30%" :before-close="handleClose">
-      <el-form label-position="left" label-width="80px" :model="editVideoData">
-        <el-form-item label="视频分类" prop="">
+      <el-form label-position="right" label-width="120px" :model="editVideoData">
+        <el-form-item label="视频分类：" prop="">
           <el-select v-model="editVideoData.categoryId" placeholder="请选择">
             <el-option v-for="item in categoryData" :key="item.name" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="视频名称" prop="name">
-          <el-input v-model="editVideoData.name"></el-input>
+        <el-form-item label="视频名称：" prop="name">
+          <el-input v-model="editVideoData.name" placeholder="请输入视频名称"></el-input>
         </el-form-item>
-        <el-form-item label="视频简介" prop="introduction">
-          <el-input v-model="editVideoData.introduction" type="textarea" rows="7"></el-input>
+        <el-form-item label="视频简介： " prop="introduction">
+          <el-input v-model="editVideoData.introduction" type="textarea" placeholder="请输入视频简介" rows="7"></el-input>
         </el-form-item>
         <el-form-item label="上传视频" prop="">
-          <el-upload action="http://47.95.250.247/admin-api/file/video/upload" accept="video/*" :on-success="handleSuccessVideoEdit" :headers="headers">
+          <el-upload :action="upload.video" :on-error="handleErrVideo" accept="video/*" :on-success="handleSuccessVideoEdit" :headers="headers">
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
@@ -135,10 +138,11 @@
           <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
         </el-form-item>
         <el-form-item label="上传缩略图" prop="">
-          <el-upload action="http://47.95.250.247/admin-api/file/image/upload" accept="image/*" :headers="headers" :on-success="handleSuccessPicEdit">
+          <el-upload :action="upload.pic" accept="image/*" :headers="headers" :on-success="handleSuccessPicEdit">
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
           </el-upload>
+          <img :src="imgUrl" alt="" class="pic" v-if="imgUrl">
         </el-form-item>
 
       </el-form>
@@ -163,6 +167,7 @@
 import baseService from '../../service/baseService.js'
 import { getSessionStorage } from '../../utils/base.js'
 import moment from 'moment'
+import config from '../../config.json'
 export default {
   name: 'video-list',
   data() {
@@ -170,6 +175,11 @@ export default {
       headers: {
         authKey: getSessionStorage('authKey')
       },
+      upload:{
+        pic:`${config.service.host}/file/image/upload`,
+        video:`${config.service.host}/file/video/upload`
+      },
+      imgUrl:'',
       // 视频列表
       videoDate: [],
       tabMaxHeight: 0,
@@ -226,6 +236,12 @@ export default {
     this.getVideoDate()
   },
   methods: {
+    timer(time) {
+      let h = Math.floor((time / 3600) % 24) < 10 ? '0' + Math.floor((time / 3600) % 24) : Math.floor((time / 3600) % 24)
+      let m = Math.floor((time / 60) % 60) < 10 ? '0' + Math.floor((time / 60) % 60) : Math.floor((time / 60) % 60)
+      let s = Math.floor(time % 60) < 10 ? '0' + Math.floor(time % 60) : Math.floor(time % 60)
+      return `${h}:${m}:${s}`
+    },
     // 时间转化
     moment(time) {
       return moment(time).format('YYYY-MM-DD hh:mm:ss')
@@ -253,6 +269,7 @@ export default {
     },
     //   添加视频
     addVideo() {
+      this.imgUrl = ''
       this.addVideoData = {
         categoryId: '',
         name: '',
@@ -309,6 +326,7 @@ export default {
     },
     // 编辑视频
     editVideoItem(row) {
+       this.imgUrl = ''
       let t = Number(row.duration)
       let h = Math.floor((t / 3600) % 24)
       let m = Math.floor((t / 60) % 60)
@@ -371,12 +389,21 @@ export default {
     },
     handleSuccessPic(val) {
       this.addVideoData.thumbToken = val.data.token
+      this.imgUrl = val.data.url
     },
     handleSuccessVideoEdit(val) {
       this.editVideoData.videoToken = val.data.token
     },
     handleSuccessPicEdit(val) {
       this.editVideoData.thumbToken = val.data.token
+      this.imgUrl = val.data.url
+    },
+    handleErrVideo(err, file, fileList) {
+      console.log(err, file, fileList)
+      this.$message({
+        message: '上传失败，请重新上传',
+        type: 'warning'
+      })
     }
   }
 }

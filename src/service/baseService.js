@@ -31,8 +31,15 @@ class BaseService {
 
   baseGetData(path, delId) {
     return new Promise((resolve, reject) => {
+      let url = ''
+      if(delId){
+        url = `${config.service.host}${path}?id=${delId}`
+      }else{
+        url = `${config.service.host}${path}`
+      }
+     
       axios({
-        url: `${config.service.host}${path}?id=${delId}`,
+        url: url,
         method: 'get',
         headers: {
           authKey: getSessionStorage('authKey')
