@@ -1,11 +1,12 @@
 <template>
-    <div class=" page">home</div>
+    <div class=" page">
+        欢迎使用后台管理系统
+    </div>
 </template>
 <style>
 .page{
-    padding: 10px;
-    display: flex;
-    flex: 1;
+    text-align: center;
+    padding: 20px;
 }
 </style>
 

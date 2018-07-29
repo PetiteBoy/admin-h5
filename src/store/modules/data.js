@@ -15,6 +15,9 @@ const state = {
   ],
   // 证件类型列表
   idList: [{
+    name: '全部',
+    val: ''
+  },{
       name: '居民身份证',
       val: 'IDCARD'
     },
@@ -40,7 +43,8 @@ const state = {
     }
   ],
   //驾驶证类别列表
-  licenseList: [{
+  licenseList: [
+    {
       name: 'A1'
     },
     {
@@ -61,6 +65,9 @@ const state = {
   ],
   // 审核状态
   auditList: [{
+    name: '全部',
+    val: ''
+  },{
       name: '待审核',
       val: 'INHAND'
     },

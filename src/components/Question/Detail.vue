@@ -77,7 +77,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD h:mm:ss')
+      return moment(time).format('YYYY-MM-DD hh:mm:ss')
     },
     getData() {
       let id = this.$route.query.id

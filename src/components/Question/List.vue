@@ -8,19 +8,15 @@
       </el-breadcrumb>
     </div>
     <div class="main-page">
-      <div class="btn-list">
-        <el-button size="small" type="primary" @click="getData()">搜索</el-button>
-        <el-button size="small" type="primary" @click="reset()">重置</el-button>
-        <el-button size="small" type="primary" @click="add()">添加</el-button>
-      </div>
+
       <div class="row base-search">
         <label for="">
           <span class="label-span">题目id：</span>
-          <el-input size="small" v-model="search.id"></el-input>
+          <el-input size="small" v-model="search.id" placeholder="题目id"></el-input>
         </label>
         <label for="">
           <span class="label-span">题目关键字：</span>
-          <el-input size="small" v-model="search.question"></el-input>
+          <el-input size="small" v-model="search.question" placeholder="题目关键字"></el-input>
         </label>
       </div>
       <div class="row base-search">
@@ -50,21 +46,25 @@
           <el-date-picker size="small" v-model="updateTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="updateTimeChange" value-format="timestamp">
           </el-date-picker>
         </label>
-
+        <div style="float: right;">
+          <el-button size="small" type="primary" @click="getData()">搜索</el-button>
+          <el-button size="small" type="primary" @click="reset()">重置</el-button>
+          <el-button size="small" type="primary" @click="add()">添加</el-button>
+        </div>
       </div>
 
       <!-- 数据列表 -->
-      <div class="row data-container">
+      <div class="row ">
         <el-table :data="data" border style="width: 100%">
-          <el-table-column label="题目id" prop="id">
+          <el-table-column label="题目id" prop="id" width="60">
           </el-table-column>
-          <el-table-column label="科目类别" prop="phone">
+          <el-table-column label="科目类别" prop="phone" width="80">
             <template slot-scope="scope">
               <div v-if="scope.row.subject === '1'">科目一</div>
               <div v-if="scope.row.subject === '4'">科目四</div>
             </template>
           </el-table-column>
-          <el-table-column label="题目类型" prop="type">
+          <el-table-column label="题目类型" prop="type" width="96">
           </el-table-column>
           <el-table-column label="题目分类" prop="licenseType">
             <template slot-scope="scope">
@@ -76,27 +76,32 @@
           </el-table-column>
           <el-table-column label="题目问题" prop="question">
           </el-table-column>
-          <el-table-column label="创建时间" prop="createTime">
+          <el-table-column label="创建时间" prop="createTime" width="96">
             <template slot-scope="scope">
               <div>{{moment(scope.row.createTime)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="最近修改时间" prop="updateTime">
+          <el-table-column label="最近修改时间" prop="updateTime" width="96">
             <template slot-scope="scope">
               <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="300">
+          <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="detail(scope.row)">
-                查看
-              </el-button>
-              <el-button type="primary" size="mini" @click="edit(scope.row)">
-                编辑
-              </el-button>
-              <el-button type="primary" size="mini" @click="del(scope.row)">
-                删除
-              </el-button>
+              <div>
+                <el-button type="primary" size="mini" @click="detail(scope.row)">
+                  查看
+                </el-button>
+                <el-button type="primary" size="mini" @click="edit(scope.row)">
+                  编辑
+                </el-button>
+              </div>
+              <div class="row">
+                <el-button type="danger" size="mini" @click="del(scope.row)">
+                  删除
+                </el-button>
+              </div>
+
             </template>
           </el-table-column>s
         </el-table>
@@ -112,39 +117,75 @@
     <el-dialog title="添加" :visible.sync="addDialogVisible" width="30%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="addData" :rules="addRules" ref="addFrom">
         <el-form-item label="" prop="subject">
-          <el-select size="small" v-model="addData.subject" placeholder="请选择科目类别">
-            <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
-            </el-option>
-          </el-select>
+          <label for="" class="driver-label">
+            <span class="">科目类别：</span>
+            <el-select size="small" v-model="addData.subject" placeholder="请选择科目类别">
+              <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
+              </el-option>
+            </el-select>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="type">
-          <el-checkbox-group v-model="addData.type">
-            <el-checkbox v-for="(item, index) in licenseList" :key="index" :label="item.name"></el-checkbox>
-          </el-checkbox-group>
+          <label for="">
+            <span class="">题目类型：</span>
+            <el-checkbox-group v-model="addData.type">
+              <el-checkbox v-for="(item, index) in licenseList" :key="index" :label="item.name"></el-checkbox>
+            </el-checkbox-group>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="question">
-          <el-input v-model="addData.question" placeholder="请输入题目问题" type="textarea" rows="7"></el-input>
+          <label for="">
+            <span class="">题目问题：</span>
+            <el-input v-model="addData.question" placeholder="请输入题目问题" type="textarea" rows="7"></el-input>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="item1">
-          <el-input v-model="addData.item1" placeholder="请输入题目选项A（必填）"></el-input>
+          <label for="">
+            <span class="">题目答案A：</span>
+            <el-input v-model="addData.item1" placeholder="请输入题目选项A（必填）"></el-input>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="item2">
-          <el-input v-model="addData.item2" placeholder="请输入题目选项B（必填）"></el-input>
+          <label for="">
+            <span class="">题目答案B：</span>
+            <el-input v-model="addData.item2" placeholder="请输入题目选项B（必填）"></el-input>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="item3">
-          <el-input v-model="addData.item3" placeholder="请输入题目选项C"></el-input>
+          <label for="">
+            <span class="">题目答案C：</span>
+            <el-input v-model="addData.item3" placeholder="请输入题目选项C"></el-input>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="item4">
-          <el-input v-model="addData.item4" placeholder="请输入题目选项D"></el-input>
+          <label for="">
+            <span class="">题目答案D：</span>
+            <el-input v-model="addData.item4" placeholder="请输入题目选项D"></el-input>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="answer">
-          <el-select size="small" v-model="addData.answer" placeholder="请选择题目答案">
-            <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
-            </el-option>
-          </el-select>
+          <label for="">
+            <span class="">题目答案：</span>
+            <el-select size="small" v-model="addData.answer" placeholder="请选择题目答案">
+              <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
+              </el-option>
+            </el-select>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="explains">
-          <el-input v-model="addData.explains" placeholder="请输入题目详解" type="textarea" rows="7"></el-input>
+          <label for="">
+            <span class="">题目详解</span>
+            <el-input v-model="addData.explains" placeholder="请输入题目详解" type="textarea" rows="7"></el-input>
+          </label>
+
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
@@ -157,39 +198,66 @@
     <el-dialog title="编辑" :visible.sync="editDialogVisible" width="30%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="editData" :rules="addRules" ref="editData">
         <el-form-item label="" prop="subject">
+          <label for="" class="driver-label">
+            <span class="">科目类别：</span>
           <el-select size="small" v-model="editData.subject" placeholder="请选择科目类别">
-            <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
+           <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
             </el-option>
           </el-select>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="type">
+          <label for="">
+            <span class="">题目类型：</span>
           <el-checkbox-group v-model="editData.type">
             <el-checkbox v-for="(item, index) in licenseList" :key="index" :label="item.name"></el-checkbox>
           </el-checkbox-group>
+           </label>
         </el-form-item>
         <el-form-item label="" prop="question">
+           <label for="">
+            <span class="">题目问题：</span>
           <el-input v-model="editData.question" placeholder="请输入题目问题" type="textarea" rows="7"></el-input>
+        </label>
         </el-form-item>
         <el-form-item label="" prop="item1">
+            <label for="">
+            <span class="">题目答案A：</span>
           <el-input v-model="editData.item1" placeholder="请输入题目选项A（必填）"></el-input>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="item2">
+          <label for="">
+            <span class="">题目答案B：</span>
           <el-input v-model="editData.item2" placeholder="请输入题目选项B（必填）"></el-input>
+           </label>
         </el-form-item>
         <el-form-item label="" prop="item3">
+          <label for="">
+            <span class="">题目答案C：</span>
           <el-input v-model="editData.item3" placeholder="请输入题目选项C"></el-input>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="item4">
+          <label for="">
+            <span class="">题目答案D：</span>
           <el-input v-model="editData.item4" placeholder="请输入题目选项D"></el-input>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="answer">
+          <label for="">
+            <span class="">题目答案：</span>
           <el-select size="small" v-model="editData.answer" placeholder="请选择题目答案">
             <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
             </el-option>
           </el-select>
+           </label>
         </el-form-item>
         <el-form-item label="" prop="explains">
+           <label for="">
+            <span class="">题目详解</span>
           <el-input v-model="editData.explains" placeholder="请输入题目详解" type="textarea" rows="7"></el-input>
+           </label>
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="editDialogVisible = false">取 消</el-button>
@@ -268,7 +336,7 @@ export default {
       // 编辑数据
       editData: {
         id: '',
-        subject: '',
+        subject: 0,
         type: [],
         question: '',
         item1: '',
@@ -283,11 +351,11 @@ export default {
       subjectList: [
         {
           name: '科目一',
-          val: 1
+          val: '1'
         },
         {
           name: '科目四',
-          val: 4
+          val: '4'
         }
       ],
       // 答案列表
@@ -319,7 +387,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD h:mm:ss')
+      return moment(time).format('YYYY-MM-DD hh:mm:ss')
     },
     // 获取列表数据
     getData() {
@@ -409,7 +477,6 @@ export default {
     },
     // 编辑
     edit(row) {
-      let data = row
       this.editData.id = row.id
       this.editData.subject = row.subject
       this.editData.type = row.type.split(',')

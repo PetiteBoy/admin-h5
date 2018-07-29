@@ -23,12 +23,12 @@
         </el-table-column>
         <el-table-column label="名称" prop="name">
         </el-table-column>
-        <el-table-column label="创建时间 " prop="createTime">
+        <el-table-column label="创建时间 " prop="createTime" width="96">
           <template slot-scope="scope">
             <div>{{moment(scope.row.createTime)}}</div>
           </template>
         </el-table-column>
-        <el-table-column label="最近修改时间 " prop="updateTime">
+        <el-table-column label="最近修改时间 " prop="updateTime" width="96">
           <template slot-scope="scope">
             <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
           </template>
@@ -212,7 +212,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD h:mm:ss')
+      return moment(time).format('YYYY-MM-DD hh:mm:ss')
     },
     //  获取数据
     getRoleData() {

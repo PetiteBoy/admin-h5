@@ -16,8 +16,8 @@
       </div>
       <!-- 数据列表 -->
       <div class="row">
-        <el-table :data="videoDate" border style="width: 100%" >
-          <el-table-column label="ID" prop="id">
+        <el-table :data="videoDate" border style="width: 100%">
+          <el-table-column label="ID" prop="id" width="60">
           </el-table-column>
           <el-table-column label="所属分类" prop="categoryName">
           </el-table-column>
@@ -25,31 +25,36 @@
           </el-table-column>
           <el-table-column label="原始文件名" prop="originName">
           </el-table-column>
-          <el-table-column label="视频时长" prop="duration">
+          <el-table-column label="视频时长" prop="duration" width="100">
             <template slot-scope="scope">
               <div>{{Math.floor((scope.row.duration/ 3600)%24)}} 时 {{Math.floor((scope.row.duration / 60) % 60)}} 分 {{Math.floor(scope.row.duration % 60) }}秒</div>
             </template>
           </el-table-column>
-          <el-table-column label="视频大小" prop="fileSize">
+          <el-table-column label="视频大小" prop="fileSize" width="96">
           </el-table-column>
-          <el-table-column label="创建时间" prop="createTime">
+          <el-table-column label="创建时间" prop="createTime" width="96">
             <template slot-scope="scope">
               <div>{{moment(scope.row.createTime)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="最近修改时间" prop="updateTime">
+          <el-table-column label="最近修改时间" prop="updateTime" width="96">
             <template slot-scope="scope">
               <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="250">
+          <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="editVideoItem(scope.row)">编辑
-              </el-button>
-              <el-button type="primary" size="mini" @click="detailVideoItem(scope.row)">查看
-              </el-button>
-              <el-button type="danger" size="mini" @click="delVideoItem(scope.row)">删除
-              </el-button>
+              <div>
+                <el-button type="primary" size="mini" @click="editVideoItem(scope.row)">编辑
+                </el-button>
+                <el-button type="primary" size="mini" @click="detailVideoItem(scope.row)">查看
+                </el-button>
+              </div>
+              <div class="row">
+                <el-button type="danger" size="mini" @click="delVideoItem(scope.row)">删除
+                </el-button>
+              </div>
+
             </template>
           </el-table-column>
 
@@ -76,10 +81,10 @@
           <el-input v-model="addVideoData.name"></el-input>
         </el-form-item>
         <el-form-item label="视频简介" prop="">
-          <el-input v-model="addVideoData.introduction"></el-input>
+          <el-input v-model="addVideoData.introduction" type="textarea" rows="7"></el-input>
         </el-form-item>
         <el-form-item label="上传视频" prop="">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/video/upload" accept="video/*" :on-success="handleSuccessVideo" :headers="headers">
+          <el-upload action="http://47.95.250.247/admin-api/file/video/upload" accept="video/*" :on-success="handleSuccessVideo" :headers="headers">
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
@@ -90,7 +95,7 @@
           <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
         </el-form-item>
         <el-form-item label="上传缩略图" prop="">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" accept="image/*" :headers="headers" :on-success="handleSuccessPic">
+          <el-upload action="http://47.95.250.247/admin-api/file/image/upload" accept="image/*" :headers="headers" :on-success="handleSuccessPic">
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
           </el-upload>
@@ -116,10 +121,10 @@
           <el-input v-model="editVideoData.name"></el-input>
         </el-form-item>
         <el-form-item label="视频简介" prop="introduction">
-          <el-input v-model="editVideoData.introduction"></el-input>
+          <el-input v-model="editVideoData.introduction" type="textarea" rows="7"></el-input>
         </el-form-item>
         <el-form-item label="上传视频" prop="">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/video/upload" accept="video/*" :on-success="handleSuccessVideoEdit" :headers="headers">
+          <el-upload action="http://47.95.250.247/admin-api/file/video/upload" accept="video/*" :on-success="handleSuccessVideoEdit" :headers="headers">
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
@@ -130,7 +135,7 @@
           <el-input v-model="duration.second" size="small" min='0' max="59" type="number"></el-input> 秒
         </el-form-item>
         <el-form-item label="上传缩略图" prop="">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" accept="image/*" :headers="headers" :on-success="handleSuccessPicEdit">
+          <el-upload action="http://47.95.250.247/admin-api/file/image/upload" accept="image/*" :headers="headers" :on-success="handleSuccessPicEdit">
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
           </el-upload>
@@ -223,7 +228,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD h:mm:ss')
+      return moment(time).format('YYYY-MM-DD hh:mm:ss')
     },
     //   获取数据
     getVideoDate() {

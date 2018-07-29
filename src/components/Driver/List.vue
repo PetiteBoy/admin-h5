@@ -10,20 +10,14 @@
     </div>
 
     <div class="main-page">
-      <!-- 操作按钮 -->
-      <div class="btn-list">
-        <el-button size="small" type="primary" @click="getData()">搜索</el-button>
-        <el-button size="small" type="primary" @click="reset()">重置</el-button>
-        <el-button size="small" type="primary" @click="add()">添加</el-button>
-      </div>
-      <div class="row base-search">
+      <div class=" base-search">
         <label for="">
           <span class="label-span">用户id：</span>
-          <el-input size="small" v-model="search.id"></el-input>
+          <el-input size="small" v-model="search.id" placeholder="用户id"></el-input>
         </label>
         <label for="">
           <span class="label-span">手机号：</span>
-          <el-input size="small" v-model="search.phone"></el-input>
+          <el-input size="small" v-model="search.phone" placeholder="手机号"></el-input>
         </label>
         <label for="">
           <span class="label-span">名单类型：</span>
@@ -50,20 +44,20 @@
         </label>
         <label for="">
           <span class="label-span">证件号：</span>
-          <el-input size="small" v-model="search.idNo"></el-input>
+          <el-input size="small" v-model="search.idNo" placeholder="证件号"></el-input>
         </label>
       </div>
       <div class="row senior-search">
         <label for="">
           <span class="label-span">驾驶证类型：</span>
-          <el-select size="small" v-model="search.licenseType">
+          <el-select size="small" v-model="search.licenseType" placeholder="全部">
             <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
             </el-option>
           </el-select>
         </label>
         <label for="">
           <span class="label-span">驾驶证号：</span>
-          <el-input size="small" v-model="search.licenseNo"></el-input>
+          <el-input size="small" v-model="search.licenseNo" placeholder="驾驶证号"></el-input>
         </label>
       </div>
       <div class="row senior-search">
@@ -77,63 +71,74 @@
           <el-date-picker size="small" v-model="auditTime" type="daterange" range-separator="" start-placeholder="" end-placeholder="" @change="auditTimeChange" value-format="timestamp">
           </el-date-picker>
         </label>
+        <div style="float:right;">
+          <el-button size="small" type="primary" @click="getData()">搜索</el-button>
+          <el-button size="small" type="primary" @click="reset()">重置</el-button>
+          <el-button size="small" type="primary" @click="add()">添加</el-button>
+        </div>
       </div>
 
       <!-- 数据列表 -->
-      <div class=" data-container">
+      <div class="row">
         <el-table :data="data" border style="width: 100%" min-height="409">
-          <el-table-column label="用户id" prop="id">
+          <el-table-column label="用户id" prop="id" width="60">
           </el-table-column>
           <el-table-column label="用户手机" prop="phone">
           </el-table-column>
-          <el-table-column label="证件类型" prop="idType">
+          <el-table-column label="证件类型" prop="idType" width="90">
             <template slot-scope="scope">
               <div>{{dataIdType[scope.row.idType]}}</div>
             </template>
           </el-table-column>
           <el-table-column label="证件号" prop="idNo">
           </el-table-column>
-          <el-table-column label="准驾车型" prop="licenseType">
+          <el-table-column label="准驾车型" prop="licenseType" width="60">
           </el-table-column>
           <el-table-column label="驾驶证档案编号" prop="licenseNo">
           </el-table-column>
-          <el-table-column label="注册时间" prop="createTime">
+          <el-table-column label="注册时间" prop="createTime" width="96">
             <template slot-scope="scope">
               <div>{{moment(scope.row.createTime)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="审核时间" prop="auditTime">
+          <el-table-column label="审核时间" prop="auditTime" width="96">
             <template slot-scope="scope">
               <div v-if="scope.row.auditTime">{{moment(scope.row.auditTime)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="审核状态" prop="auditState">
+          <el-table-column label="审核状态" prop="auditState" width="70">
             <template slot-scope="scope">
               <div>{{dataAuditStatus[scope.row.auditState]}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="最近修改时间" prop="updateTime">
+          <el-table-column label="最近修改时间" prop="updateTime" width="96">
             <template slot-scope="scope">
               <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+              <div v-if="!scope.row.updateTime">-</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="300">
+          <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="detail(scope.row)">
-                查看
-              </el-button>
-              <el-button :disabled="scope.row.auditState !== 'INHAND'" type="primary" size="mini" @click="auditItem(scope.row)">
-                审核
-              </el-button>
-              <el-button type="primary" size="mini" @click="edit(scope.row)">
-                编辑
-              </el-button>
-              <el-button type="primary" size="mini" v-if="!scope.row.disabled" @click="blackItem(scope.row)">
-                拉黑
-              </el-button>
-              <el-button type="primary" size="mini" v-if="scope.row.disabled" @click="whiteItem(scope.row)">
-                解封
-              </el-button>
+              <div>
+                <el-button type="primary" size="mini" @click="detail(scope.row)">
+                  查看
+                </el-button>
+                <el-button :disabled="scope.row.auditState !== 'INHAND'" type="primary" size="mini" @click="auditItem(scope.row)">
+                  审核
+                </el-button>
+              </div>
+              <div class="row">
+                <el-button type="primary" size="mini" @click="edit(scope.row)">
+                  编辑
+                </el-button>
+                <el-button type="primary" size="mini" v-if="!scope.row.disabled" @click="blackItem(scope.row)">
+                  拉黑
+                </el-button>
+                <el-button type="primary" size="mini" v-if="scope.row.disabled" @click="whiteItem(scope.row)">
+                  解封
+                </el-button>
+              </div>
+
             </template>
           </el-table-column>s
         </el-table>
@@ -149,41 +154,66 @@
     <el-dialog title="添加" :visible.sync="addDialogVisible" width="40%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="addData" :rules="addRules" ref="addFrom">
         <el-form-item label="" prop="idType">
-          <el-select size="small" v-model="addData.idType" placeholder="用户证件类型">
-            <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
-            </el-option>
-          </el-select>
+          <label for="" class="driver-label">
+            <span class="label-span ">用户证件类型：</span>
+            <el-select size="small" v-model="addData.idType" placeholder="用户证件类型">
+              <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
+              </el-option>
+            </el-select>
+          </label>
         </el-form-item>
+
         <el-form-item label="" prop="idNo">
-          <el-input size="small" v-model="addData.idNo" placeholder="请输入证件号"></el-input>
+          <label for="" class="driver-label">
+            <span class="label-span ">证件号：</span>
+            <el-input size="small" v-model="addData.idNo" placeholder="请输入证件号"></el-input>
+          </label>
         </el-form-item>
+
         <el-form-item label="" prop="licenseType">
-          <el-select size="small" v-model="addData.licenseType" placeholder="用户驾驶证类型">
-            <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
-            </el-option>
-          </el-select>
+          <label for="" class="driver-label">
+            <span class="label-span ">用户驾驶证类型：</span>
+            <el-select size="small" v-model="addData.licenseType" placeholder="用户驾驶证类型">
+              <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
+              </el-option>
+            </el-select>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="licenseNo">
-          <el-input size="small" v-model="addData.licenseNo" placeholder="请输入驾驶证档案编号"></el-input>
+          <label for="" class="driver-label">
+            <span class="label-span ">驾驶证档案编号：</span>
+            <el-input size="small" v-model="addData.licenseNo" placeholder="请输入驾驶证档案编号"></el-input>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="">
-          <el-date-picker size="small" v-model="driverTimeadd" type="daterange" range-separator="" start-placeholder="请选择注册时间范围" end-placeholder="" @change="driverTimeChangeadd" value-format="timestamp">
-          </el-date-picker>
+          <label for="" class="driver-label">
+            <span class="label-span ">注册时间范围：</span>
+            <el-date-picker size="small" v-model="driverTimeadd" type="daterange" range-separator="" start-placeholder="请选择注册时间范围" end-placeholder="" @change="driverTimeChangeadd" value-format="timestamp">
+            </el-date-picker>
+          </label>
+
         </el-form-item>
         <el-form-item label="" prop="idCardImgUrlToken">
           <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessIdCard" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人证件图片 （选填）</el-button>
           </el-upload>
+
         </el-form-item>
         <el-form-item label="" prop="headUrlToken">
           <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessHead" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人本人头像（选填） </el-button>
           </el-upload>
+
         </el-form-item>
         <el-form-item label="" prop="phone">
-          <el-input size="small" v-model="addData.phone" placeholder="手机号"></el-input>
+          <label for="" class="driver-label">
+            <span class="label-span ">手机号：</span>
+            <el-input size="small" v-model="addData.phone" placeholder="手机号"></el-input>
+          </label>
         </el-form-item>
-        <el-form-item>
+         <el-form-item class="btn-">
           <el-button type="primary" size="small" @click="submitAdd('addFrom')">提 交</el-button>
           <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
         </el-form-item>
@@ -194,31 +224,47 @@
     <el-dialog title="编辑" :visible.sync="editDialogVisible" width="40%" :before-close="handleClose">
       <el-form class="add-form" label-position="left" label-width="0px" :model="editData" :rules="addRules" ref="editFrom">
         <el-form-item label="" prop="idType">
-          <el-select size="small" v-model="editData.idType" placeholder="用户证件类型">
-            <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
-            </el-option>
-          </el-select>
+          <label for="" class="driver-label">
+            <span class="label-span ">用户证件类型：</span>
+            <el-select size="small" v-model="editData.idType" placeholder="用户证件类型">
+              <el-option v-for="(item, index) in idList" :key="index" :label="item.name" :value="item.val">
+              </el-option>
+            </el-select>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="idNo">
-          <el-input size="small" v-model="editData.idNo" placeholder="请输入证件号"></el-input>
+          <label for="" class="driver-label">
+            <span class="label-span ">证件号：</span>
+            <el-input size="small" v-model="editData.idNo" placeholder="请输入证件号"></el-input>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="licenseType">
-          <el-select size="small" v-model="editData.licenseType" placeholder="用户驾驶证类型">
-            <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
-            </el-option>
-          </el-select>
+          <label for="" class="driver-label">
+            <span class="label-span ">用户驾驶证类型：</span>
+            <el-select size="small" v-model="editData.licenseType" placeholder="用户驾驶证类型">
+              <el-option v-for="(item, index) in licenseList" :key="index" :label="item.name" :value="item.name">
+              </el-option>
+            </el-select>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="licenseNo">
-          <el-input size="small" v-model="editData.licenseNo" placeholder="请输入驾驶证档案编号"></el-input>
+          <label for="" class="driver-label">
+            <span class="label-span ">驾驶证档案编号：</span>
+            <el-input size="small" v-model="editData.licenseNo" placeholder="请输入驾驶证档案编号"></el-input>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="">
-          <el-date-picker size="small" v-model="driverTimeedit" type="daterange" range-separator="" start-placeholder="请选择注册时间范围" end-placeholder="" @change="driverTimeChangeedit" value-format="timestamp">
-          </el-date-picker>
+          <label for="" class="driver-label">
+            <span class="label-span ">注册时间范围：</span>
+            <el-date-picker size="small" v-model="driverTimeedit" type="daterange" range-separator="" start-placeholder="请选择注册时间范围" end-placeholder="" @change="driverTimeChangeedit" value-format="timestamp">
+            </el-date-picker>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="idCardImgUrlToken">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessIdCard" :headers="headers">
+            <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessIdCard" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人证件图片 （选填）</el-button>
           </el-upload>
+          
         </el-form-item>
         <el-form-item label="" prop="headUrlToken">
           <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessHead" :headers="headers">
@@ -226,9 +272,12 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="" prop="phone">
-          <el-input size="small" v-model="editData.phone" placeholder="手机号"></el-input>
+          <label for="" class="driver-label">
+            <span class="label-span ">手机号：</span>
+            <el-input size="small" v-model="editData.phone" placeholder="手机号"></el-input>
+          </label>
         </el-form-item>
-        <el-form-item>
+        <el-form-item class="btn-">
           <el-button type="primary" size="small" @click="submitEdit('editFrom')">提 交</el-button>
           <el-button size="small" @click="editDialogVisible = false">取 消</el-button>
         </el-form-item>
@@ -321,8 +370,8 @@ export default {
       },
       creatTime: '',
       auditTime: '',
-      driverTimeadd: '',
-      driverTimeedit: '',
+      driverTimeadd: [],
+      driverTimeedit: [],
       totalSize: 0,
       // 审核弹窗
       auditDialogVisible: false,
@@ -403,7 +452,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD h:mm:ss')
+      return moment(time).format('YYYY-MM-DD hh:mm:ss')
     },
     // 获取列表数据
     getData() {
@@ -503,8 +552,10 @@ export default {
       this.editData.licenseNo = row.licenseNo
       this.editData.licenseBeginDate = row.licenseBeginDate
       this.editData.licenseEndDate = row.licenseEndDate
-      this.editData.phone = row.phone
+      this.editData.phone = row.phone 
       this.editDialogVisible = true
+      this.driverTimeedit[0] = row.licenseBeginDate
+      this.driverTimeedit[1] = row.licenseEndDate
     },
     // 编辑请求
     submitEdit(formName) {
