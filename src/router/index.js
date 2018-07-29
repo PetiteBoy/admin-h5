@@ -34,6 +34,9 @@ import QuestionNotice from '@/components/Question/Notice'
 // 预约管理
 import BookList from '@/components/Book/List'
 
+// 公告管理
+import Notice from '@/components/Notice'
+
 
 Vue.use(Router)
 export default new Router({
@@ -48,10 +51,13 @@ export default new Router({
       path: '/bm',
       component: Bm,
       children: [{
+          path: '/notice',
+          component: Notice
+        }, {
           path: '/',
           name: 'home',
           component: Home
-        },{
+        }, {
           path: '/home',
           name: 'home',
           component: Home
@@ -70,7 +76,7 @@ export default new Router({
         }, {
           path: '/question/detail',
           component: QuestionDetail
-        },{
+        }, {
           path: '/question/notice',
           component: QuestionNotice
         }, {
@@ -91,7 +97,7 @@ export default new Router({
         }, {
           path: '/video/check',
           component: VideoCheck
-        },{
+        }, {
           path: '/video/notice',
           component: VideoNotice
         }, {

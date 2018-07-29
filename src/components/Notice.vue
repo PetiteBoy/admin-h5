@@ -4,7 +4,7 @@
         <div class="row breadcrumb-container">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{path:'/bm'}">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>审验教育考试公告设置</el-breadcrumb-item>
+                <el-breadcrumb-item>通用公告设置</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
@@ -29,7 +29,7 @@
 
 </template>
 <script>
-import baseService from '../../service/baseService.js'
+import baseService from '../service/baseService.js'
 export default {
   name: 'notice',
   data() {
@@ -39,8 +39,8 @@ export default {
         content: ''
       },
       checkPath: {
-        getPath: '/notice/find/checkquestion',
-        savePath: '/notice/config/checkquestion'
+        getPath: '/notice/find/global',
+        savePath: '/notice/config/global'
       }
     }
   },
