@@ -12,7 +12,6 @@
     <div class="main-page">
       <!-- 操作按钮 -->
     <div>
-      <el-button type="primary" icon="el-icon-refresh" size="small" @click="getRoleData()">刷新</el-button>
       <el-button type="success" size="small" @click="addRole()">新增</el-button>
       <Search v-on:search="getRoleData()"></Search>
     </div>

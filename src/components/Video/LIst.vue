@@ -91,6 +91,7 @@
             <el-button size="small" type="primary" :loading="uploading" >上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
+          <video :src="videoUrl" controls v-if="videoUrl"></video>
         </el-form-item>
         <el-form-item label="视频时长：" prop="duration" class="video-druction">
           <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> 时
@@ -102,7 +103,7 @@
             <el-button size="small" type="primary">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
           </el-upload>
-          <img :src="imgUrl" alt="" class="pic" v-if="imgUrl">
+          <img :src="imgUrl" alt="" class="pic-1" v-if="imgUrl">
         </el-form-item>
 
       </el-form>
@@ -132,6 +133,7 @@
             <el-button size="small" type="primary" :loading="uploading" :disabled="uploading">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
+          <video :src="videoUrl" controls v-if="videoUrl"></video>
         </el-form-item>
         <el-form-item label="视频时长" prop="duration" class="video-druction">
           <el-input v-model="duration.hour" size="small" min='0' max="59" type="number"></el-input> 时
@@ -143,7 +145,7 @@
             <el-button size="small" type="primary" >上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
           </el-upload>
-          <img :src="imgUrl" alt="" class="pic" v-if="imgUrl">
+          <img :src="imgUrl" alt="" class="pic-1" v-if="imgUrl">
         </el-form-item>
 
       </el-form>
@@ -181,6 +183,7 @@ export default {
         video: `${config.service.host}/file/video/upload`
       },
       imgUrl: '',
+      videoUrl:'',
       // 视频列表
       videoDate: [],
       tabMaxHeight: 0,
@@ -280,6 +283,7 @@ export default {
     //   添加视频
     addVideo() {
       this.imgUrl = ''
+      this.videoUrl = ''
       this.addVideoData = {
         categoryId: '',
         name: '',
@@ -350,6 +354,7 @@ export default {
     editVideoItem(row) {
       this.uploading = false
       this.imgUrl = ''
+       this.videoUrl = ''
       let t = Number(row.duration)
       let h = Math.floor((t / 3600) % 24)
       let m = Math.floor((t / 60) % 60)
@@ -370,6 +375,8 @@ export default {
       this.editVideoData.name = row.name
       this.editVideoData.introduction = row.introduction
       this.editVideoData.duration = row.duration
+      this.imgUrl = row.thumbUrl
+       this.videoUrl = row.url
 
       this.editVideoDialogVisible = true
     },
@@ -426,6 +433,7 @@ export default {
       })
       this.uploading = false
       this.addVideoData.videoToken = val.data.token
+       this.videoUrl = val.data.url
     },
     handleSuccessPic(val) {
       this.addVideoData.thumbToken = val.data.token
@@ -438,6 +446,7 @@ export default {
       })
       this.uploading = false
       this.editVideoData.videoToken = val.data.token
+      this.videoUrl = val.data.url
     },
     handleSuccessPicEdit(val) {
       this.editVideoData.thumbToken = val.data.token
@@ -471,6 +480,12 @@ export default {
 }
 .video-druction .el-input__inner {
   padding: 2px;
+}
+video{
+  width: 200px;
+}
+.pic-1{
+  width: 200px;
 }
 </style>
 
