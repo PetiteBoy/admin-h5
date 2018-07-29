@@ -91,7 +91,7 @@
             <el-button size="small" type="primary" :loading="uploading">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
-          <video :src="videoUrl" controls v-if="videoUrl" id="addVideoTime" preload></video>
+          <video :src="videoUrl" controls v-if="videoUrl" id="addVideoTime" preload autoplay></video>
         </el-form-item>
         <el-form-item label="视频时长：" prop="duration" class="video-druction">
           <el-input v-model="addVideoData.duration" size="small" disabled=""></el-input>
@@ -131,7 +131,7 @@
             <el-button size="small" type="primary" :loading="uploading" :disabled="uploading">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
-          <video :src="videoUrledit" controls v-if="videoUrledit" id="editVideoTime"></video>
+          <video :src="videoUrledit" controls v-if="videoUrledit" id="editVideoTime" autoplay preload></video>
         </el-form-item>
         <el-form-item label="视频时长" prop="duration" class="video-druction">
           <el-input v-model="editVideoData.duration" size="small" disabled=""></el-input>
