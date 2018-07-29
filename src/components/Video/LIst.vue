@@ -87,8 +87,8 @@
           <el-input v-model="addVideoData.introduction" type="textarea" placeholder="请输入视频简介" rows="7"></el-input>
         </el-form-item>
         <el-form-item label="上传视频：" prop="videoToken">
-          <el-upload :action="upload.video" :on-error="handleErrVideo" accept="video/*" :on-success="handleSuccessVideo" :headers="headers">
-            <el-button size="small" type="primary">上传</el-button>
+          <el-upload :action="upload.video" :on-error="handleErrVideo" accept="video/*" :disabled="uploading" :before-upload="handlePreviewVideo" :on-success="handleSuccessVideo" :headers="headers">
+            <el-button size="small" type="primary" :loading="uploading" >上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
         </el-form-item>
@@ -128,8 +128,8 @@
           <el-input v-model="editVideoData.introduction" type="textarea" placeholder="请输入视频简介" rows="7"></el-input>
         </el-form-item>
         <el-form-item label="上传视频" prop="">
-          <el-upload :action="upload.video" :on-error="handleErrVideo" accept="video/*" :on-success="handleSuccessVideoEdit" :headers="headers">
-            <el-button size="small" type="primary">上传</el-button>
+          <el-upload :action="upload.video" :on-error="handleErrVideo" :before-upload="handlePreviewVideo" :disabled="uploading" accept="video/*" :on-success="handleSuccessVideoEdit" :headers="headers">
+            <el-button size="small" type="primary" :loading="uploading" :disabled="uploading">上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个mp4 文件，且不超过 1G</div>
           </el-upload>
         </el-form-item>
@@ -140,7 +140,7 @@
         </el-form-item>
         <el-form-item label="上传缩略图" prop="">
           <el-upload :action="upload.pic" accept="image/*" :headers="headers" :on-success="handleSuccessPicEdit">
-            <el-button size="small" type="primary">上传</el-button>
+            <el-button size="small" type="primary" >上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
           </el-upload>
           <img :src="imgUrl" alt="" class="pic" v-if="imgUrl">
@@ -201,7 +201,7 @@ export default {
         introduction: [{ required: true, message: '请输入视频简介', trigger: 'blur' }],
         videoToken: [{ required: true, message: '请上传视频', trigger: 'blur' }],
         thumbToken: [{ required: true, message: '请上传图片', trigger: 'blur' }],
-        duration: [{ required: true, message: '请输入视频时长', trigger: 'change' }, { type: 'number', message: '请输入视频时长',min:1 }]
+        duration: [{ required: true, message: '请输入视频时长', trigger: 'change' }, { type: 'number', message: '请输入视频时长', min: 1 }]
       },
       //   编辑视频弹窗
       editVideoDialogVisible: false,
@@ -238,7 +238,8 @@ export default {
       //页码相关
       currentPage: 1,
       pageSize: 20,
-      totalSize: 0
+      totalSize: 0,
+      uploading: false
     }
   },
   mounted() {
@@ -347,6 +348,7 @@ export default {
     },
     // 编辑视频
     editVideoItem(row) {
+      this.uploading = false
       this.imgUrl = ''
       let t = Number(row.duration)
       let h = Math.floor((t / 3600) % 24)
@@ -376,8 +378,6 @@ export default {
       this.editVideoData.duration = Number(this.duration.hour) * 60 * 60 + Number(this.duration.minute) * 60 + Number(this.duration.second)
       this.$refs[formName].validate(valid => {
         if (valid) {
-          
-
           baseService.basePostData(this.videoPath.editPath, this.editVideoData).then(res => {
             let result = res.data
             if (result.status !== '0x0000') {
@@ -420,6 +420,11 @@ export default {
       this.getVideoDate()
     },
     handleSuccessVideo(val) {
+      this.$message({
+        message: '上传成功',
+        type: 'success'
+      })
+      this.uploading = false
       this.addVideoData.videoToken = val.data.token
     },
     handleSuccessPic(val) {
@@ -427,6 +432,11 @@ export default {
       this.imgUrl = val.data.url
     },
     handleSuccessVideoEdit(val) {
+      this.$message({
+        message: '上传成功',
+        type: 'success'
+      })
+      this.uploading = false
       this.editVideoData.videoToken = val.data.token
     },
     handleSuccessPicEdit(val) {
@@ -434,11 +444,16 @@ export default {
       this.imgUrl = val.data.url
     },
     handleErrVideo(err, file, fileList) {
+      this.uploading = false
       console.log(err, file, fileList)
       this.$message({
         message: '上传失败，请重新上传',
         type: 'warning'
       })
+    },
+    handlePreviewVideo(file) {
+      console.log(file)
+      this.uploading = true
     }
   }
 }
