@@ -99,7 +99,7 @@
         <el-form-item label="上传缩略图：" prop="thumbToken">
           <el-upload :action="upload.pic" accept="image/*" :headers="headers" :on-success="handleSuccessPic">
             <el-button size="small" type="primary">上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，分辨率800*600</div>
+            <div slot="tip" class="el-upload__tip">只能上传单个jpg/png 文件，且不超过 800K，960*540</div>
           </el-upload>
           <img :src="imgUrl" alt="" class="pic-1" v-if="imgUrl">
         </el-form-item>

@@ -7,7 +7,6 @@
         <el-breadcrumb-item>记录详情</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-
     <div class="row main-page">
       <div id="print">
         <div class="print">
@@ -24,7 +23,7 @@
               </div>
             </div>
             <div class="img">
-              <img :src="data.headUrl" alt="">
+              <img :src="data.headUrl" id="ossImg">
             </div>
           </div>
           <div class="con2 row">
@@ -33,7 +32,7 @@
           <div class="con3">
             <div class="row">市（县、区）公安机关</div>
             <div class="row">交通管理部门（印章）</div>
-            <div class="row"> 年&nbsp;&nbsp;月&nbsp;&nbsp;日</div>
+            <div class="row"> 年月日</div>
           </div>
           <div class="con4">
             <div class="title">参加审验教育须知</div>
@@ -47,17 +46,22 @@
         </div>
       </div>
       <el-button type="primary" @click="print()">打印</el-button>
+      <el-button type="primary" @click="saveDownload()">保存下载</el-button>
     </div>
+
+    <div id="ssssssssssss" style="position: fixed;right:0px;top:0px;width:600px;background-color:#333333;"></div>
 
   </div>
 
 </template>
 <script>
 import moment from 'moment'
+import html2canvas from 'html2canvas'
 import baseService from '../../service/baseService.js'
 export default {
   data() {
     return {
+      imgObj: null,
       data: {},
       path: {
         detail: '/edurecord/detail'
@@ -97,7 +101,6 @@ export default {
       })
     },
     print() {
-      this.remove_ie_header_and_footer()
       let subOutputRankPrint = document.getElementById('print')
       let newContent = subOutputRankPrint.innerHTML
       let oldContent = document.body.innerHTML
@@ -106,21 +109,33 @@ export default {
       window.location.reload()
       return false
     },
+    saveDownload() {
+      html2canvas(document.getElementById('print')).then(canvas => {
+        var img = new Image()
+        img.src = document.getElementById('ossImg').src
+        document.getElementById('ssssssssssss').appendChild(canvas)
+        let dataURL = canvas.toDataURL('image/png')
+        var filename = 'fy' + new Date().getTime() + '.png'
+        this.saveFile(dataURL, filename)
+      })
+    },
+    saveFile(data, filename) {
+      var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a')
+      save_link.href = data
+      save_link.download = filename
 
-    remove_ie_header_and_footer() {
-      var hkey_path
-      hkey_path = 'HKEY_CURRENT_USER\\Software\\Microsoft\\Internet Explorer\\PageSetup\\'
-      try {
-        var RegWsh = new ActiveXObject('WScript.Shell')
-        RegWsh.RegWrite(hkey_path + 'header', '')
-        RegWsh.RegWrite(hkey_path + 'footer', '')
-      } catch (e) {}
+      var event = document.createEvent('MouseEvents')
+      event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+      save_link.dispatchEvent(event)
     }
   }
 }
 </script>
 
 <style>
+#ssssssssssss canvas {
+  display: none;
+}
 .print {
   margin-top: 20px;
 }
