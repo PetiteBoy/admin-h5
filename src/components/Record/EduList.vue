@@ -23,7 +23,7 @@
 
       <div class="row senior-search">
         <label for="">
-          <span>注册时间范围：</span>
+          <span>教育时间范围：</span>
           <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="开始时间" end-placeholder="结束时间" @change="creatTimeChange" value-format="timestamp">
           </el-date-picker>
         </label>

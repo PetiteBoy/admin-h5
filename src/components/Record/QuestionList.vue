@@ -1,76 +1,76 @@
 <template>
-    <div class="view-container">
+  <div class="view-container">
 
-        <!--面包屑导航-->
-        <div class="row breadcrumb-container">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{path:'/bm'}">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>考试记录列表</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-
-        <div class="main-page">
-            <div class=" base-search">
-                <label for="">
-                    <span class="label-span">手机号码：</span>
-                    <el-input size="small" v-model="search.phone" placeholder="请输入手机号码"></el-input>
-                </label>
-                <label for="">
-                    <span class="label-span">真实姓名：</span>
-                    <el-input size="small" v-model="search.realname" placeholder="请输入您的姓名："></el-input>
-                </label>
-            </div>
-
-            <div class="row senior-search">
-                <label for="">
-                    <span>开始时间范围：</span>
-                    <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="开始时间" end-placeholder="结束时间" @change="creatTimeChange" value-format="timestamp">
-                    </el-date-picker>
-                </label>
-
-                <div style="float:right;">
-                    <el-button size="small" type="primary" @click="getData()">搜索</el-button>
-                    <el-button size="small" type="primary" @click="reset()">重置</el-button>
-                </div>
-            </div>
-
-            <!-- 数据列表 -->
-            <div class="row-data">
-                <el-table :data="data" border style="width: 100%" min-height="409">
-                    <el-table-column label="真实姓名" prop="realname">
-                    </el-table-column>
-                    <el-table-column label="手机号" prop="phone">
-                    </el-table-column>
-                    <el-table-column label="考试批次" prop="batchNum">
-                    </el-table-column>
-                    <el-table-column label="教育类型" prop="eduType">
-                        <template slot-scope="scope">
-                            <div v-if="scope.row.eduType === 'CHECK'">审验教育</div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="证件类型" prop="idType">
-                        <template slot-scope="scope">
-                            <div>{{dataIdType[scope.row.idType]}}</div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="证件号" prop="idNo">
-                    </el-table-column>
-                    <el-table-column label="驾驶证档案编号" prop="licenseNo">
-                    </el-table-column>
-                    <el-table-column label="考试时间" prop="createTime" width="96">
-                        <template slot-scope="scope">
-                            <div>{{moment(scope.row.createTime)}}</div>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-            <!-- 分页器 -->
-            <div class=" page-container">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.currentPage" :page-sizes="[10, 50]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
-                </el-pagination>
-            </div>
-        </div>
+    <!--面包屑导航-->
+    <div class="row breadcrumb-container">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{path:'/bm'}">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>考试记录列表</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
+
+    <div class="main-page">
+      <div class=" base-search">
+        <label for="">
+          <span class="label-span">手机号码：</span>
+          <el-input size="small" v-model="search.phone" placeholder="请输入手机号码"></el-input>
+        </label>
+        <label for="">
+          <span class="label-span">真实姓名：</span>
+          <el-input size="small" v-model="search.realname" placeholder="请输入您的姓名"></el-input>
+        </label>
+      </div>
+
+      <div class="row senior-search">
+        <label for="">
+          <span>考试时间范围：</span>
+          <el-date-picker size="small" v-model="creatTime" type="daterange" range-separator="" start-placeholder="开始时间" end-placeholder="结束时间" @change="creatTimeChange" value-format="timestamp">
+          </el-date-picker>
+        </label>
+
+        <div style="float:right;">
+          <el-button size="small" type="primary" @click="getData()">搜索</el-button>
+          <el-button size="small" type="primary" @click="reset()">重置</el-button>
+        </div>
+      </div>
+
+      <!-- 数据列表 -->
+      <div class="row-data">
+        <el-table :data="data" border style="width: 100%" min-height="409">
+          <el-table-column label="真实姓名" prop="realname">
+          </el-table-column>
+          <el-table-column label="手机号" prop="phone">
+          </el-table-column>
+          <el-table-column label="考试批次" prop="batchNum">
+          </el-table-column>
+          <el-table-column label="教育类型" prop="eduType">
+            <template slot-scope="scope">
+              <div v-if="scope.row.eduType === 'CHECK'">审验教育</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="证件类型" prop="idType">
+            <template slot-scope="scope">
+              <div>{{dataIdType[scope.row.idType]}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="证件号" prop="idNo">
+          </el-table-column>
+          <el-table-column label="驾驶证档案编号" prop="licenseNo">
+          </el-table-column>
+          <el-table-column label="考试时间" prop="createTime" width="96">
+            <template slot-scope="scope">
+              <div>{{moment(scope.row.createTime)}}</div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <!-- 分页器 -->
+      <div class=" page-container">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="search.currentPage" :page-sizes="[10, 50]" :page-size="search.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+        </el-pagination>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import baseService from '../../service/baseService.js'
