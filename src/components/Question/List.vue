@@ -208,64 +208,64 @@
         <el-form-item label="" prop="subject">
           <label for="" class="driver-label">
             <span class="">科目类别：</span>
-          <el-select size="small" v-model="editData.subject" placeholder="请选择科目类别">
-           <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
-            </el-option>
-          </el-select>
+            <el-select size="small" v-model="editData.subject" placeholder="请选择科目类别">
+              <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.val">
+              </el-option>
+            </el-select>
           </label>
         </el-form-item>
         <el-form-item label="" prop="type">
           <label for="">
             <span class="">题目类型：</span>
-          <el-checkbox-group v-model="editData.type">
-            <el-checkbox v-for="(item, index) in licenseList" :key="index" :label="item.name"></el-checkbox>
-          </el-checkbox-group>
-           </label>
+            <el-checkbox-group v-model="editData.type">
+              <el-checkbox v-for="(item, index) in licenseList" :key="index" :label="item.name"></el-checkbox>
+            </el-checkbox-group>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="question">
-           <label for="">
+          <label for="">
             <span class="">题目问题：</span>
-          <el-input v-model="editData.question" placeholder="请输入题目问题" type="textarea" rows="7"></el-input>
-        </label>
+            <el-input v-model="editData.question" placeholder="请输入题目问题" type="textarea" rows="7"></el-input>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="item1">
-            <label for="">
+          <label for="">
             <span class="">题目答案A：</span>
-          <el-input v-model="editData.item1" placeholder="请输入题目选项A（必填）"></el-input>
+            <el-input v-model="editData.item1" placeholder="请输入题目选项A（必填）"></el-input>
           </label>
         </el-form-item>
         <el-form-item label="" prop="item2">
           <label for="">
             <span class="">题目答案B：</span>
-          <el-input v-model="editData.item2" placeholder="请输入题目选项B（必填）"></el-input>
-           </label>
+            <el-input v-model="editData.item2" placeholder="请输入题目选项B（必填）"></el-input>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="item3">
           <label for="">
             <span class="">题目答案C：</span>
-          <el-input v-model="editData.item3" placeholder="请输入题目选项C"></el-input>
+            <el-input v-model="editData.item3" placeholder="请输入题目选项C"></el-input>
           </label>
         </el-form-item>
         <el-form-item label="" prop="item4">
           <label for="">
             <span class="">题目答案D：</span>
-          <el-input v-model="editData.item4" placeholder="请输入题目选项D"></el-input>
+            <el-input v-model="editData.item4" placeholder="请输入题目选项D"></el-input>
           </label>
         </el-form-item>
         <el-form-item label="" prop="answer">
           <label for="">
             <span class="">题目答案：</span>
-          <el-select size="small" v-model="editData.answer" placeholder="请选择题目答案">
-            <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
-            </el-option>
-          </el-select>
-           </label>
+            <el-select size="small" v-model="editData.answer" placeholder="请选择题目答案">
+              <el-option v-for="(item, index) in answerList" :key="index" :label="item" :value="item">
+              </el-option>
+            </el-select>
+          </label>
         </el-form-item>
         <el-form-item label="" prop="explains">
-           <label for="">
+          <label for="">
             <span class="">题目详解</span>
-          <el-input v-model="editData.explains" placeholder="请输入题目详解" type="textarea" rows="7"></el-input>
-           </label>
+            <el-input v-model="editData.explains" placeholder="请输入题目详解" type="textarea" rows="7"></el-input>
+          </label>
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="editDialogVisible = false">取 消</el-button>
@@ -396,7 +396,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD hh:mm:ss')
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
     // 获取列表数据
     getData() {
@@ -475,7 +475,7 @@ export default {
                 message: result.message,
                 type: 'warning'
               })
-            }else{
+            } else {
               this.$message({
                 message: '添加成功',
                 type: 'success'
@@ -518,7 +518,7 @@ export default {
                 message: result.message,
                 type: 'warning'
               })
-            }else{
+            } else {
               this.$message({
                 message: '编辑成功',
                 type: 'success'

@@ -180,7 +180,7 @@ export default {
       },
       imgUrl: '',
       videoUrl: '',
-      videoUrledit:'',
+      videoUrledit: '',
       // 视频列表
       videoDate: [],
       tabMaxHeight: 0,
@@ -254,7 +254,7 @@ export default {
     },
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD hh:mm:ss')
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
     //   获取数据
     getVideoDate() {
@@ -427,7 +427,7 @@ export default {
         let addVideoTime = document.getElementById('addVideoTime')
         addVideoTime.oncanplay = function() {
           _this.addVideoData.duration = parseInt(addVideoTime.duration)
-        } 
+        }
       }, 100)
     },
     handleSuccessPic(val) {
@@ -448,7 +448,7 @@ export default {
         editVideoTime.oncanplay = function() {
           _this.editVideoData.duration = parseInt(editVideoTime.duration)
           console.log(editVideoTime.duration)
-        } 
+        }
       }, 100)
     },
     handleSuccessPicEdit(val) {
@@ -466,6 +466,24 @@ export default {
     handlePreviewVideo(file) {
       console.log(file)
       this.uploading = true
+    }
+  },
+  watch: {
+    addVideoDialogVisible() {
+      if (!this.addVideoDialogVisible) {
+        let addVideoTime = document.getElementById('addVideoTime')
+        if (addVideoTime) {
+          addVideoTime.pause()
+        }
+      }
+    },
+    editVideoDialogVisible() {
+      if (!this.editVideoDialogVisible) {
+        let editVideoTime = document.getElementById('editVideoTime')
+        if (editVideoTime) {
+          editVideoTime.pause()
+        }
+      }
     }
   }
 }

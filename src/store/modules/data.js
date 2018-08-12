@@ -15,9 +15,9 @@ const state = {
   ],
   // 证件类型列表
   idList: [{
-    name: '全部',
-    val: ''
-  },{
+      name: '全部',
+      val: ''
+    }, {
       name: '居民身份证',
       val: 'IDCARD'
     },
@@ -68,69 +68,139 @@ const state = {
     }
   ],
   //驾驶证类别列表
-  licenseList: [
-    {
+  licenseList: [{
       name: '全部',
-      val:''
+      val: ''
     },
     {
       name: 'A1',
-      val:'A1'
+      val: 'A1'
     },
     {
       name: 'A2',
-      val:'A2'
+      val: 'A2'
+    },
+    {
+      name: 'A3',
+      val: 'A3'
     },
     {
       name: 'B1',
-      val:'B1'
+      val: 'B1'
     },
     {
       name: 'B2',
-      val:'B2'
+      val: 'B2'
     }, {
       name: 'C1',
-      val:'C1'
+      val: 'C1'
     }, {
       name: 'C2',
-      val:'C2'
+      val: 'C2'
     }, {
       name: 'C3',
-      val:'C3'
+      val: 'C3'
+    },
+    {
+      name: 'C4',
+      val: 'C4'
+    },
+    {
+      name: 'C5',
+      val: 'C5'
+    },
+    {
+      name: 'D',
+      val: 'D'
+    },
+    {
+      name: 'E',
+      val: 'E'
+    },
+    {
+      name: 'F',
+      val: 'F'
+    },
+    {
+      name: 'M',
+      val: 'M'
+    },
+    {
+      name: 'N',
+      val: 'N'
+    },
+    {
+      name: 'P',
+      val: 'P'
     }
   ],
-  licenseListone: [
-    {
+  licenseListone: [{
       name: 'A1',
-      val:'A1'
+      val: 'A1'
     },
     {
       name: 'A2',
-      val:'A2'
+      val: 'A2'
+    },
+    {
+      name: 'A3',
+      val: 'A3'
     },
     {
       name: 'B1',
-      val:'B1'
+      val: 'B1'
     },
     {
       name: 'B2',
-      val:'B2'
+      val: 'B2'
     }, {
       name: 'C1',
-      val:'C1'
+      val: 'C1'
     }, {
       name: 'C2',
-      val:'C2'
+      val: 'C2'
     }, {
       name: 'C3',
-      val:'C3'
+      val: 'C3'
+    },
+    {
+      name: 'C4',
+      val: 'C4'
+    },
+    {
+      name: 'C5',
+      val: 'C5'
+    },
+    {
+      name: 'D',
+      val: 'D'
+    },
+    {
+      name: 'E',
+      val: 'E'
+    },
+    {
+      name: 'F',
+      val: 'F'
+    },
+    {
+      name: 'M',
+      val: 'M'
+    },
+    {
+      name: 'N',
+      val: 'N'
+    },
+    {
+      name: 'P',
+      val: 'P'
     }
   ],
   // 审核状态
   auditList: [{
-    name: '全部',
-    val: ''
-  },{
+      name: '全部',
+      val: ''
+    }, {
       name: '待审核',
       val: 'INHAND'
     },
@@ -160,7 +230,10 @@ const state = {
     REJECT: '驳回',
     PASSED: '通过',
     REINHAND: '重新提交'
-  }
+  },
+
+
+
 }
 const mutations = {
 

@@ -17,25 +17,33 @@ import VideoList from '@/components/Video/List'
 import VideoDetail from '@/components/Video/Detail'
 import VideoCategory from '@/components/Video/Category'
 import VideoCheck from '@/components/Video/CheckConfig'
-import VideoNotice from '@/components/Video/Notice'
 
 
 // 驾驶人管理
 import DriverList from '@/components/Driver/List'
 import DriverDetail from '@/components/Driver/Detail'
 
+
 // 试题管理
 import QuestionList from '@/components/Question/List'
 import QuestionCategory from '@/components/Question/Category'
 import QuestionCheck from '@/components/Question/CheckConfig'
 import QuestionDetail from '@/components/Question/Detail'
-import QuestionNotice from '@/components/Question/Notice'
+
 
 // 预约管理
 import BookList from '@/components/Book/List'
 
 // 公告管理
-import Notice from '@/components/Notice'
+import Notice from '@/components/Notice/Global'
+import QuestionNotice from '@/components/Notice/CheckQuestion'
+import VideoNotice from '@/components/Notice/CheckVideo'
+
+
+// 记录管理
+import EduRecordList from '@/components/Record/EduList'
+import EduRecordDetail from '@/components/Record/EduDetail'
+import QuestionRecordList from '@/components/Record/QuestionList'
 
 
 Vue.use(Router)
@@ -51,8 +59,23 @@ export default new Router({
       path: '/bm',
       component: Bm,
       children: [{
+          path: '/edu-record-list',
+          component: EduRecordList
+        }, {
+          path: '/edu-record-detail',
+          component: EduRecordDetail
+        }, {
+          path: '/question-record-list',
+          component: QuestionRecordList
+        }, {
           path: '/notice',
           component: Notice
+        }, {
+          path: '/question/notice',
+          component: QuestionNotice
+        }, {
+          path: '/video/notice',
+          component: VideoNotice
         }, {
           path: '/',
           name: 'home',
@@ -77,9 +100,6 @@ export default new Router({
           path: '/question/detail',
           component: QuestionDetail
         }, {
-          path: '/question/notice',
-          component: QuestionNotice
-        }, {
           path: '/driver/list',
           component: DriverList
         }, {
@@ -97,9 +117,6 @@ export default new Router({
         }, {
           path: '/video/check',
           component: VideoCheck
-        }, {
-          path: '/video/notice',
-          component: VideoNotice
         }, {
           path: '/user/admin',
           name: 'admin',

@@ -3,11 +3,11 @@
     <div class="head-left">
       满分审验教育后台管理系统
     </div>
-    <div class="head-right"> 
-       <span>{{realname}}</span>
-    <span @click="logout()">退出</span>
+    <div class="head-right">
+      <span>{{realname}}</span>
+      <span @click="logout()">退出</span>
     </div>
-   
+
   </div>
 </template>
 
@@ -47,8 +47,9 @@ export default {
   text-align: right;
   box-sizing: border-box;
   display: flex;
+  z-index: 1;
 }
-.head-left{
+.head-left {
   width: 250px;
   background: rgba(67, 74, 80, 1);
   line-height: 60px;
@@ -56,10 +57,11 @@ export default {
   text-align: center;
   cursor: pointer;
 }
-.head-right{
+.head-right {
   color: #000;
   flex: 1;
   background: #ffffff;
+  box-shadow: 0px 1px 3px 0px rgba(140, 140, 140, 0.5);
 }
 .head span {
   cursor: pointer;

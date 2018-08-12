@@ -11,52 +11,51 @@
 
     <div class="main-page">
       <!-- 操作按钮 -->
-    <div>
-      <el-button type="success" size="small" @click="addRole()">新增</el-button>
-      <Search v-on:search="getRoleData()"></Search>
-    </div>
-    <!-- 数据列表 -->
-    <div class="row">
-      <el-table :data="roleData" border style="width: 100%">
-        <el-table-column label="ID" prop="id" width="50">
-        </el-table-column>
-        <el-table-column label="名称" prop="name" width="150">
-        </el-table-column>
-        <el-table-column label="创建时间 " prop="createTime" >
-          <template slot-scope="scope">
-            <div>{{moment(scope.row.createTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="最近修改时间 " prop="updateTime" >
-          <template slot-scope="scope">
-            <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作 " width="300">
-          <template slot-scope="scope ">
+      <div>
+        <el-button type="success" size="small" @click="addRole()">新增</el-button>
+        <Search v-on:search="getRoleData()"></Search>
+      </div>
+      <!-- 数据列表 -->
+      <div class="row">
+        <el-table :data="roleData" border style="width: 100%">
+          <el-table-column label="ID" prop="id" width="50">
+          </el-table-column>
+          <el-table-column label="名称" prop="name" width="150">
+          </el-table-column>
+          <el-table-column label="创建时间 " prop="createTime">
+            <template slot-scope="scope">
+              <div>{{moment(scope.row.createTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="最近修改时间 " prop="updateTime">
+            <template slot-scope="scope">
+              <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作 " width="300">
+            <template slot-scope="scope ">
 
-            <el-button type="primary " size="mini " @click="editRoleItem(scope.row) ">
-              <i class="el-icon-edit "></i>
-            </el-button>
-            <el-button type="primary " size="mini " @click="addRolePermission(scope.row) ">权限
-            </el-button>
-            <el-button type="primary " size="mini " @click="addRoleMenu(scope.row) ">菜单
-            </el-button>
-            <el-button type="danger " size="mini " @click="delRoleItem(scope.row) ">
-              <i class="el-icon-delete "></i>
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+              <el-button type="primary " size="mini " @click="editRoleItem(scope.row) ">
+                <i class="el-icon-edit "></i>
+              </el-button>
+              <el-button type="primary " size="mini " @click="addRolePermission(scope.row) ">权限
+              </el-button>
+              <el-button type="primary " size="mini " @click="addRoleMenu(scope.row) ">菜单
+              </el-button>
+              <el-button type="danger " size="mini " @click="delRoleItem(scope.row) ">
+                <i class="el-icon-delete "></i>
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
-    <!-- 分页器 -->
-    <div class="row">
-      <el-pagination @size-change="handleSizeChange " @current-change="handleCurrentChange " :current-page="currentPage " :page-sizes="[10, 20] " :page-size="pageSize " layout="total, sizes, prev, pager, next, jumper " :total="totalSize ">
-      </el-pagination>
+      <!-- 分页器 -->
+      <div class="row">
+        <el-pagination @size-change="handleSizeChange " @current-change="handleCurrentChange " :current-page="currentPage " :page-sizes="[10, 20] " :page-size="pageSize " layout="total, sizes, prev, pager, next, jumper " :total="totalSize ">
+        </el-pagination>
+      </div>
     </div>
-    </div>
-    
 
     <!-- 新增角色弹窗 -->
     <el-dialog title="新增角色" :visible.sync="addRoleDialogVisible" width="30%" :before-close="handleClose">
@@ -211,7 +210,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD hh:mm:ss')
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
     //  获取数据
     getRoleData() {

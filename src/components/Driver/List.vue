@@ -33,6 +33,10 @@
           <span class="label-span">证件号码：</span>
           <el-input size="small" v-model="search.idNo" placeholder="请输入证件号码"></el-input>
         </label>
+        <label for="">
+          <span class="label-span">真实姓名：</span>
+          <el-input size="small" v-model="search.realname" placeholder="请输入您的真实姓名"></el-input>
+        </label>
       </div>
 
       <div class="row senior-search">
@@ -86,6 +90,8 @@
       <div class="row-data">
         <el-table :data="data" border style="width: 100%" min-height="409">
           <el-table-column label="用户id" prop="id" width="60">
+          </el-table-column>
+          <el-table-column label="真实姓名" prop="realname">
           </el-table-column>
           <el-table-column label="用户手机" prop="phone">
           </el-table-column>
@@ -181,13 +187,20 @@
           </label>
         </el-form-item>
 
+        <el-form-item label="" prop="realname">
+          <label for="" class="driver-label">
+            <span class="label-span ">真实姓名：</span>
+            <el-input size="small" v-model="addData.realname" placeholder="请输入您的真实姓名"></el-input>
+          </label>
+        </el-form-item>
+
         <el-form-item label="" prop="licenseType">
           <label for="" class="driver-label">
             <span class="label-span ">驾驶证类型：</span>
-            <el-select size="small" v-model="addData.licenseType" placeholder="驾驶证类型">
-              <el-option v-for="(item, index) in licenseListone" :key="index" :label="item.name" :value="item.name">
-              </el-option>
+            <el-select size="small" v-model="addData.licenseType" multiple placeholder="驾驶证类型">
+              <el-option v-for="(item, index) in licenseListone" :key="index" :label="item.name" :value="item.name"> </el-option>
             </el-select>
+
           </label>
 
         </el-form-item>
@@ -249,12 +262,18 @@
             <el-input size="small" v-model="editData.idNo" placeholder="请输入证件号码"></el-input>
           </label>
         </el-form-item>
+        <el-form-item label="" prop="realname">
+          <label for="" class="driver-label">
+            <span class="label-span ">真实姓名：</span>
+            <el-input size="small" v-model="editData.realname" placeholder="请输入您的真实姓名"></el-input>
+          </label>
+        </el-form-item>
+
         <el-form-item label="" prop="licenseType">
           <label for="" class="driver-label">
             <span class="label-span ">驾驶证类型：</span>
-            <el-select size="small" v-model="editData.licenseType" placeholder="驾驶证类型">
-              <el-option v-for="(item, index) in licenseListone" :key="index" :label="item.name" :value="item.name">
-              </el-option>
+            <el-select size="small" v-model="editData.licenseType" multiple placeholder="驾驶证类型">
+              <el-option v-for="(item, index) in licenseListone" :key="index" :label="item.name" :value="item.name"> </el-option>
             </el-select>
           </label>
         </el-form-item>
@@ -378,7 +397,9 @@ export default {
         // 审核时间结束
         auditTimeEnd: '',
         //拉黑/洗白
-        disabled: ''
+        disabled: '',
+        // 真实姓名
+        realname: ''
       },
       creatTime: '',
       auditTime: '',
@@ -403,9 +424,10 @@ export default {
       addDialogVisible: false,
       // 添加数据
       addData: {
+        realname: '',
         idType: '',
         idNo: '',
-        licenseType: '',
+        licenseType: [],
         licenseNo: '',
         licenseBeginDate: '',
         licenseEndDate: '',
@@ -416,6 +438,7 @@ export default {
       idCardImgUrl: '',
       headUrl: '',
       addRules: {
+        realname: [{ required: true, message: '请输入您的真实姓名', trigger: 'blur' }],
         idType: [{ required: true, message: '请选择证件类型', trigger: 'change' }],
         idNo: [{ required: true, message: '请输入证件号', trigger: 'blur' }],
         licenseType: [{ required: true, message: '请选择驾照', trigger: 'change' }],
@@ -427,10 +450,11 @@ export default {
       editDialogVisible: false,
       // 添加数据
       editData: {
+        realname: '',
         id: '',
         idType: '',
         idNo: '',
-        licenseType: '',
+        licenseType: [],
         licenseNo: '',
         licenseBeginDate: '',
         licenseEndDate: '',
@@ -473,7 +497,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD hh:mm:ss')
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
     // 获取列表数据
     getData() {
@@ -530,7 +554,7 @@ export default {
       this.addData = {
         idType: '',
         idNo: '',
-        licenseType: '',
+        licenseType: [],
         licenseNo: '',
         licenseBeginDate: '',
         licenseEndDate: '',
@@ -545,6 +569,8 @@ export default {
     submitAdd(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          let licenseType = this.addData.licenseType.join(',')
+          this.addData.licenseType = licenseType
           baseService.basePostData(this.apiPath.add, this.addData).then(res => {
             this.getData()
             let result = res.data
@@ -571,9 +597,10 @@ export default {
       this.idCardImgUrl = ''
       this.headUrl = ''
       this.editData.id = row.id
+      this.editData.realname = row.realname
       this.editData.idType = row.idType
       this.editData.idNo = row.idNo
-      this.editData.licenseType = row.licenseType
+      this.editData.licenseType = row.licenseType.split(',')
       this.editData.licenseNo = row.licenseNo
       this.editData.licenseBeginDate = row.licenseBeginDate
       this.editData.licenseEndDate = row.licenseEndDate
@@ -586,6 +613,8 @@ export default {
     submitEdit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          let licenseType = this.editData.licenseType.join(',')
+          this.editData.licenseType = licenseType
           baseService.basePostData(this.apiPath.edit, this.editData).then(res => {
             let result = res.data
             if (result.status !== '0x0000') {

@@ -29,7 +29,7 @@
 
 </template>
 <script>
-import baseService from '../service/baseService.js'
+import baseService from '../../service/baseService.js'
 export default {
   name: 'notice',
   data() {

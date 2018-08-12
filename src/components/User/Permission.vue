@@ -21,8 +21,6 @@
         <el-table :data="permissionData" border style="width: 100%">
           <el-table-column label="ID" prop="id" width="50">
           </el-table-column>
-          <el-table-column label="标识" prop="code" width="150">
-          </el-table-column>
           <el-table-column label="名称" prop="name" width="150">
           </el-table-column>
           <el-table-column label="创建时间" prop="createTime">
@@ -30,7 +28,7 @@
               <div>{{moment(scope.row.createTime)}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="更新时间" prop="updateTime" >
+          <el-table-column label="更新时间" prop="updateTime">
             <template slot-scope="scope">
               <div v-if="scope.row.updateTime">{{moment(scope.row.updateTime)}}</div>
             </template>
@@ -42,7 +40,7 @@
                 编辑
               </el-button>
               <el-button type="danger" size="mini" @click="delPermissionItem(scope.row)">
-               删除
+                删除
               </el-button>
             </template>
           </el-table-column>
@@ -59,9 +57,6 @@
     <!-- 新增权限弹窗 -->
     <el-dialog title="新增权限" :visible.sync="addPermissionDialogVisible" width="30%" :before-close="handleClose">
       <el-form label-position="left" label-width="80px" :model="addPermissionData">
-        <el-form-item label="标识" prop="code">
-          <el-input v-model="addPermissionData.code"></el-input>
-        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="addPermissionData.name"></el-input>
         </el-form-item>
@@ -96,9 +91,6 @@
     <!-- 编辑权限弹窗 -->
     <el-dialog title="编辑权限" :visible.sync="editPermissionDialogVisible" width="30%" :before-close="handleClose">
       <el-form label-position="left" label-width="80px" :model="editPermissionData">
-        <el-form-item label="标识" prop="code">
-          <el-input v-model="editPermissionData.code"></el-input>
-        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="editPermissionData.name"></el-input>
         </el-form-item>
@@ -128,7 +120,6 @@ export default {
       addPermissionDialogVisible: false,
       // 新增权限数据
       addPermissionData: {
-        code: '',
         name: '',
         action: '',
         menuId: '',
@@ -143,7 +134,6 @@ export default {
       //  编辑权限
       editPermissionData: {
         id: '',
-        code: '',
         name: '',
         action: ''
       },
@@ -183,7 +173,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD hh:mm:ss')
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
     //  获取数据
     getPermissionData() {
@@ -210,7 +200,6 @@ export default {
     //  新增
     addPermission() {
       this.addPermissionData = {
-        code: '',
         name: '',
         action: '',
         menuId: '',
@@ -231,7 +220,7 @@ export default {
     // 新增请求
     submitAddPermission(formName) {
       this.addPermissionDialogVisible = false
-      baseService.basePostData(this.permissionPath.getPath, this.addPermissionData).then(res => {
+      baseService.basePostData(this.permissionPath.addPath, this.addPermissionData).then(res => {
         let result = res.data
         if (result.status !== '0x0000') {
           this.$message({
@@ -264,7 +253,6 @@ export default {
     // 编辑
     editPermissionItem(row) {
       this.editPermissionData.id = row.id
-      this.editPermissionData.code = row.code
       this.editPermissionData.name = row.name
       this.editPermissionData.action = row.action
       this.editPermissionDialogVisible = true

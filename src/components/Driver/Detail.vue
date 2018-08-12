@@ -13,6 +13,9 @@
                 <el-form-item label="用户id：">
                     <div>{{data.id}}</div>
                 </el-form-item>
+                <el-form-item label="真实姓名：">
+                    <div>{{data.realname}}</div>
+                </el-form-item>
                 <el-form-item label="手机号码：">
                     <div>{{data.phone}}</div>
                 </el-form-item>
@@ -26,7 +29,7 @@
                     <img :src="data.idCardImgUrl" alt="" class="pic" style="margin:0px;">
                 </el-form-item>
                 <el-form-item label="驾驶人本人头像：">
-                     <img :src="data.headUrl" alt="" class="pic" style="margin:0px;">
+                    <img :src="data.headUrl" alt="" class="pic" style="margin:0px;">
                 </el-form-item>
                 <el-form-item label="准驾车型：">
                     <div>{{data.licenseType}}</div>
@@ -77,7 +80,7 @@ export default {
   methods: {
     // 时间转化
     moment(time) {
-      return moment(time).format('YYYY-MM-DD hh:mm:ss')
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
     getData() {
       let id = this.$route.query.id
