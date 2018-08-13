@@ -32,7 +32,7 @@
           <div class="con3">
             <div class="row">市（县、区）公安机关</div>
             <div class="row">交通管理部门（印章）</div>
-            <div class="row"> 年月日</div>
+            <div class="row"> &nbsp;&nbsp;年&nbsp;&nbsp;月&nbsp;&nbsp;日</div>
           </div>
           <div class="con4">
             <div class="title">参加审验教育须知</div>
