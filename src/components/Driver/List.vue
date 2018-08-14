@@ -220,13 +220,13 @@
 
         </el-form-item>
         <el-form-item label="" prop="idCardImgUrlToken">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessIdCard" :headers="headers">
+          <el-upload class="upload-demo" :action="upload.pic" :on-success="handleSuccessIdCard" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人证件图片 （选填）</el-button>
           </el-upload>
           <img :src="idCardImgUrl" alt="" class="pic" v-if="idCardImgUrl">
         </el-form-item>
         <el-form-item label="" prop="headUrlToken">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :on-success="handleSuccessHead" :headers="headers">
+          <el-upload class="upload-demo" :action="upload.pic" :on-success="handleSuccessHead" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人本人头像（选填） </el-button>
           </el-upload>
           <img :src="headUrl" alt="" class="pic" v-if="headUrl">
@@ -291,13 +291,13 @@
           </label>
         </el-form-item>
         <el-form-item label="" prop="idCardImgUrlToken">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :show-file-list="false" :on-success="handleSuccessIdCard" :headers="headers">
+          <el-upload class="upload-demo" :action="upload.pic" :show-file-list="false" :on-success="handleSuccessIdCard" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人证件图片 （选填）</el-button>
           </el-upload>
           <img :src="idCardImgUrl" alt="" class="pic" v-if="idCardImgUrl">
         </el-form-item>
         <el-form-item label="" prop="headUrlToken">
-          <el-upload class="upload-demo" action="http://47.95.250.247/admin-api/file/image/upload" :show-file-list="false" :on-success="handleSuccessHead" :headers="headers">
+          <el-upload class="upload-demo" :action="upload.pic" :show-file-list="false" :on-success="handleSuccessHead" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人本人头像（选填） </el-button>
           </el-upload>
           <img :src="headUrl" alt="" class="pic" v-if="headUrl">
@@ -351,10 +351,14 @@
 import baseService from '../../service/baseService.js'
 import { getSessionStorage } from '../../utils/base.js'
 import moment from 'moment'
+import config from '../../config.json'
 export default {
   name: '',
   data() {
     return {
+      upload: {
+        pic: `${config.service.host}/file/image/upload`
+      },
       headers: {
         authKey: getSessionStorage('authKey')
       },
