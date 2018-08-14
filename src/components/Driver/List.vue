@@ -291,13 +291,13 @@
           </label>
         </el-form-item>
         <el-form-item label="" prop="idCardImgUrlToken">
-          <el-upload class="upload-demo" :action="upload.pic" :show-file-list="false" :on-success="handleSuccessIdCard" :headers="headers">
+          <el-upload class="upload-demo" :action="upload.pic" :show-file-list="false" :on-success="handleSuccessIdCardEdit" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人证件图片 （选填）</el-button>
           </el-upload>
           <img :src="idCardImgUrl" alt="" class="pic" v-if="idCardImgUrl">
         </el-form-item>
         <el-form-item label="" prop="headUrlToken">
-          <el-upload class="upload-demo" :action="upload.pic" :show-file-list="false" :on-success="handleSuccessHead" :headers="headers">
+          <el-upload class="upload-demo" :action="upload.pic" :show-file-list="false" :on-success="handleSuccessHeadEdit" :headers="headers">
             <el-button size="small" type="primary">上传驾驶人本人头像（选填） </el-button>
           </el-upload>
           <img :src="headUrl" alt="" class="pic" v-if="headUrl">
@@ -749,6 +749,14 @@ export default {
     },
     handleSuccessHead(val) {
       this.addData.headUrlToken = val.data.token
+      this.headUrl = val.data.url
+    },
+    handleSuccessIdCardEdit(val) {
+      this.editData.idCardImgUrlToken = val.data.token
+      this.idCardImgUrl = val.data.url
+    },
+    handleSuccessHeadEdit(val) {
+      this.editData.headUrlToken = val.data.token
       this.headUrl = val.data.url
     }
   }
