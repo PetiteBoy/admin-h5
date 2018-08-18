@@ -8,8 +8,8 @@
             <!-- <div class="hand"></div> -->
             <!-- <div class="hand hand-r"></div> -->
             <!-- <div class="arms"> -->
-              <!-- <div class="arm"></div> -->
-              <!-- <div class="arm arm-r"></div> -->
+            <!-- <div class="arm"></div> -->
+            <!-- <div class="arm arm-r"></div> -->
             <!-- </div> -->
           </div>
           <div class="pad">
@@ -44,8 +44,8 @@ export default {
   data() {
     return {
       loginData: {
-        username: 'superadmin',
-        password: 'superpassword'
+        username: '',
+        password: ''
       },
       passwordStatus: false
     }
@@ -89,7 +89,7 @@ export default {
 </script>
 
 <style>
-.login-title{
+.login-title {
   text-align: center;
   font-size: 24px;
   position: absolute;
